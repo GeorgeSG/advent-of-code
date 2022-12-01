@@ -1,7 +1,6 @@
-import path from 'path';
 import R from 'ramda';
 import { ijMeBro, sortNums } from '~utils/arrays';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
 import { Point2D } from '~utils/points';
 

@@ -1,7 +1,6 @@
-import path from 'path';
 import R from 'ramda';
 import { findMax } from '~utils/arrays';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
 
 type Input = number[];

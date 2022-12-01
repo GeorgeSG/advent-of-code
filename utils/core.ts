@@ -1,23 +1,6 @@
 import { readFileSync } from 'fs';
 import { green, red } from 'kleur';
 
-export const timeAndPrint = (partA?, partB?) => {
-  console.log('Part A:');
-  console.time('Time');
-  console.log(green().bold(partA()));
-  console.timeEnd('Time');
-  console.log('\n---\n');
-
-  if (partB) {
-    console.log('Part B:');
-    console.time('Time');
-    console.log(green().bold(partB()));
-    console.timeEnd('Time');
-  }
-
-  console.log();
-};
-
 export const readFile = (inputFile, lineTransformer?) => {
   try {
     let input;
