@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "start": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register",
     "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn"
   },
   "author": "Georgi Gardev",
