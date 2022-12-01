@@ -5,13 +5,14 @@
   "scripts": {
     "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
     "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
-    "test": "yarn execute runner.ts",
-    "runner": "yarn watch runner.ts",
-    "new": "yarn execute new.ts"
+    "test": "yarn execute cli/runner.ts",
+    "runner": "yarn watch cli/runner.ts",
+    "new": "yarn execute cli/new.ts"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
   "dependencies": {
+    "app-root-path": "^3.1.0",
     "kleur": "^4.1.5",
     "ramda": "^0.28.0"
   },
