@@ -3,8 +3,7 @@
 		"prefix": "aoc",
 		"body": [
 			"import path from 'path';",
-			"import { readFile } from '../../utils/readFile';",
-			"import { timeAndPrint } from '../../utils/timeAndPrint';",
+			"import { readFile, timeAndPrint } from '~utils/core';",
 			"",
 			"const DEMO = true;",
 			"",
