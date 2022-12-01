@@ -8,13 +8,13 @@ const folderArg = cmndArgs.length >= 1 ? cmndArgs[0] : null;
 const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
 if (folderArg) {
-  if (typeArg === 'test' || typeArg === 'both') {
-    console.log(underline().bold('Test'));
+  if (typeArg === 'example' || typeArg === 'both') {
+    console.log(underline().bold('Example'));
     testRun(folderArg);
   }
 
-  if (typeArg === 'prod' || typeArg === 'both') {
-    console.log(underline().bold('\nProd'));
+  if (typeArg === 'real' || typeArg === 'both') {
+    console.log(underline().bold('\nReal'));
     prodRun(folderArg);
   }
   console.log();

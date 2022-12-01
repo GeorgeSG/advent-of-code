@@ -5,6 +5,7 @@
   "scripts": {
     "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
     "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
+    "test": "yarn execute runner.ts",
     "runner": "yarn watch runner.ts",
     "new": "yarn execute new.ts"
   },
