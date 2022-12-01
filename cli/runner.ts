@@ -1,6 +1,7 @@
 import appRootPath from 'app-root-path';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { bold, green, red, underline, yellow } from 'kleur';
+import { readFileRaw } from '~utils/core';
 import { toI } from '~utils/numbers';
 
 const cmndArgs = process.argv.slice(2);
@@ -56,9 +57,7 @@ export function runExample(folder: string) {
     return;
   }
 
-  const [expectedA, expectedB] = readFileSync(outputFile, { encoding: 'utf8', flag: 'r' })
-    .split('\n')
-    .map(toI);
+  const [expectedA, expectedB] = readFileRaw(outputFile).split('\n').map(toI);
 
   const input = prepareInput(inputFile);
 
