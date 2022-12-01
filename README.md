@@ -11,7 +11,7 @@ Each solution is in a folder named `<year>/<solutuon-day>`. Example: `2022/02`.
 
 Each solution folder contains the following files:
 - `solution.ts` - code for the solution
-- `input` - input
+- `input` - task input
 - `test_input` - the example input given in the task description
 - `test_output` - the example answers given in the task description - each part on a new line
 
@@ -45,7 +45,14 @@ There are useful utils in `./utils`. Check them out :)
 
 ## Commands
 
-- `yarn new 2022 01` - create a Solution folder 2022/01 using a predefined template
-- `yarn test 2022/01 [example | real | both]` - run the tests for 2022/01 once. Defaults to running both example and real tests
-- `yarn runner 2022/01 [example | real | both]` - run the tests for 2022/01 and watch for changes. Defaults to running both example and real tests
-- `yarn set-cookie [cookie]` - store your session cookie value locally to be able to automatically fetch input
+### `yarn new 2022 01`
+Create a Solution folder 2022/01 using a predefined template. Attempt to automatically fetch and populate input.
+
+### `yarn test 2022/01 [example | real | both]`
+Run the tests for 2022/01 once. Defaults to running both example and real tests.
+
+### `yarn runner 2022/01 [example | real | both]`
+Run the tests for 2022/01 and watch for changes. Defaults to running both example and real tests.
+
+### `yarn set-cookie [cookie]`
+Store your session cookie value locally to be able to automatically fetch input.
