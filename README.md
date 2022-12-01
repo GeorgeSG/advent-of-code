@@ -7,7 +7,8 @@ Included is a small "framework" I wrote to help me run and test the solutions.
 ## Code
 ### Solution folders
 
-Each solution is in a folder named `<year>/<solutuon-day>`. - for example `2022/02`
+Each solution is in a folder named `<year>/<solutuon-day>`. Example: `2022/02`.
+
 Each solution folder contains the following files:
 - `solution.ts` - code for the solution
 - `input` - input
