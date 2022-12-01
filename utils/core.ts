@@ -12,7 +12,6 @@ export const timeAndPrint = (partA?, partB?) => {
     console.log('Part B:');
     console.time('Time');
     console.log(kleur.green().bold(partB()));
-    console.log();
     console.timeEnd('Time');
   }
 
