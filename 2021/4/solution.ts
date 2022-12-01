@@ -64,9 +64,7 @@ function partB({ boards, draw }: Input) {
   for (let i = 0; i < draw.length; i++) {
     currentDraw.push(draw[i]);
 
-    remainingBoards = remainingBoards.filter(
-      (board) => !checkBingo(board, currentDraw)
-    );
+    remainingBoards = remainingBoards.filter((board) => !checkBingo(board, currentDraw));
 
     if (remainingBoards.length === 1) {
       const remainingBoard = remainingBoards[0];

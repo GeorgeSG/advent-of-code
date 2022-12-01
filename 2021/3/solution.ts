@@ -8,8 +8,7 @@ const inputFile = path.resolve(__dirname) + '/input';
 type InputLine = number[];
 type Input = InputLine[];
 
-const lineParser = (line: string): InputLine =>
-  line.split('').map((i) => parseInt(i));
+const lineParser = (line: string): InputLine => line.split('').map((i) => parseInt(i));
 
 let inputData: Input = readFile(inputFile, lineParser);
 

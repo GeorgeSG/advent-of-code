@@ -13,25 +13,20 @@ type Input = Range[];
 
 const lineParser = (line: string): Range => {
   const from = [line.split(',')[0], line.split(',')[1].split(' ')[0]].map(toI);
-  const to = [
-    line.split(' ')[2].split(',')[0],
-    line.split(' ')[2].split(',')[1],
-  ].map(toI);
+  const to = [line.split(' ')[2].split(',')[0], line.split(' ')[2].split(',')[1]].map(toI);
 
   return { from, to } as Range;
 };
 
 let inputData: Input = readFile(inputFile, lineParser);
 
-const isDiagonal = ({ from, to }: Range) =>
-  Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]);
+const isDiagonal = ({ from, to }: Range) => Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]);
 
 function partA(input: Input) {
   const map = {};
 
   const lines = input.filter(
-    ({ from, to }) =>
-      from[1] === to[1] || from[0] === to[0] || isDiagonal({ from, to }) // diagonals for partB
+    ({ from, to }) => from[1] === to[1] || from[0] === to[0] || isDiagonal({ from, to }) // diagonals for partB
   );
 
   lines.forEach(({ from, to }) => {
