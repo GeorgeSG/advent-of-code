@@ -1,15 +1,12 @@
-import path from 'path';
 import { sum } from 'ramda';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
+import { toI } from '~utils/numbers';
 
-const inputFile = path.resolve(__dirname) + '/input';
+type Input = number[][];
 
-type InputLine = number[];
-type Input = InputLine[];
-
-const lineParser = (line: string): InputLine => line.split('').map((i) => parseInt(i));
-
-let inputData: Input = readFile(inputFile, lineParser);
+export function prepareInput(inputFile: string): Input {
+  return readFile(inputFile, (line: string) => line.split('').map(toI));
+}
 
 function mostCommonAt(index: number, input: Input) {
   const totalInputs = input.length;
@@ -20,7 +17,7 @@ function mostCommonAt(index: number, input: Input) {
   return ones > totalInputs / 2 ? 1 : 0;
 }
 
-function partA(input: Input) {
+export function partA(input: Input) {
   const gamma = [];
   const epsilon = [];
 
@@ -37,7 +34,7 @@ function partA(input: Input) {
   return gammaRate * epsilonRate;
 }
 
-function partB(input: Input) {
+export function partB(input: Input) {
   let oxygen = input;
   let co2 = input;
 
@@ -64,8 +61,3 @@ function partB(input: Input) {
 
   return oxygenRate * co2Rate;
 }
-
-timeAndPrint(
-  () => partA(inputData),
-  () => partB(inputData)
-);

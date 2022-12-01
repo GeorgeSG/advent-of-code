@@ -1,13 +1,16 @@
-import path from 'path';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
+import { toI } from '~utils/numbers';
 
-const inputFile = path.resolve(__dirname) + '/input';
-let inputData = readFile(inputFile, parseInt);
+type Input = number[];
 
-function partA(input) {
+export function prepareInput(inputFile: string): Input {
+  return readFile(inputFile, toI);
+}
+
+export function partA(input: Input): number {
   let result = 0;
 
-  for (let i = 1; i < input.length - 1; i++) {
+  for (let i = 1; i < input.length; i++) {
     if (input[i] > input[i - 1]) {
       result += 1;
     }
@@ -16,11 +19,11 @@ function partA(input) {
   return result;
 }
 
-function partB(input) {
+export function partB(input: Input): number {
   let result = 0;
   let windows: number[] = [];
 
-  for (let i = 0; i < input.length - 3; i++) {
+  for (let i = 0; i < input.length - 2; i++) {
     windows[i] = input[i] + input[i + 1] + input[i + 2];
     if (i > 0 && windows[i] > windows[i - 1]) {
       result++;
@@ -29,8 +32,3 @@ function partB(input) {
 
   return result;
 }
-
-timeAndPrint(
-  () => partA(inputData),
-  () => partB(inputData)
-);

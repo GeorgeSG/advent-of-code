@@ -1,24 +1,14 @@
-import path from 'path';
 import { sum } from 'ramda';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
 
-// const inputFile = path.resolve(__dirname) + '/demo_input';
-const inputFile = path.resolve(__dirname) + '/input';
+type Input = number[];
 
-type InputLine = number[];
-type Input = InputLine;
+export function prepareInput(inputFile: string): Input {
+  return readFile(inputFile, (line) => line.split(',').map(toI))[0];
+}
 
-// Parser
-const lineParser = (line: string): InputLine => line.split(',').map(toI);
-// Input Data
-let inputData: Input = readFile(inputFile, lineParser)[0];
-
-// const DAYS = 80;
-const DAYS = 256;
-
-// ---- Part A ----
-function partA(input: Input) {
+function solve(input: Input, days: number) {
   let fishes = input;
   let fishesAtDay = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -26,7 +16,7 @@ function partA(input: Input) {
     fishesAtDay[f] = fishesAtDay[f] + 1;
   });
 
-  for (let i = 0; i < DAYS; i++) {
+  for (let i = 0; i < days; i++) {
     let fishesToAdd = 0;
     for (let day = 0; day <= 8; day++) {
       const fishes = fishesAtDay[day];
@@ -45,12 +35,12 @@ function partA(input: Input) {
   return sum(fishesAtDay);
 }
 
-// ---- Part B ----
-function partB(input: Input) {
-  return 0;
+// ---- Part A ----
+export function partA(input: Input) {
+  return solve(input, 80);
 }
 
-timeAndPrint(
-  () => partA(inputData),
-  () => partB(inputData)
-);
+// ---- Part B ----
+export function partB(input: Input) {
+  return solve(input, 256);
+}

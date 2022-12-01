@@ -1,17 +1,17 @@
 import { readFileSync } from 'fs';
-import kleur from 'kleur';
+import { green, red } from 'kleur';
 
 export const timeAndPrint = (partA?, partB?) => {
   console.log('Part A:');
   console.time('Time');
-  console.log(kleur.green().bold(partA()));
+  console.log(green().bold(partA()));
   console.timeEnd('Time');
   console.log('\n---\n');
 
   if (partB) {
     console.log('Part B:');
     console.time('Time');
-    console.log(kleur.green().bold(partB()));
+    console.log(green().bold(partB()));
     console.timeEnd('Time');
   }
 
@@ -29,7 +29,7 @@ export const readFile = (inputFile, lineTransformer?) => {
 
     return lineTransformer ? input.map((line, i) => lineTransformer(line, i)) : input;
   } catch (e) {
-    console.error(kleur.red().bold('Error: unable to read input'));
+    console.error(red().bold('Error: unable to read input'));
   }
 };
 
@@ -37,6 +37,6 @@ export const readFileRaw = (inputFile) => {
   try {
     return readFileSync(inputFile, { encoding: 'utf8', flag: 'r' });
   } catch (e) {
-    console.error(kleur.red().bold('Error: unable to read input'));
+    console.error(red().bold('Error: unable to read input'));
   }
 };

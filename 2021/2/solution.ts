@@ -1,7 +1,4 @@
-import path from 'path';
-import { readFile, timeAndPrint } from '~utils/core';
-
-const inputFile = path.resolve(__dirname) + '/input';
+import { readFile } from '~utils/core';
 
 type Input = {
   cmd: string;
@@ -13,9 +10,11 @@ const lineParser = (line: string): Input => ({
   amount: parseInt(line.split(' ')[1]),
 });
 
-let inputData: Input[] = readFile(inputFile, lineParser);
+export function prepareInput(inputFile: string): Input {
+  return readFile(inputFile, lineParser);
+}
 
-function partA(input: Input[]): number {
+export function partA(input: Input[]): number {
   let horizontal = 0;
   let depth = 0;
 
@@ -30,7 +29,7 @@ function partA(input: Input[]): number {
   return horizontal * depth;
 }
 
-function partB(input: Input[]): number {
+export function partB(input: Input[]): number {
   let horizontal = 0;
   let depth = 0;
   let aim = 0;
@@ -46,8 +45,3 @@ function partB(input: Input[]): number {
 
   return horizontal * depth;
 }
-
-timeAndPrint(
-  () => partA(inputData),
-  () => partB(inputData)
-);

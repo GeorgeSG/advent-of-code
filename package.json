@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register",
-    "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn"
+    "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn",
+    "runner":  "yarn run watch runner.ts"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",

@@ -4,25 +4,20 @@ import { findMax } from '~utils/arrays';
 import { readFile, timeAndPrint } from '~utils/core';
 import { toI } from '~utils/numbers';
 
-// const inputFile = path.resolve(__dirname) + '/demo_input';
-const inputFile = path.resolve(__dirname) + '/input';
+type Input = number[];
 
-type InputLine = number[];
-type Input = InputLine;
-
-// Parser
-const lineParser = (line: string): InputLine => line.split(',').map(toI);
-// Input Data
-let inputData: Input = readFile(inputFile, lineParser)[0];
+export function prepareInput(inputFile: string): Input {
+  return readFile(inputFile, (line) => line.split(',').map(toI))[0];
+}
 
 // ---- Part A ----
-function partA(input: Input) {
+export function partA(input: Input) {
   const optimalPos = R.median(input);
   return R.sum(input.map((i) => Math.abs(optimalPos - i)));
 }
 
 // ---- Part B ----
-function partB(input: Input) {
+export function partB(input: Input) {
   const max = findMax(input);
 
   let minFuel = Number.POSITIVE_INFINITY;
@@ -42,8 +37,3 @@ function partB(input: Input) {
 
   return minFuel;
 }
-
-timeAndPrint(
-  () => partA(inputData),
-  () => partB(inputData)
-);

@@ -1,10 +1,6 @@
-import path from 'path';
 import { last, splitEvery, sum, transpose, without } from 'ramda';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
-
-// const inputFile = path.resolve(__dirname) + '/demo_input';
-const inputFile = path.resolve(__dirname) + '/input';
 
 type Board = number[][];
 type Input = {
@@ -12,17 +8,19 @@ type Input = {
   boards: Board[];
 };
 
-const inputRaw = readFile(inputFile);
+export function prepareInput(inputFile: string): Input {
+  const inputRaw = readFile(inputFile);
 
-const inputData: Input = {
-  draw: inputRaw[0].split(',').map(toI),
-  boards: splitEvery(
-    5, // split into subarrays of each 5 rows
-    inputRaw
-      .slice(1) // drop draw
-      .map((line) => line.trim().replaceAll('  ', ' ').split(' ').map(toI))
-  ),
-};
+  return {
+    draw: inputRaw[0].split(',').map(toI),
+    boards: splitEvery(
+      5, // split into subarrays of each 5 rows
+      inputRaw
+        .slice(1) // drop draw
+        .map((line) => line.trim().replaceAll('  ', ' ').split(' ').map(toI))
+    ),
+  };
+}
 
 function checkBingo(board: Board, draw: number[]) {
   if (board.some((row) => without(draw, row).length === 0)) {
@@ -40,7 +38,7 @@ function score(board: Board, draw: number[]) {
   return sum(without(draw, board.flat())) * last(draw);
 }
 
-function partA({ boards, draw }: Input) {
+export function partA({ boards, draw }: Input) {
   const currentDraw: number[] = [];
 
   for (let i = 0; i < draw.length; i++) {
@@ -56,7 +54,7 @@ function partA({ boards, draw }: Input) {
   return 0;
 }
 
-function partB({ boards, draw }: Input) {
+export function partB({ boards, draw }: Input) {
   const currentDraw = [];
   let remainingBoards = boards;
 
@@ -74,8 +72,3 @@ function partB({ boards, draw }: Input) {
 
   return 0;
 }
-
-timeAndPrint(
-  () => partA(inputData),
-  () => partB(inputData)
-);

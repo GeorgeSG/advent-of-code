@@ -1,18 +1,12 @@
-import path from 'path';
 import R from 'ramda';
 import { sortNums } from '~utils/arrays';
-import { readFile, timeAndPrint } from '~utils/core';
+import { readFile } from '~utils/core';
 
-const INPUT_FILE = path.resolve(__dirname) + '/demo_input';
-// const INPUT_FILE = path.resolve(__dirname) + '/input';
+type Input = string[];
 
-type InputLine = string;
-type Input = InputLine[];
-
-// Parser
-const lineParser = (line: string): InputLine => line;
-// Input Data
-const INPUT_DATA: Input = readFile(INPUT_FILE, lineParser);
+export function prepareInput(inputFile: string): Input {
+  return readFile(inputFile);
+}
 
 const IS_OPENING = /[{<\(\[]/;
 const CLOSE_TO_OPEN = { '}': '{', '>': '<', ')': '(', ']': '[' };
@@ -51,7 +45,7 @@ const computeCompleteScore = (line: string): number => {
 };
 
 // ---- Part A ----
-function partA(input: Input) {
+export function partA(input: Input) {
   return R.sum(
     input
       .map(checkCorrupted)
@@ -61,14 +55,9 @@ function partA(input: Input) {
 }
 
 // ---- Part B ----
-function partB(input: Input) {
+export function partB(input: Input) {
   const incomplete = input.filter((l) => checkCorrupted(l) === undefined);
   const completionScores = sortNums(incomplete.map(computeCompleteScore));
 
   return completionScores[Math.floor(completionScores.length / 2)];
 }
-
-timeAndPrint(
-  () => partA(INPUT_DATA),
-  () => partB(INPUT_DATA)
-);
