@@ -4,9 +4,9 @@
   "description": "",
   "scripts": {
     "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
-    "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
+    "respawn": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
     "test": "yarn execute cli/runner.ts",
-    "runner": "yarn watch cli/runner.ts",
+    "watch": "yarn respawn cli/runner.ts",
     "new": "yarn execute cli/new.ts",
     "set-cookie": "yarn execute cli/cookie.ts"
   },
