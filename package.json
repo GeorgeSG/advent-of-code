@@ -2,6 +2,9 @@
   "name": "advent-of-code",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": ">=16.17.0"
+  },
   "scripts": {
     "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
     "respawn": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
