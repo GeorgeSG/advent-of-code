@@ -42,5 +42,5 @@ export function partB(input: Input): number {}
 ## Commands
 
 - `yarn new 2022/01` - create a Solution folder 2022/01 using a predefined template
-- `yarn test 2022/01 [example | real | both]` - run the tests for 2022/01 once. Defaults to running both tests
-- `yarn runner 2022/01 [example | real | both]` - run the tests for 2022/01 and watch for changes. Defaults to running both tests
+- `yarn test 2022/01 [example | real | both]` - run the tests for 2022/01 once. Defaults to running both example and real tests
+- `yarn runner 2022/01 [example | real | both]` - run the tests for 2022/01 and watch for changes. Defaults to running both example and real tests
