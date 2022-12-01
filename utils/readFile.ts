@@ -17,3 +17,11 @@ export const readFile = (inputFile, lineTransformer?) => {
     console.error(kleur.red().bold('Error: unable to read input'));
   }
 };
+
+export const readFileRaw = (inputFile) => {
+  try {
+    return readFileSync(inputFile, { encoding: 'utf8', flag: 'r' });
+  } catch (e) {
+    console.error(kleur.red().bold('Error: unable to read input'));
+  }
+};
