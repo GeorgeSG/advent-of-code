@@ -8,7 +8,7 @@ import { COOKIE_FILE as SESSION_FILE } from './const';
 const cmdArgs = process.argv.slice(2);
 if (cmdArgs.length < 2) {
   console.log(red().bold('ERROR: Enter year and day. Example: yarn new 2021 1'));
-  process.exit(0);
+  process.exit();
 }
 
 const year = cmdArgs[0];
@@ -41,12 +41,12 @@ const sessionId = readFileSync(SESSION_FILE, { encoding: 'utf-8' });
 console.log('Attempting input fetch...');
 if (!sessionId) {
   console.log(yellow().bold('WARNING: Set your session via yarn set-session to fetch input.'));
-  process.exit(0);
+  process.exit();
 }
 
 if (existsSync(INPUT_FILE)) {
   console.log(green().bold(`File ${INPUT_FILE} already exists. Skipping download.`));
-  process.exit(0);
+  process.exit();
 }
 
 const headers = new Headers({
