@@ -1,0 +1,36 @@
+{
+	"Advent of code": {
+		"prefix": "aoc",
+		"body": [
+			"import path from 'path';",
+			"import { readFile } from '../../utils/readFile';",
+			"import { timeAndPrint } from '../../utils/timeAndPrint';",
+			"",
+			"const inputFile = path.resolve(__dirname) + '/demo_input';",
+			"// const inputFile = path.resolve(__dirname) + '/input';",
+			"",
+			"type InputLine = string;",
+			"type Input = InputLine[];",
+			"",
+			"// Parser",
+			"const lineParser = (line: string): InputLine => line;",
+			"// Input Data",
+			"let inputData: Input = readFile(inputFile, lineParser);",
+			"",
+			"// ---- Part A ----",
+			"function partA(input: Input) {",
+  		"\treturn 0;",
+			"}",
+			"",
+			"// ---- Part B ----",
+			"function partB(input: Input) {",
+  		"\treturn 0;",
+			"}",
+			"",
+			"timeAndPrint(",
+  		"\t() => partA(inputData),",
+  		"\t() => partB(inputData)",
+			");",
+		]
+	}
+}
