@@ -1,16 +1,18 @@
 import kleur from 'kleur';
 
 export const timeAndPrint = (partA?, partB?) => {
-  console.log();
-  console.time('Part A');
+  console.log('Part A:');
+  console.time('Time');
   console.log(kleur.green().bold(partA()));
-  console.timeEnd('Part A');
-  console.log();
+  console.timeEnd('Time');
+  console.log('\n---\n');
 
   if (partB) {
-    console.time('Part B');
+    console.log('Part B:');
+    console.time('Time');
     console.log(kleur.green().bold(partB()));
-    console.timeEnd('Part B');
+    console.log();
+    console.timeEnd('Time');
   }
 
   console.log();
