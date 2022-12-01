@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "allowJs": true,
     "strict": false,
     "noImplicitAny": false,

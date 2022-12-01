@@ -7,22 +7,24 @@
     "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
     "test": "yarn execute cli/runner.ts",
     "runner": "yarn watch cli/runner.ts",
-    "new": "yarn execute cli/new.ts"
+    "new": "yarn execute cli/new.ts",
+    "set-cookie": "yarn execute cli/cookie.ts"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
   "dependencies": {
     "app-root-path": "^3.1.0",
+    "fs-extra": "^11.1.0",
     "kleur": "^4.1.5",
-    "ramda": "^0.28.0"
+    "node-fetch": "2",
+    "ramda": "^0.28.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.1.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
     "@types/ramda": "^0.28.20",
-    "fs-extra": "^11.1.0",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.1.1",
     "typescript": "^4.9.3"
   }
 }
