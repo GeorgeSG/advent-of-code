@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register",
-    "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn",
-    "runner":  "yarn run watch runner.ts"
+    "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
+    "watch": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
+    "runner": "yarn watch runner.ts",
+    "new": "yarn execute new.ts"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^18.11.9",
     "@types/ramda": "^0.28.20",
+    "fs-extra": "^11.1.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.1.1",

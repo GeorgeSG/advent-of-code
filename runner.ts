@@ -3,16 +3,17 @@ import { bold, green, red, underline, yellow } from 'kleur';
 import path from 'path';
 import { toI } from '~utils/numbers';
 
-const folderArg = process.argv.length >= 3 ? process.argv[2] : null;
-const type = process.argv.length >= 4 ? process.argv[3] : 'both';
+const cmndArgs = process.argv.slice(2);
+const folderArg = cmndArgs.length >= 1 ? cmndArgs[0] : null;
+const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
 if (folderArg) {
-  if (type === 'test' || type === 'both') {
+  if (typeArg === 'test' || typeArg === 'both') {
     console.log(underline().bold('Test'));
     testRun(folderArg);
   }
 
-  if (type === 'prod' || type === 'both') {
+  if (typeArg === 'prod' || typeArg === 'both') {
     console.log(underline().bold('\nProd'));
     prodRun(folderArg);
   }
