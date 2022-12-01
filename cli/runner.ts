@@ -1,4 +1,4 @@
-import appRoot from 'app-root-path';
+import appRootPath from 'app-root-path';
 import { existsSync, readFileSync } from 'fs';
 import { bold, green, red, underline, yellow } from 'kleur';
 import { toI } from '~utils/numbers';
@@ -23,7 +23,7 @@ if (folderArg) {
 export function prodRun(folder: string) {
   const { partA, partB, prepareInput } = loadSolution(folder);
 
-  const inputFile = `${appRoot}/${folder}/input`;
+  const inputFile = `${appRootPath}/${folder}/input`;
   if (!existsSync(inputFile)) {
     console.log(yellow().bold('WARNING: Prod input does not exist! Skipping prod...'));
     return;
@@ -48,8 +48,8 @@ export function testRun(folder: string) {
   const { partA, partB, prepareInput } = loadSolution(folder);
 
   // Load Files
-  const outputFile = `${appRoot}/${folder}/test_output`;
-  const inputFile = `${appRoot}/${folder}/test_input`;
+  const outputFile = `${appRootPath}/${folder}/test_output`;
+  const inputFile = `${appRootPath}/${folder}/test_input`;
   if (!existsSync(outputFile) || !existsSync(inputFile)) {
     console.log(yellow().bold('WARNING: Test files do not exist! Skipping tests...'));
     return;
@@ -79,7 +79,7 @@ export function testRun(folder: string) {
 }
 
 function loadSolution(folder: string) {
-  const solutionFile = `${appRoot}/${folder}/solution.ts`;
+  const solutionFile = `${appRootPath}/${folder}/solution.ts`;
 
   if (!existsSync(solutionFile)) {
     console.log(red().bold('ERROR: Solution file does not exist!'));

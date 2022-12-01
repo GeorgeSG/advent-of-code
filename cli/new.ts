@@ -1,4 +1,4 @@
-import appRoot from 'app-root-path';
+import appRootPath from 'app-root-path';
 import { readFileSync, writeFileSync } from 'fs';
 import { copy, existsSync } from 'fs-extra';
 import { green, red, yellow } from 'kleur';
@@ -20,7 +20,7 @@ if (day.startsWith('0')) {
 
 const dayPadded = day.padStart(2, '0');
 
-const FOLDER = `${appRoot}/${year}/${dayPadded}`;
+const FOLDER = `${appRootPath}/${year}/${dayPadded}`;
 const INPUT_FILE = `${FOLDER}/input`;
 
 if (existsSync(FOLDER)) {
