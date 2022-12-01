@@ -28,6 +28,7 @@ function partB(input: Input) {
 
   let minFuel = Number.POSITIVE_INFINITY;
 
+  // this will take a while xD. ~12secs
   for (let pos = 0; pos < max; pos++) {
     const fuelPerSub = input.map((i) => {
       const change = Math.abs(pos - i);
