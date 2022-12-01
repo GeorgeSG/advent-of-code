@@ -1,9 +1,8 @@
 import path from 'path';
 import R from 'ramda';
-import { findMax, sortNums } from '../../utils/arrays';
-import { toI } from '../../utils/numbers';
-import { readFile } from '../../utils/readFile';
-import { timeAndPrint } from '../../utils/timeAndPrint';
+import { findMax } from '~utils/arrays';
+import { readFile, timeAndPrint } from '~utils/core';
+import { toI } from '~utils/numbers';
 
 // const inputFile = path.resolve(__dirname) + '/demo_input';
 const inputFile = path.resolve(__dirname) + '/input';

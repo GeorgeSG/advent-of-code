@@ -1,8 +1,7 @@
 import path from 'path';
 import R from 'ramda';
-import { sortNums } from '../../utils/arrays';
-import { readFile } from '../../utils/readFile';
-import { timeAndPrint } from '../../utils/timeAndPrint';
+import { sortNums } from '~utils/arrays';
+import { readFile, timeAndPrint } from '~utils/core';
 
 const INPUT_FILE = path.resolve(__dirname) + '/demo_input';
 // const INPUT_FILE = path.resolve(__dirname) + '/input';

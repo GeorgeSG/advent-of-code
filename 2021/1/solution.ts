@@ -1,6 +1,5 @@
 import path from 'path';
-import { readFile } from '../../utils/readFile';
-import { timeAndPrint } from '../../utils/timeAndPrint';
+import { readFile, timeAndPrint } from '~utils/core';
 
 const inputFile = path.resolve(__dirname) + '/input';
 let inputData = readFile(inputFile, parseInt);

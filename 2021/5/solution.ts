@@ -1,8 +1,6 @@
 import path from 'path';
-import { max, min } from 'ramda';
-import { toI } from '../../utils/numbers';
-import { readFile } from '../../utils/readFile';
-import { timeAndPrint } from '../../utils/timeAndPrint';
+import { readFile, timeAndPrint } from '~utils/core';
+import { toI } from '~utils/numbers';
 
 // const inputFile = path.resolve(__dirname) + '/demo_input';
 const inputFile = path.resolve(__dirname) + '/input';

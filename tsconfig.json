@@ -5,6 +5,10 @@
     "allowJs": true,
     "strict": false,
     "noImplicitAny": false,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "~utils/*": ["utils/*"],
+    }
+  },
 }
