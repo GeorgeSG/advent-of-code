@@ -1,5 +1,5 @@
 import appRoot from 'app-root-path';
-import { readFileSync, writeFile, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { copy, existsSync } from 'fs-extra';
 import { green, red, yellow } from 'kleur';
 import fetch, { Headers } from 'node-fetch';
@@ -20,25 +20,32 @@ if (day.startsWith('0')) {
 
 const dayPadded = day.padStart(2, '0');
 
-const folder = `${appRoot}/${year}/${dayPadded}`;
+const FOLDER = `${appRoot}/${year}/${dayPadded}`;
+const INPUT_FILE = `${FOLDER}/input`;
 
-if (existsSync(folder)) {
-  console.error(yellow().bold(`WARNING: ${folder} already exists`));
+if (existsSync(FOLDER)) {
+  console.error(yellow().bold(`WARNING: ${FOLDER} already exists.`));
 } else {
-  console.log(`Copying template to ${folder}...`);
-  copy('./template/', folder, (err) => {
+  console.log(`Copying template to ${FOLDER}...`);
+  copy('./template/', FOLDER, (err) => {
     if (err) {
       console.log(red().bold(`ERROR: ${err}`));
     } else {
-      console.log(green().bold(`${folder} created successfully!`));
+      console.log(green().bold(`${FOLDER} created successfully!`));
     }
   });
 }
 
 const sessionId = readFileSync(SESSION_FILE, { encoding: 'utf-8' });
 
+console.log('Attempting input fetch...');
 if (!sessionId) {
-  console.log(yellow().bold('WARNING: Set your session via yarn set-session to fetch input'));
+  console.log(yellow().bold('WARNING: Set your session via yarn set-session to fetch input.'));
+  process.exit(0);
+}
+
+if (existsSync(INPUT_FILE)) {
+  console.log(green().bold(`File ${INPUT_FILE} already exists. Skipping download.`));
   process.exit(0);
 }
 
@@ -52,7 +59,7 @@ fetch(`https://adventofcode.com/${year}/day/${day}/input`, {
   headers,
 })
   .then((response) => response.text())
-  .then((data) => writeFileSync(`${folder}/input`, data))
+  .then((data) => writeFileSync(INPUT_FILE, data))
   .catch((e) => {
     console.log(red().bold('ERROR fetching input'));
     console.log(e);
