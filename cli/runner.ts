@@ -11,13 +11,14 @@ if (folderArg) {
   if (typeArg === 'example' || typeArg === 'both') {
     console.log(underline().bold('Example'));
     runExample(folderArg);
+    console.log();
   }
 
   if (typeArg === 'real' || typeArg === 'both') {
-    console.log(underline().bold('\nReal'));
+    console.log(underline().bold('Real'));
     runReal(folderArg);
+    console.log();
   }
-  console.log();
 }
 
 export function runReal(folder: string) {
