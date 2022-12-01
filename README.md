@@ -40,6 +40,9 @@ export function partA(input: Input): number {}
 export function partB(input: Input): number {}
 ```
 
+### Utils
+There are useful utils in `./utils`. Check them out :)
+
 ## Commands
 
 - `yarn new 2022/01` - create a Solution folder 2022/01 using a predefined template
