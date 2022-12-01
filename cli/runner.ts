@@ -10,17 +10,17 @@ const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 if (folderArg) {
   if (typeArg === 'example' || typeArg === 'both') {
     console.log(underline().bold('Example'));
-    testRun(folderArg);
+    runExample(folderArg);
   }
 
   if (typeArg === 'real' || typeArg === 'both') {
     console.log(underline().bold('\nReal'));
-    prodRun(folderArg);
+    runReal(folderArg);
   }
   console.log();
 }
 
-export function prodRun(folder: string) {
+export function runReal(folder: string) {
   const { partA, partB, prepareInput } = loadSolution(folder);
 
   const inputFile = `${appRootPath}/${folder}/input`;
@@ -44,7 +44,7 @@ export function prodRun(folder: string) {
   });
 }
 
-export function testRun(folder: string) {
+export function runExample(folder: string) {
   const { partA, partB, prepareInput } = loadSolution(folder);
 
   // Load Files
