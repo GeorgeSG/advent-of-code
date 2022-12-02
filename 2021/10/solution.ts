@@ -45,7 +45,7 @@ const computeCompleteScore = (line: string): number => {
 };
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return R.sum(
     input
       .map(checkCorrupted)
@@ -55,7 +55,7 @@ export function partA(input: Input) {
 }
 
 // ---- Part B ----
-export function partB(input: Input) {
+export function partB(input: Input): number {
   const incomplete = input.filter((l) => checkCorrupted(l) === undefined);
   const completionScores = sortNums(incomplete.map(computeCompleteScore));
 

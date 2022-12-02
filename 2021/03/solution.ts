@@ -17,7 +17,7 @@ function mostCommonAt(index: number, input: Input) {
   return ones > totalInputs / 2 ? 1 : 0;
 }
 
-export function partA(input: Input) {
+export function partA(input: Input): number {
   const gamma = [];
   const epsilon = [];
 
@@ -34,7 +34,7 @@ export function partA(input: Input) {
   return gammaRate * epsilonRate;
 }
 
-export function partB(input: Input) {
+export function partB(input: Input): number {
   let oxygen = input;
   let co2 = input;
 

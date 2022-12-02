@@ -60,11 +60,11 @@ function solve(input: Input, rangeFilter: (range: Range) => boolean) {
   return Object.values(map).filter((v) => v > 1).length;
 }
 
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return solve(input, ({ from, to }) => from[1] === to[1] || from[0] === to[0]);
 }
 
-export function partB(input: Input) {
+export function partB(input: Input): number {
   // diagonals for partB)
   return solve(
     input,

@@ -8,11 +8,11 @@ export function prepareInput(inputFile: string): Input {
 }
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return 0;
 }
 
 // ---- Part B ----
-export function partB(input: Input) {
+export function partB(input: Input): number {
   return 0;
 }

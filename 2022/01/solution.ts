@@ -12,11 +12,11 @@ export function prepareInput(inputFile: string): Input {
 const caloriesPerElf = (input: Input) => R.splitWhenever(R.equals(NaN), input.map(toI)).map(R.sum);
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return findMax(caloriesPerElf(input));
 }
 
 // ---- Part B ----
-export function partB(input: Input) {
+export function partB(input: Input): number {
   return R.sum(sortNums(caloriesPerElf(input), true).slice(0, 3));
 }

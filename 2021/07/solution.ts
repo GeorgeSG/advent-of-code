@@ -10,13 +10,13 @@ export function prepareInput(inputFile: string): Input {
 }
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   const optimalPos = R.median(input);
   return R.sum(input.map((i) => Math.abs(optimalPos - i)));
 }
 
 // ---- Part B ----
-export function partB(input: Input) {
+export function partB(input: Input): number {
   const max = findMax(input);
 
   let minFuel = Number.POSITIVE_INFINITY;

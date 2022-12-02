@@ -19,12 +19,12 @@ function scoreGame(player1, player2): number {
 }
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return input.reduce((score, game) => score + scoreGame(...game), 0);
 }
 
 // ---- Part B ----
-export function partB(input: Input) {
+export function partB(input: Input): number {
   return input.reduce((score, game) => {
     const player1 = game[0];
 

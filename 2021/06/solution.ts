@@ -36,11 +36,11 @@ function solve(input: Input, days: number) {
 }
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return solve(input, 80);
 }
 
 // ---- Part B ----
-export function partB(input: Input) {
+export function partB(input: Input): number {
   return solve(input, 256);
 }

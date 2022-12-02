@@ -55,7 +55,7 @@ const findLowPoints = (input: Input): Point2D[] => {
 };
 
 // ---- Part A ----
-export function partA(input: Input) {
+export function partA(input: Input): number {
   return R.sum(findLowPoints(input).map(({ x, y }) => input[x][y] + 1));
 }
 
@@ -85,7 +85,7 @@ function findBasin(lowPoint: Point2D, map: Input): Point2D[] {
   return basin;
 }
 
-export function partB(input: Input) {
+export function partB(input: Input): number {
   const lowPoints = findLowPoints(input);
   const basinSizes = lowPoints.map((point) => findBasin(point, input).length);
   return R.product(sortNums(basinSizes, true).slice(0, 3));
