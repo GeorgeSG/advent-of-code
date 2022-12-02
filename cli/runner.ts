@@ -1,5 +1,5 @@
 import appRootPath from 'app-root-path';
-import { printTable } from 'console-table-printer';
+import { Table } from 'console-table-printer';
 import { existsSync } from 'fs';
 import { bold } from 'kleur';
 import { hrtime } from 'process';
@@ -10,7 +10,37 @@ const cmndArgs = process.argv.slice(2);
 const folderArg = cmndArgs.length >= 1 ? cmndArgs[0] : null;
 const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
-const resultData = [];
+const p = new Table({
+  title: bold().white(`${folderArg} Results`),
+  disabledColumns: ['_output', '_result'],
+  charLength: { '❌': 2, '✅': 2 },
+  columns: [
+    { name: 'Run', alignment: 'left', color: 'white' }, // column coloring
+    { name: 'Time', alignment: 'left', color: 'white' },
+    { name: 'Type', alignment: 'left' },
+    { name: 'Expected' },
+  ],
+  computedColumns: [
+    {
+      name: 'Output',
+      function: (row) => {
+        if (row.Expected === '-') {
+          return bold().yellow(row._output);
+        }
+        return row._output === row.Expected ? bold().green(row._output) : bold().red(row._output);
+      },
+    },
+    {
+      name: 'Result',
+      function: (row) => {
+        if (row.Expected === '-') {
+          return '-';
+        }
+        return row._output === row.Expected ? '✅' : '❌';
+      },
+    },
+  ],
+});
 
 if (folderArg) {
   if (typeArg === 'a' || typeArg === 'b') {
@@ -28,7 +58,8 @@ if (folderArg) {
     runReal(folderArg, 'b');
   }
 
-  printTable(resultData);
+  // printTable(resultData);
+  p.printTable();
 }
 
 function runExample(folder: string, part: 'a' | 'b') {
@@ -107,22 +138,20 @@ function run(name: string, runFn: () => number, expected?: number) {
   const result = runFn();
   const end = hrtime()[1];
   const time = `${((end - start) / 1000000).toPrecision(6).slice(0, 5)} ms`;
-  const commonTableData = { Run: runPart, Time: time, Type: runType };
+  const commonTableData = { Run: runPart, Time: time, Type: runType, _output: result };
 
   if (expected) {
-    const formatFn = result !== expected ? bold().red : bold().green;
-    resultData.push({
+    const resultString = result !== expected ? 'fail' : 'success';
+    p.addRow({
       ...commonTableData,
-      Output: formatFn(result),
       Expected: expected,
-      Result: formatFn('success'),
+      _result: resultString,
     });
   } else {
-    resultData.push({
+    p.addRow({
       ...commonTableData,
-      Output: bold().yellow(result),
       Expected: '-',
-      Result: '-',
+      _result: '-',
     });
   }
 }
