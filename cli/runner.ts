@@ -1,6 +1,8 @@
 import appRootPath from 'app-root-path';
+import { printTable } from 'console-table-printer';
 import { existsSync } from 'fs';
-import { bold, green, red, yellow } from 'kleur';
+import { bold } from 'kleur';
+import { hrtime } from 'process';
 import { readFileRaw } from '~utils/core';
 import { toI } from '~utils/numbers';
 
@@ -8,46 +10,25 @@ const cmndArgs = process.argv.slice(2);
 const folderArg = cmndArgs.length >= 1 ? cmndArgs[0] : null;
 const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
+const resultData = [];
+
 if (folderArg) {
-  if (typeArg === 'a') {
-    header('Part A: Example');
-    runExample(folderArg, 'a');
-    console.log();
-
-    header('Part A: Real');
-    runReal(folderArg, 'a');
-    console.log();
-  }
-
-  if (typeArg === 'b') {
-    header('Part B: Example');
-    runExample(folderArg, 'b');
-    console.log();
-
-    header('Part B: Real');
-    runReal(folderArg, 'b');
-    console.log();
+  if (typeArg === 'a' || typeArg === 'b') {
+    runExample(folderArg, typeArg);
+    runReal(folderArg, typeArg);
   }
 
   if (typeArg === 'example' || typeArg === 'both') {
-    header('Part A: Example');
     runExample(folderArg, 'a');
-    console.log();
-
-    header('Part B: Example');
     runExample(folderArg, 'b');
-    console.log();
   }
 
   if (typeArg === 'real' || typeArg === 'both') {
-    header('Part A: Real');
     runReal(folderArg, 'a');
-    console.log();
-
-    header('Part B: Real');
     runReal(folderArg, 'b');
-    console.log();
   }
+
+  printTable(resultData);
 }
 
 function runExample(folder: string, part: 'a' | 'b') {
@@ -55,14 +36,14 @@ function runExample(folder: string, part: 'a' | 'b') {
   const { testOutputFile, testInputFile } = getFilePaths(folder);
 
   if (!existsSync(testOutputFile) || !existsSync(testInputFile)) {
-    console.log(yellow().bold('WARNING: Test files do not exist! Skipping tests...'));
+    console.log(bold().yellow('WARNING: Test files do not exist! Skipping tests...'));
     return;
   }
 
-  const expectedA = readFileRaw(testOutputFile).split('\n').map(toI)[part === 'a' ? 0 : 1];
+  const expected = readFileRaw(testOutputFile).split('\n').map(toI)[part === 'a' ? 0 : 1];
   const input = prepareInput(testInputFile);
-  const fn = part === 'a' ? partA : partB;
-  run(`${folder} ${part.toUpperCase()}`, () => fn(input), expectedA);
+  const runFn = part === 'a' ? partA : partB;
+  run(`${folder} ${part.toUpperCase()}`, () => runFn(input), expected);
 }
 
 function runReal(folder: string, part: 'a' | 'b') {
@@ -70,13 +51,13 @@ function runReal(folder: string, part: 'a' | 'b') {
   const { inputFile } = getFilePaths(folder);
 
   if (!existsSync(inputFile)) {
-    console.log(yellow().bold('WARNING: Input does not exist! Skipping prod...'));
+    console.log(bold().yellow('WARNING: Input does not exist! Skipping prod...'));
     return;
   }
 
   const input = prepareInput(inputFile);
-  const fn = part === 'a' ? partA : partB;
-  run(`${folder} ${part.toUpperCase()}`, () => fn(input));
+  const runFn = part === 'a' ? partA : partB;
+  run(`${folder} ${part.toUpperCase()}`, () => runFn(input));
 }
 
 // -------- Helpers
@@ -94,24 +75,24 @@ function loadSolution(folder: string) {
   const solutionFile = `${appRootPath}/${folder}/solution.ts`;
 
   if (!existsSync(solutionFile)) {
-    console.log(red().bold('ERROR: Solution file does not exist!'));
+    console.log(bold().red('ERROR: Solution file does not exist!'));
     process.exit();
   }
 
   const { partA, partB, prepareInput } = require(solutionFile);
 
   if (typeof partA !== 'function') {
-    console.log(red().bold('ERROR: partA not a function'));
+    console.log(bold().red('ERROR: partA not a function'));
     process.exit();
   }
 
   if (typeof partB !== 'function') {
-    console.log(red().bold('ERROR: partB not a function'));
+    console.log(bold().red('ERROR: partB not a function'));
     process.exit();
   }
 
   if (typeof prepareInput !== 'function') {
-    console.log(red().bold('ERROR: prepareInput not a function'));
+    console.log(bold().red('ERROR: prepareInput not a function'));
     process.exit();
   }
 
@@ -119,31 +100,29 @@ function loadSolution(folder: string) {
 }
 
 function run(name: string, runFn: () => number, expected?: number) {
-  console.time(name);
+  const runType = expected !== undefined ? bold().cyan('Example') : bold().magenta('Real');
+  const runPart = `Part ${name.split(' ')[1]}`;
+
+  const start = hrtime()[1];
   const result = runFn();
-  console.timeEnd(name);
+  const end = hrtime()[1];
+  const time = `${((end - start) / 1000000).toPrecision(6).slice(0, 5)} ms`;
+  const commonTableData = { Run: runPart, Time: time, Type: runType };
+
   if (expected) {
-    if (result !== expected) {
-      fail(name, expected, result);
-    } else {
-      success(name, result);
-    }
+    const formatFn = result !== expected ? bold().red : bold().green;
+    resultData.push({
+      ...commonTableData,
+      Output: formatFn(result),
+      Expected: expected,
+      Result: formatFn('success'),
+    });
   } else {
-    console.log(bold(`${name} · ${yellow(result)}`));
+    resultData.push({
+      ...commonTableData,
+      Output: bold().yellow(result),
+      Expected: '-',
+      Result: '-',
+    });
   }
-}
-
-function fail(part: string, expected: number, received: number) {
-  console.log(
-    red().bold(`${part} · failed `),
-    bold(`· expected: ${expected}, received: ${red(received)}`)
-  );
-}
-
-function success(part: string, result: number) {
-  console.log(green().bold(`${part} · success`), '· received:', bold(result));
-}
-
-function header(header: string) {
-  console.log(bold().white(`${header}`));
 }
