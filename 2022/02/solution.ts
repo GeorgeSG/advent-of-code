@@ -2,11 +2,11 @@ import { readFile } from '~utils/core';
 
 type Input = ['A' | 'B' | 'C', 'X' | 'Y' | 'Z'][];
 
-export const POINTS_PER_PLAYED = { X: 1, Y: 2, Z: 3 };
+const POINTS_PER_PLAYED = { X: 1, Y: 2, Z: 3 };
 
-export const WIN = { A: 'Y', B: 'Z', C: 'X' };
-export const DRAW = { A: 'X', B: 'Y', C: 'Z' };
-export const LOSE = { A: 'Z', B: 'X', C: 'Y' };
+const WIN = { A: 'Y', B: 'Z', C: 'X' };
+const DRAW = { A: 'X', B: 'Y', C: 'Z' };
+const LOSE = { A: 'Z', B: 'X', C: 'Y' };
 
 // Parser
 export function prepareInput(inputFile: string): Input {
