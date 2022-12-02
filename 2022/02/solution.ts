@@ -25,10 +25,8 @@ export function partA(input: Input): number {
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  return input.reduce((score, game) => {
-    const player1 = game[0];
-
-    const MOVE = game[1] === 'X' ? LOSE : game[1] === 'Y' ? DRAW : WIN;
+  return input.reduce((score, [player1, roundEnd]) => {
+    const MOVE = roundEnd === 'X' ? LOSE : roundEnd === 'Y' ? DRAW : WIN;
     const player2 = MOVE[player1];
 
     return score + scoreGame(player1, player2);
