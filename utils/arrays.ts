@@ -2,6 +2,9 @@ import R from 'ramda';
 
 export const findMax = (array: number[]): number => R.apply(Math.max, array);
 
+export const intersectAll = <T>(arrays: T[][]) =>
+  R.reduce<T[], T[]>(R.intersection, arrays[0], arrays);
+
 export const sortNums = (array: number[], inverted = false): number[] =>
   array.sort((a, b) => (inverted ? b - a : a - b));
 
