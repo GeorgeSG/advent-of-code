@@ -17,7 +17,7 @@ function itemPriority(item: string): number {
 // ---- Part A ----
 export function partA(input: Input): number {
   return R.sum(
-    input.map((sack) => R.intersection(...R.splitAt(sack.length / 2, sack)).map(itemPriority)[0])
+    input.map((sack) => itemPriority(R.intersection(...R.splitAt(sack.length / 2, sack))[0]))
   );
 }
 
