@@ -17,37 +17,40 @@ enum Run {
   REAL = 'real',
 }
 
+const DATA_MISSING = '-';
+type DATA_MISSING = typeof DATA_MISSING;
+
 const cmndArgs = process.argv.slice(2);
 const folderArg = cmndArgs.length >= 1 ? cmndArgs[0] : null;
 const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
 const table = new Table({
   title: bold().white(`${folderArg} Results`),
-  disabledColumns: ['_output', '_result'],
+  disabledColumns: ['_output'],
   charLength: { '❌': 2, '✅': 2 },
   columns: [
-    { name: 'Run', alignment: 'left', color: 'white' },
-    { name: 'Time', alignment: 'left', color: 'white' },
-    { name: 'Type', alignment: 'left' },
-    { name: 'Expected' },
+    { name: 'part', title: 'Part', alignment: 'left', color: 'white' },
+    { name: 'time', title: 'Time', alignment: 'left', color: 'white' },
+    { name: 'type', title: 'Type', alignment: 'left' },
+    { name: 'expected', title: 'Expected' },
   ],
   computedColumns: [
     {
       name: 'Output',
-      function: (row) => {
-        if (row.Expected === '-') {
+      function(row) {
+        if (row.expected === DATA_MISSING) {
           return bold().yellow(row._output);
         }
-        return row._output === row.Expected ? bold().green(row._output) : bold().red(row._output);
+        return row._output === row.expected ? bold().green(row._output) : bold().red(row._output);
       },
     },
     {
       name: 'Result',
-      function: (row) => {
-        if (row.Expected === '-') {
-          return '-';
+      function(row) {
+        if (row.expected === DATA_MISSING) {
+          return DATA_MISSING;
         }
-        return row._output === row.Expected ? '✅' : '❌';
+        return row._output === row.expected ? '✅' : '❌';
       },
     },
   ],
@@ -73,33 +76,32 @@ if (folderArg) {
 }
 
 function run(folder: string, part: Part, run: Run) {
+  // Check that solution exists and get handlers
   const { solutionFn, prepareInput } = loadSolution(folder, part);
-  const { inputFile, outputFile } = getFilePaths(folder, run);
 
+  // Get input and output
+  const { inputFile, outputFile } = getFilePaths(folder, run);
   if (!existsSync(inputFile)) {
     warning(
       `'${R.last(inputFile.split('/'))}' file does not exist! Skipping ${run.toLowerCase()} tests!`
     );
     return;
   }
+  const expected = existsSync(outputFile) ? getExpectedResult(outputFile, part) : '-';
 
-  const input = prepareInput(inputFile);
-  const expectedOutput = existsSync(outputFile) ? getExpectedResult(outputFile, part) : '-';
-
-  const runType = run === Run.EXAMPLE ? bold().cyan(run) : bold().magenta(run);
-  const runPartLabel = `Part ${part}`;
-
+  // Run input through solution code and measure time
   const start = hrtime()[1];
-  const result = solutionFn(input);
+  const result = solutionFn(prepareInput(inputFile));
   const end = hrtime()[1];
   const time = `${((end - start) / 1000000).toPrecision(6).slice(0, 5)} ms`;
 
+  // Add to results table
   table.addRow({
-    Run: runPartLabel,
-    Type: runType,
     _output: result,
-    Time: time,
-    Expected: expectedOutput !== '-' && isNaN(expectedOutput) ? '-' : expectedOutput,
+    part: `Part ${part.toUpperCase()}`,
+    type: run === Run.EXAMPLE ? bold().cyan(run) : bold().magenta(run),
+    time,
+    expected,
   });
 }
 
@@ -145,8 +147,14 @@ function loadSolution(folder: string, part: Part) {
   return { solutionFn, prepareInput };
 }
 
-function getExpectedResult(outputFile: string, part: Part): number {
-  return readFileRaw(outputFile).split('\n').map(toI)[part === Part.A ? 0 : 1];
+function getExpectedResult(outputFile: string, part: Part): number | DATA_MISSING {
+  const resultIndex = part === Part.A ? 0 : 1;
+  const definedResults = readFileRaw(outputFile)
+    .split('\n')
+    .map(toI)
+    .filter((n) => !isNaN(n));
+
+  return definedResults.length >= resultIndex + 1 ? definedResults[resultIndex] : DATA_MISSING;
 }
 
 function error(message: string, exit: boolean = false) {
