@@ -58,7 +58,6 @@ if (folderArg) {
     runReal(folderArg, 'b');
   }
 
-  // printTable(resultData);
   p.printTable();
 }
 
@@ -71,39 +70,48 @@ function runExample(folder: string, part: 'a' | 'b') {
     return;
   }
 
-  const expected = readFileRaw(testOutputFile).split('\n').map(toI)[part === 'a' ? 0 : 1];
   const input = prepareInput(testInputFile);
+  const expectedResult = getExpectedResult(testOutputFile, part);
+
   const runFn = part === 'a' ? partA : partB;
-  run(`${folder} ${part.toUpperCase()}`, () => runFn(input), expected);
+  run(`${folder} ${part.toUpperCase()}`, () => runFn(input), 'Example', expectedResult);
 }
 
 function runReal(folder: string, part: 'a' | 'b') {
   const { partA, partB, prepareInput } = loadSolution(folder);
-  const { inputFile } = getFilePaths(folder);
+  const { inputFile, realOutputFile } = getFilePaths(folder);
 
   if (!existsSync(inputFile)) {
     console.log(bold().yellow('WARNING: Input does not exist! Skipping prod...'));
     return;
   }
 
+  let expected;
+  if (existsSync(realOutputFile)) {
+    expected = getExpectedResult(realOutputFile, part);
+  }
+
   const input = prepareInput(inputFile);
   const runFn = part === 'a' ? partA : partB;
-  run(`${folder} ${part.toUpperCase()}`, () => runFn(input));
+  run(`${folder} ${part.toUpperCase()}`, () => runFn(input), 'Real', expected);
 }
 
 // -------- Helpers
 
 function getFilePaths(folder: string) {
-  const solutionFile = `${appRootPath}/${folder}/solution.ts`;
-  const testOutputFile = `${appRootPath}/${folder}/test_output`;
-  const testInputFile = `${appRootPath}/${folder}/test_input`;
-  const inputFile = `${appRootPath}/${folder}/input`;
+  const path = `${appRootPath}/${folder}`;
 
-  return { solutionFile, testInputFile, testOutputFile, inputFile };
+  return {
+    solutionFile: `${path}/solution.ts`,
+    testInputFile: `${path}/test_input`,
+    testOutputFile: `${path}/test_output`,
+    inputFile: `${path}/input`,
+    realOutputFile: `${path}/real_output`,
+  };
 }
 
 function loadSolution(folder: string) {
-  const solutionFile = `${appRootPath}/${folder}/solution.ts`;
+  const { solutionFile } = getFilePaths(folder);
 
   if (!existsSync(solutionFile)) {
     console.log(bold().red('ERROR: Solution file does not exist!'));
@@ -130,8 +138,8 @@ function loadSolution(folder: string) {
   return { partA, partB, prepareInput };
 }
 
-function run(name: string, runFn: () => number, expected?: number) {
-  const runType = expected !== undefined ? bold().cyan('Example') : bold().magenta('Real');
+function run(name: string, runFn: () => number, type: 'Real' | 'Example', expected?: number) {
+  const runType = type === 'Example' ? bold().cyan(type) : bold().magenta(type);
   const runPart = `Part ${name.split(' ')[1]}`;
 
   const start = hrtime()[1];
@@ -154,4 +162,8 @@ function run(name: string, runFn: () => number, expected?: number) {
       _result: '-',
     });
   }
+}
+
+function getExpectedResult(outputFile: string, part: 'a' | 'b'): number {
+  return readFileRaw(outputFile).split('\n').map(toI)[part === 'a' ? 0 : 1];
 }
