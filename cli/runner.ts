@@ -90,10 +90,13 @@ function run(folder: string, part: Part, run: Run) {
   const expected = existsSync(outputFile) ? getExpectedResult(outputFile, part) : '-';
 
   // Run input through solution code and measure time
-  const start = hrtime()[1];
+  const start = process.hrtime();
   const result = solutionFn(prepareInput(inputFile));
-  const end = hrtime()[1];
-  const time = `${((end - start) / 1000000).toPrecision(6).slice(0, 5)} ms`;
+  const end = hrtime(start);
+  const timeInMs = (end[0] * 1000000000 + end[1]) / 1000000;
+
+  let time: any = timeInMs > 1000 ? timeInMs / 1000 : timeInMs;
+  time = `${time.toPrecision(6).slice(0, 6)} ${timeInMs > 1000 ? 's' : 'ms'}`;
 
   // Add to results table
   table.addRow({
