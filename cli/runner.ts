@@ -116,7 +116,7 @@ function getFilePaths(folder: string, run: Run) {
   const testInputFile = `${path}/test_input`;
   const testOutputFile = `${path}/test_output`;
   const realInputFile = `${path}/input`;
-  const realOutputFile = `${path}/real_output`;
+  const realOutputFile = `${path}/output`;
 
   return {
     inputFile: run === Run.REAL ? realInputFile : testInputFile,
