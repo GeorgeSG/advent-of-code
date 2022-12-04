@@ -2,42 +2,12 @@ import R from 'ramda';
 import { ijMeBro, sortNums } from '~utils/arrays';
 import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
-import { Point2D } from '~utils/points';
+import { findAdjacent, Point2D } from '~utils/points';
 
 type Input = number[][];
 
 export function prepareInput(inputFile: string): Input {
   return readFile(inputFile, (line) => line.split('').map(toI));
-}
-
-function findAdjacent({ x, y }: Point2D, map: Input): Point2D[] {
-  const res: Point2D[] = [];
-  const maxX = map.length - 1;
-  const maxY = map[0].length - 1;
-
-  if (y < maxY) res.push({ x, y: y + 1 });
-  if (y !== 0) res.push({ x, y: y - 1 });
-  if (x < maxX) res.push({ x: x + 1, y });
-  if (x !== 0) res.push({ x: x - 1, y });
-
-  return res;
-}
-
-function findAdjacentAll({ x, y }: Point2D, map: Input): Point2D[] {
-  const res: Point2D[] = [];
-  const maxX = map.length - 1;
-  const maxY = map[0].length - 1;
-
-  if (y < maxY) res.push({ x, y: y + 1 });
-  if (y !== 0) res.push({ x, y: y - 1 });
-  if (x < maxX) res.push({ x: x + 1, y });
-  if (x !== 0) res.push({ x: x - 1, y });
-  if (x < maxX && y < maxY) res.push({ x: x + 1, y: y + 1 });
-  if (x !== 0 && y < maxY) res.push({ x: x - 1, y: y + 1 });
-  if (x < maxX && y !== 0) res.push({ x: x + 1, y: y - 1 });
-  if (x !== 0 && y !== 0) res.push({ x: x - 1, y: y - 1 });
-
-  return res;
 }
 
 const findLowestAdjacentValue = (point: Point2D, map: Input): number =>
