@@ -1,6 +1,11 @@
 import R from 'ramda';
 
 export const findMax = (array: number[]): number => R.apply(Math.max, array);
+export const findMin = (array: number[]): number => R.apply(Math.min, array);
+export const findMinMax = (array: number[]): [number, number] => {
+  const sorted = array.sort((a, b) => a - b);
+  return [sorted[0], sorted[sorted.length - 1]];
+};
 
 export const intersectAll = <T>(arrays: T[][]) =>
   R.reduce<T[], T[]>(R.intersection, arrays[0], arrays);
