@@ -32,7 +32,9 @@ const table = new Table({
     { name: 'part', title: 'Part', alignment: 'left', color: 'white' },
     { name: 'time', title: 'Time', alignment: 'left', color: 'white' },
     { name: 'type', title: 'Type', alignment: 'left' },
+    { name: 'output', title: 'Output' },
     { name: 'expected', title: 'Expected' },
+    { name: 'result', title: 'Result' },
   ],
 });
 
@@ -51,6 +53,7 @@ if (folderArg) {
     run(folderArg, Part.A, Run.REAL);
     run(folderArg, Part.B, Run.REAL);
   }
+  table.printTable();
 }
 
 function run(folder: string, part: Part, run: Run) {
@@ -91,8 +94,8 @@ function run(folder: string, part: Part, run: Run) {
     time,
     expected,
   });
-  console.clear();
-  table.printTable();
+  // console.clear();
+  // table.printTable();
 }
 
 // -------- Helpers

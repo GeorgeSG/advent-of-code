@@ -1,3 +1,5 @@
+import { findMax } from './arrays';
+
 export type Point2D = { x: number; y: number };
 
 export function findAdjacent<T>({ x, y }: Point2D, map: T[][]): Point2D[] {
@@ -28,4 +30,20 @@ export function findAdjacentAll<T>({ x, y }: Point2D, map: T[][]): Point2D[] {
   if (x !== 0 && y !== 0) res.push({ x: x - 1, y: y - 1 });
 
   return res;
+}
+
+export function render(points: Point2D[]) {
+  let output = '';
+  const maxX = findMax(points.map(({ x }) => x));
+  const maxY = findMax(points.map(({ y }) => y));
+
+  for (let i = 0; i <= maxY; i++) {
+    for (let j = 0; j <= maxX; j++) {
+      const pointExists = points.find(({ x, y }) => x === j && y === i);
+      output += pointExists ? '#' : '.';
+    }
+    output += '\n';
+  }
+
+  return output;
 }
