@@ -12,8 +12,9 @@ Each solution is in a folder named `<year>/<solutuon-day>`. Example: `2022/02`.
 Each solution folder contains the following files:
 - `solution.ts` - code for the solution
 - `input` - task input
-- `test_input` - the example input given in the task description
-- `test_output` - the example answers given in the task description - each part on a new line
+- `output` - (optional) task output - each part on a new line
+- `example_input` - the example input given in the task description
+- `example_output` - the example answers given in the task description - each part on a new line
 
 See "Commands" below for creating a new solution folders.
 

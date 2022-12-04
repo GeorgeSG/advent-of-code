@@ -100,8 +100,8 @@ function run(folder: string, part: Part, run: Run) {
 function getFilePaths(folder: string, run: Run) {
   const path = `${appRootPath}/${folder}`;
 
-  const testInputFile = `${path}/test_input`;
-  const testOutputFile = `${path}/test_output`;
+  const testInputFile = `${path}/example_input`;
+  const testOutputFile = `${path}/example_output`;
   const realInputFile = `${path}/input`;
   const realOutputFile = `${path}/output`;
 
