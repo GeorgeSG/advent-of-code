@@ -16,7 +16,14 @@ export const ijMeBro = <T>(array: T[][], callback: (i: number, j: number, el: T)
   }
 };
 
-export const debug2D = <T>(array: T[][]) => {
-  array.forEach((row) => console.log(row.join('')));
+export const debug2D = <T>(array: T[][], separator = '', indicators = false, padEnd = 2) => {
+  const printRow = (row) => row.map((el) => `${el}`.padEnd(padEnd)).join(separator);
+
+  if (indicators) {
+    const colCount = array[0].length;
+    console.log(`    ${printRow(R.range(0, colCount))}`);
+    console.log(`    ${printRow(R.range(0, colCount).map(() => '-'))}`);
+  }
+  array.forEach((row, rowIndex) => console.log(`${rowIndex} | ${printRow(row)}`));
   console.log('');
 };
