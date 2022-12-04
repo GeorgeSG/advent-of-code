@@ -34,26 +34,6 @@ const table = new Table({
     { name: 'type', title: 'Type', alignment: 'left' },
     { name: 'expected', title: 'Expected' },
   ],
-  computedColumns: [
-    {
-      name: 'Output',
-      function(row) {
-        if (row.expected === DATA_MISSING) {
-          return bold().yellow(row._output);
-        }
-        return row._output === row.expected ? bold().green(row._output) : bold().red(row._output);
-      },
-    },
-    {
-      name: 'Result',
-      function(row) {
-        if (row.expected === DATA_MISSING) {
-          return DATA_MISSING;
-        }
-        return row._output === row.expected ? '✅' : '❌';
-      },
-    },
-  ],
 });
 
 if (folderArg) {
@@ -71,8 +51,6 @@ if (folderArg) {
     run(folderArg, Part.A, Run.REAL);
     run(folderArg, Part.B, Run.REAL);
   }
-
-  table.printTable();
 }
 
 function run(folder: string, part: Part, run: Run) {
@@ -101,11 +79,20 @@ function run(folder: string, part: Part, run: Run) {
   // Add to results table
   table.addRow({
     _output: result,
+    output:
+      expected === DATA_MISSING
+        ? bold().yellow(result)
+        : result === expected
+        ? bold().green(result)
+        : bold().red(result),
+    result: expected === DATA_MISSING ? DATA_MISSING : result === expected ? '✅' : '❌',
     part: `Part ${part.toUpperCase()}`,
     type: run === Run.EXAMPLE ? bold().cyan(run) : bold().magenta(run),
     time,
     expected,
   });
+  console.clear();
+  table.printTable();
 }
 
 // -------- Helpers
