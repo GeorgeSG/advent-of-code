@@ -1,5 +1,6 @@
 import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
+import { NumericMap } from '~utils/numericMap';
 
 type Point = [number, number];
 type Range = { from: Point; to: Point };
@@ -19,7 +20,7 @@ export function prepareInput(inputFile: string): Input {
 const isDiagonal = ({ from, to }: Range) => Math.abs(to[0] - from[0]) === Math.abs(to[1] - from[1]);
 
 function solve(input: Input, rangeFilter: (range: Range) => boolean) {
-  const map = {};
+  const map = new NumericMap<string>();
 
   const ranges = input.filter(rangeFilter);
 
@@ -30,16 +31,13 @@ function solve(input: Input, rangeFilter: (range: Range) => boolean) {
 
       let x = from[0];
       let y = from[1];
-      const key = `${x}-${y}`;
-      map[key] = map[key] || 0;
-      map[key] += 1;
+      map.inc(`${x}-${y}`, 1);
+
       while (x !== to[0] && y !== to[1]) {
         x += 1 * xDir;
         y += 1 * yDir;
 
-        const key = `${x}-${y}`;
-        map[key] = map[key] || 0;
-        map[key] += 1;
+        map.inc(`${x}-${y}`, 1);
       }
 
       return;
@@ -50,14 +48,12 @@ function solve(input: Input, rangeFilter: (range: Range) => boolean) {
 
     for (let i = minX; i <= maxX; i++) {
       for (let j = minY; j <= maxY; j++) {
-        const key = `${i}-${j}`;
-        map[key] = map[key] || 0;
-        map[key] += 1;
+        map.inc(`${i}-${j}`, 1);
       }
     }
   });
 
-  return Object.values(map).filter((v) => v > 1).length;
+  return map.values().filter((v) => v > 1).length;
 }
 
 export function partA(input: Input): number {

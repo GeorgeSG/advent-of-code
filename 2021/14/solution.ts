@@ -1,6 +1,7 @@
 import R from 'ramda';
-import { findMax, findMin, findMinMax } from '~utils/arrays';
+import { findMinMax } from '~utils/arrays';
 import { readFile } from '~utils/core';
+import { NumericMap } from '~utils/numericMap';
 
 type Rules = Record<string, string>;
 type Input = {
@@ -43,18 +44,16 @@ export function prepareInput(inputFile: string): Input {
 // }
 
 function runSteps(times: number, { template, rules }: Input): number {
-  let occurrences: Map<string, number> = new Map();
+  let occurrences = new NumericMap<string>();
+  let newOccurrences = new NumericMap<string>();
 
   for (let i = 0; i < template.length - 1; i++) {
     const pair = template.slice(i, i + 2);
-
-    occurrences[pair] ||= 0;
-    occurrences[pair] += 1;
+    occurrences.inc(pair, 1);
   }
 
-  let newOccurrences: Map<string, number> = new Map();
   R.range(0, times).forEach(() => {
-    Object.keys(occurrences).forEach((pair) => {
+    occurrences.keys().forEach((pair) => {
       if (!rules[pair]) {
         return;
       }
@@ -63,28 +62,22 @@ function runSteps(times: number, { template, rules }: Input): number {
       const pairA = `${pair.charAt(0)}${newLetter}`;
       const pairB = `${newLetter}${pair.charAt(1)}`;
 
-      newOccurrences[pairA] ||= 0;
-      newOccurrences[pairA] += occurrences[pair];
-
-      newOccurrences[pairB] ||= 0;
-      newOccurrences[pairB] += occurrences[pair];
+      newOccurrences.inc(pairA, occurrences.get(pair));
+      newOccurrences.inc(pairB, occurrences.get(pair));
     });
 
-    occurrences = { ...newOccurrences };
-    newOccurrences = new Map();
+    occurrences = new NumericMap<string>(0, newOccurrences);
+    newOccurrences = new NumericMap();
   });
 
-  const byLetter: Record<string, number> = {};
-  Object.keys(occurrences).forEach((pair) => {
+  const byLetter = new NumericMap<string>();
+  occurrences.keys().forEach((pair) => {
     const [a, b] = pair.split('');
-
-    byLetter[a] ||= 0;
-    byLetter[a] += occurrences[pair] / 2;
-    byLetter[b] ||= 0;
-    byLetter[b] += occurrences[pair] / 2;
+    byLetter.inc(a, occurrences.get(pair) / 2);
+    byLetter.inc(b, occurrences.get(pair) / 2);
   });
 
-  const countPerLetter = Object.values(byLetter).map(Math.ceil);
+  const countPerLetter = byLetter.values().map(Math.ceil);
   const [min, max] = findMinMax(countPerLetter);
   return max - min;
 }
