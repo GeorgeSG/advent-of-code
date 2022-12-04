@@ -3,19 +3,30 @@ import { Table } from 'console-table-printer';
 import { existsSync } from 'fs';
 import { bold } from 'kleur';
 import { hrtime } from 'process';
+import R from 'ramda';
 import { readFileRaw } from '~utils/core';
 import { toI } from '~utils/numbers';
+
+enum Part {
+  A = 'a',
+  B = 'B',
+}
+
+enum Run {
+  EXAMPLE = 'example',
+  REAL = 'real',
+}
 
 const cmndArgs = process.argv.slice(2);
 const folderArg = cmndArgs.length >= 1 ? cmndArgs[0] : null;
 const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
-const p = new Table({
+const table = new Table({
   title: bold().white(`${folderArg} Results`),
   disabledColumns: ['_output', '_result'],
   charLength: { '❌': 2, '✅': 2 },
   columns: [
-    { name: 'Run', alignment: 'left', color: 'white' }, // column coloring
+    { name: 'Run', alignment: 'left', color: 'white' },
     { name: 'Time', alignment: 'left', color: 'white' },
     { name: 'Type', alignment: 'left' },
     { name: 'Expected' },
@@ -44,126 +55,108 @@ const p = new Table({
 
 if (folderArg) {
   if (typeArg === 'a' || typeArg === 'b') {
-    runExample(folderArg, typeArg);
-    runReal(folderArg, typeArg);
+    run(folderArg, typeArg as Part, Run.EXAMPLE);
+    run(folderArg, typeArg as Part, Run.REAL);
   }
 
   if (typeArg === 'example' || typeArg === 'both') {
-    runExample(folderArg, 'a');
-    runExample(folderArg, 'b');
+    run(folderArg, Part.A, Run.EXAMPLE);
+    run(folderArg, Part.B, Run.EXAMPLE);
   }
 
   if (typeArg === 'real' || typeArg === 'both') {
-    runReal(folderArg, 'a');
-    runReal(folderArg, 'b');
+    run(folderArg, Part.A, Run.REAL);
+    run(folderArg, Part.B, Run.REAL);
   }
 
-  p.printTable();
+  table.printTable();
 }
 
-function runExample(folder: string, part: 'a' | 'b') {
-  const { partA, partB, prepareInput } = loadSolution(folder);
-  const { testOutputFile, testInputFile } = getFilePaths(folder);
-
-  if (!existsSync(testOutputFile) || !existsSync(testInputFile)) {
-    console.log(bold().yellow('WARNING: Test files do not exist! Skipping tests...'));
-    return;
-  }
-
-  const input = prepareInput(testInputFile);
-  const expectedResult = getExpectedResult(testOutputFile, part);
-
-  const runFn = part === 'a' ? partA : partB;
-  run(`${folder} ${part.toUpperCase()}`, () => runFn(input), 'Example', expectedResult);
-}
-
-function runReal(folder: string, part: 'a' | 'b') {
-  const { partA, partB, prepareInput } = loadSolution(folder);
-  const { inputFile, realOutputFile } = getFilePaths(folder);
+function run(folder: string, part: Part, run: Run) {
+  const { solutionFn, prepareInput } = loadSolution(folder, part);
+  const { inputFile, outputFile } = getFilePaths(folder, run);
 
   if (!existsSync(inputFile)) {
-    console.log(bold().yellow('WARNING: Input does not exist! Skipping prod...'));
+    warning(
+      `'${R.last(inputFile.split('/'))}' file does not exist! Skipping ${run.toLowerCase()} tests!`
+    );
     return;
-  }
-
-  let expected;
-  if (existsSync(realOutputFile)) {
-    expected = getExpectedResult(realOutputFile, part);
   }
 
   const input = prepareInput(inputFile);
-  const runFn = part === 'a' ? partA : partB;
-  run(`${folder} ${part.toUpperCase()}`, () => runFn(input), 'Real', expected);
+  const expectedOutput = existsSync(outputFile) ? getExpectedResult(outputFile, part) : '-';
+
+  const runType = run === Run.EXAMPLE ? bold().cyan(run) : bold().magenta(run);
+  const runPartLabel = `Part ${part}`;
+
+  const start = hrtime()[1];
+  const result = solutionFn(input);
+  const end = hrtime()[1];
+  const time = `${((end - start) / 1000000).toPrecision(6).slice(0, 5)} ms`;
+
+  table.addRow({
+    Run: runPartLabel,
+    Type: runType,
+    _output: result,
+    Time: time,
+    Expected: expectedOutput !== '-' && isNaN(expectedOutput) ? '-' : expectedOutput,
+  });
 }
 
 // -------- Helpers
 
-function getFilePaths(folder: string) {
+function getFilePaths(folder: string, run: Run) {
   const path = `${appRootPath}/${folder}`;
 
+  const testInputFile = `${path}/test_input`;
+  const testOutputFile = `${path}/test_output`;
+  const realInputFile = `${path}/input`;
+  const realOutputFile = `${path}/real_output`;
+
   return {
-    solutionFile: `${path}/solution.ts`,
-    testInputFile: `${path}/test_input`,
-    testOutputFile: `${path}/test_output`,
-    inputFile: `${path}/input`,
-    realOutputFile: `${path}/real_output`,
+    inputFile: run === Run.REAL ? realInputFile : testInputFile,
+    outputFile: run === Run.REAL ? realOutputFile : testOutputFile,
   };
 }
 
-function loadSolution(folder: string) {
-  const { solutionFile } = getFilePaths(folder);
+function loadSolution(folder: string, part: Part) {
+  const solutionFile = `${appRootPath}/${folder}/solution.ts`;
 
   if (!existsSync(solutionFile)) {
-    console.log(bold().red('ERROR: Solution file does not exist!'));
-    process.exit();
+    error('Solution file does not exist!', true);
   }
 
   const { partA, partB, prepareInput } = require(solutionFile);
 
-  if (typeof partA !== 'function') {
-    console.log(bold().red('ERROR: partA not a function'));
-    process.exit();
+  if (part === Part.A && typeof partA !== 'function') {
+    error('`partA` function not found', true);
   }
 
-  if (typeof partB !== 'function') {
-    console.log(bold().red('ERROR: partB not a function'));
-    process.exit();
+  if (part === Part.B && typeof partB !== 'function') {
+    error('`partB` function not found', true);
   }
 
   if (typeof prepareInput !== 'function') {
-    console.log(bold().red('ERROR: prepareInput not a function'));
+    error('`prepareInput` function not found', true);
+  }
+
+  const solutionFn = part === Part.A ? partA : partB;
+
+  return { solutionFn, prepareInput };
+}
+
+function getExpectedResult(outputFile: string, part: Part): number {
+  return readFileRaw(outputFile).split('\n').map(toI)[part === Part.A ? 0 : 1];
+}
+
+function error(message: string, exit: boolean = false) {
+  console.log(bold().red(`ERROR: ${message}!`));
+
+  if (exit) {
     process.exit();
   }
-
-  return { partA, partB, prepareInput };
 }
 
-function run(name: string, runFn: () => number, type: 'Real' | 'Example', expected?: number) {
-  const runType = type === 'Example' ? bold().cyan(type) : bold().magenta(type);
-  const runPart = `Part ${name.split(' ')[1]}`;
-
-  const start = hrtime()[1];
-  const result = runFn();
-  const end = hrtime()[1];
-  const time = `${((end - start) / 1000000).toPrecision(6).slice(0, 5)} ms`;
-  const commonTableData = { Run: runPart, Time: time, Type: runType, _output: result };
-
-  if (expected) {
-    const resultString = result !== expected ? 'fail' : 'success';
-    p.addRow({
-      ...commonTableData,
-      Expected: expected,
-      _result: resultString,
-    });
-  } else {
-    p.addRow({
-      ...commonTableData,
-      Expected: '-',
-      _result: '-',
-    });
-  }
-}
-
-function getExpectedResult(outputFile: string, part: 'a' | 'b'): number {
-  return readFileRaw(outputFile).split('\n').map(toI)[part === 'a' ? 0 : 1];
+function warning(message: string) {
+  console.log(bold().yellow(`WARNING: ${message}`));
 }
