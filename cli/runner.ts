@@ -26,7 +26,6 @@ const typeArg = cmndArgs.length >= 2 ? cmndArgs[1] : 'both';
 
 const table = new Table({
   title: bold().white(`${folderArg} Results`),
-  disabledColumns: ['_output'],
   charLength: { '❌': 2, '✅': 2 },
   columns: [
     { name: 'part', title: 'Part', alignment: 'left', color: 'white' },
@@ -81,14 +80,13 @@ function run(folder: string, part: Part, run: Run) {
 
   // Add to results table
   table.addRow({
-    _output: result,
     output:
       expected === DATA_MISSING
         ? bold().yellow(result)
-        : result === expected
+        : result.toString() === expected
         ? bold().green(result)
         : bold().red(result),
-    result: expected === DATA_MISSING ? DATA_MISSING : result === expected ? '✅' : '❌',
+    result: expected === DATA_MISSING ? DATA_MISSING : result.toString() === expected ? '✅' : '❌',
     part: `Part ${part.toUpperCase()}`,
     type: run === Run.EXAMPLE ? bold().cyan(run) : bold().magenta(run),
     time,
@@ -140,12 +138,9 @@ function loadSolution(folder: string, part: Part) {
   return { solutionFn, prepareInput };
 }
 
-function getExpectedResult(outputFile: string, part: Part): number | DATA_MISSING {
+function getExpectedResult(outputFile: string, part: Part): string | DATA_MISSING {
   const resultIndex = part === Part.A ? 0 : 1;
-  const definedResults = readFileRaw(outputFile)
-    .split('\n')
-    .map(toI)
-    .filter((n) => !isNaN(n));
+  const definedResults = readFileRaw(outputFile).split('\n').filter(Boolean);
 
   return definedResults.length >= resultIndex + 1 ? definedResults[resultIndex] : DATA_MISSING;
 }
