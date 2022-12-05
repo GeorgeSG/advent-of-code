@@ -43,7 +43,7 @@ function solve({ cmnds, stacks }: Input, canMoveMultiple = false) {
     if (canMoveMultiple) {
       stacks[to] = `${moved}${stacks[to]}`;
     } else {
-      stacks[to] = `${moved.split('').reverse().join('')}${stacks[to]}`;
+      stacks[to] = `${R.reverse(moved)}${stacks[to]}`;
     }
   });
 
