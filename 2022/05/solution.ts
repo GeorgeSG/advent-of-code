@@ -1,5 +1,5 @@
 import R from 'ramda';
-import { readFile, readFileRaw } from '~utils/core';
+import { readFileRaw } from '~utils/core';
 import { toI } from '~utils/numbers';
 
 type Command = {
