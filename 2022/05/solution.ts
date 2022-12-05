@@ -36,26 +36,27 @@ export function prepareInput(inputFile: string): Input {
   return { stacks, cmnds };
 }
 
-// ---- Part A ----
-export function partA({ cmnds, stacks }: Input): string {
+function solve({ cmnds, stacks }: Input, canMoveMultiple = false) {
   cmnds.forEach(({ from, to, amount }) => {
     const moved = stacks[from].slice(0, amount);
 
     stacks[from] = stacks[from].slice(amount);
-    stacks[to] = `${moved.split('').reverse().join('')}${stacks[to]}`;
+    if (canMoveMultiple) {
+      stacks[to] = `${moved}${stacks[to]}`;
+    } else {
+      stacks[to] = `${moved.split('').reverse().join('')}${stacks[to]}`;
+    }
   });
 
   return stacks.map((s) => s[0]).join('');
 }
 
+// ---- Part A ----
+export function partA(input: Input): string {
+  return solve(input);
+}
+
 // ---- Part B ----
-export function partB({ cmnds, stacks }: Input): string {
-  cmnds.forEach(({ from, to, amount }) => {
-    const moved = stacks[from].slice(0, amount);
-
-    stacks[from] = stacks[from].slice(amount);
-    stacks[to] = `${moved}${stacks[to]}`;
-  });
-
-  return stacks.map((s) => s[0]).join('');
+export function partB(input: Input): string {
+  return solve(input, true);
 }
