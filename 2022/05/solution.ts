@@ -39,11 +39,7 @@ function solve({ cmnds, stacks }: Input, canMoveMultiple = false) {
     const moved = stacks[from].slice(0, amount);
 
     stacks[from] = stacks[from].slice(amount);
-    if (canMoveMultiple) {
-      stacks[to] = `${moved}${stacks[to]}`;
-    } else {
-      stacks[to] = `${R.reverse(moved)}${stacks[to]}`;
-    }
+    stacks[to] = `${canMoveMultiple ? moved : R.reverse(moved)}${stacks[to]}`;
   });
 
   return stacks.map((s) => s[0]).join('');
