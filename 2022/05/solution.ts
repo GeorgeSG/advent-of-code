@@ -21,17 +21,16 @@ export function prepareInput(inputFile: string): Input {
 
   const stackLines = input.slice(0, divider - 1);
   const stacks = R.transpose(stackLines.map((line) => line.split('')))
-    .filter((line) => line.join('').match(/[A-Z]+/g))
-    .map((l) => l.join('').trim());
+    .map((line) => line.join(''))
+    .filter((line) => line.match(/[A-Z]+/g))
+    .map((line) => line.trim());
 
   const moveLines = input.slice(divider + 1, input.length - 1);
-  const cmnds = moveLines
-    .map((line) => {
-      const matches = line.match(/move ([\d]+) from ([\d]+) to ([\d]+)/);
-      const [amount, from, to] = matches.slice(1, 4).map(toI);
-      return { amount, from: from - 1, to: to - 1 };
-    })
-    .filter(Boolean);
+  const cmnds = moveLines.map((line) => {
+    const matches = line.match(/move ([\d]+) from ([\d]+) to ([\d]+)/);
+    const [amount, from, to] = matches.slice(1, 4).map(toI);
+    return { amount, from: from - 1, to: to - 1 };
+  });
 
   return { stacks, cmnds };
 }
