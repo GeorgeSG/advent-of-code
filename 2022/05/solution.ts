@@ -21,9 +21,8 @@ export function prepareInput(inputFile: string): Input {
 
   const stackLines = input.slice(0, divider - 1);
   const stacks = R.transpose(stackLines.map((line) => line.split('')))
-    .map((line) => line.join(''))
-    .filter((line) => line.match(/[A-Z]+/g))
-    .map((line) => line.trim());
+    .map((line) => line.join('').trim())
+    .filter((line) => line.match(/[A-Z]+/g));
 
   const moveLines = input.slice(divider + 1, input.length - 1);
   const cmnds = moveLines.map((line) => {
