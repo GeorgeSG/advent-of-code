@@ -15,16 +15,16 @@ type Input = {
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  const output = readFileRaw(inputFile).split('\n');
+  const input = readFileRaw(inputFile).split('\n');
 
-  const divider = output.findIndex((e) => e === '');
+  const divider = input.findIndex((e) => e === '');
 
-  const stackLines = output.slice(0, divider - 1);
+  const stackLines = input.slice(0, divider - 1);
   const stacks = R.transpose(stackLines.map((line) => line.split('')))
     .filter((line) => line.join('').match(/[A-Z]+/g))
     .map((l) => l.join('').trim());
 
-  const moveLines = output.slice(divider + 1, output.length - 1);
+  const moveLines = input.slice(divider + 1, input.length - 1);
   const cmnds = moveLines
     .map((line) => {
       const matches = line.match(/move ([\d]+) from ([\d]+) to ([\d]+)/);
