@@ -29,6 +29,6 @@ export function partB(input: Input): number {
     const MOVE = roundEnd === 'X' ? LOSE : roundEnd === 'Y' ? DRAW : WIN;
     const player2 = MOVE[player1];
 
-    return score - scoreGame(player1, player2);
+    return score + scoreGame(player1, player2);
   }, 0);
 }
