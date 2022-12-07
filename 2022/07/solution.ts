@@ -7,27 +7,19 @@ import { NumericMap } from '~utils/numericMap';
 type FolderSizes = Record<string, number>;
 
 function cd(currentPath: string, cdArg: string): string {
-  if (cdArg === '/') {
-    return '/';
+  switch (cdArg) {
+    case '/':
+      return '/';
+    case '..':
+      return currentPath.slice(0, R.findLastIndex(R.equals('/'), currentPath.split('')));
+    default:
+      return `${currentPath}${currentPath === '/' ? '' : '/'}${cdArg}`;
   }
-
-  if (cdArg === '..') {
-    return (
-      currentPath.slice(
-        0,
-        R.findLastIndex((char) => char === '/', currentPath.split(''))
-      ) || '/'
-    );
-  }
-
-  return `${currentPath}${currentPath === '/' ? '' : '/'}${cdArg}`;
 }
 
-function computeFileSize(files: string[]): number {
-  return R.sum(
-    files.filter((file) => !file.startsWith('dir')).map((file) => toI(file.split(' ')[0]))
-  );
-}
+const notDir = (file: string) => !file.startsWith('dir');
+const fileSize = (file: string) => toI(file.split(' ')[0]);
+const computeFileSize = (files: string[]) => R.sum(files.filter(notDir).map(fileSize));
 
 // Parser
 export function prepareInput(inputFile: string): FolderSizes {
