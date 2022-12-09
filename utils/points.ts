@@ -1,6 +1,7 @@
 import { findMax } from './arrays';
 
 export type Point2D = { x: number; y: number };
+export const ZERO: Point2D = { x: 0, y: 0 };
 
 export function findAdjacent<T>({ x, y }: Point2D, map: T[][]): Point2D[] {
   const res: Point2D[] = [];
@@ -46,4 +47,12 @@ export function render(points: Point2D[]) {
   }
 
   return output;
+}
+
+export function pointToKey({ x, y }: Point2D): string {
+  return `${x},${y}`;
+}
+
+export function sumPoints(p1: Point2D, p2: Point2D): Point2D {
+  return { x: p1.x + p2.x, y: p1.y + p2.y };
 }
