@@ -41,7 +41,7 @@ export function partB(input: Input): number {
 
   const cycleOp = () => {
     const printPos = cycle % ROW_LENGTH;
-    display += printPos >= spriteStart && printPos <= spriteStart + 2 ? '#' : '.';
+    display += spriteStart <= printPos && printPos <= spriteStart + 2 ? '#' : '.';
 
     cycle += 1;
     if (cycle % ROW_LENGTH === 0) display += '\n';
