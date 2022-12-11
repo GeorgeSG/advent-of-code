@@ -6,16 +6,18 @@
     "node": ">=16.17.0"
   },
   "scripts": {
-    "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
-    "respawn": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
+    "execute": "ts-node -r tsconfig-paths/register",
+    "respawn": "ts-node-dev -r tsconfig-paths/register --respawn --quiet --cls",
     "test": "pnpm execute cli/runner.ts",
     "watch": "pnpm respawn cli/runner.ts",
     "new": "pnpm execute cli/new.ts",
-    "set-cookie": "pnpm execute cli/cookie.ts"
+    "set-cookie": "pnpm execute cli/cookie.ts",
+    "test2": "pnpm execute cli/runner2.ts"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
   "dependencies": {
+    "@rushstack/ts-command-line": "^4.13.1",
     "app-root-path": "^3.1.0",
     "console-table-printer": "^2.11.1",
     "fs-extra": "^11.1.0",
