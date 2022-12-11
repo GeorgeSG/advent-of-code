@@ -29,11 +29,25 @@ export class SolutionFactory {
   }
 
   listFiles() {
-    const filePaths = this.fileManager.getPaths();
+    const { solution, realInput, realOutput, exampleInputs, exampleOutputs } =
+      this.fileManager.getPaths();
 
     this.log.text(`${this.year}/${this.day} Files:`);
-    Object.keys(filePaths).forEach((pathName) => {
-      this.log.text(`  ${(pathName + ':').padStart(15, ' ')} ${filePaths[pathName]}`);
+
+    const print = (name: string, path: string) => {
+      this.log.text(`${name.padStart(20, ' ')}: ${path}`);
+    };
+
+    print('Solution', solution);
+    print('Input', realInput);
+    print('Output', realOutput);
+
+    exampleInputs.forEach((name, i) => {
+      print(`Example input ${i + 1}`, name);
+    });
+
+    exampleOutputs.forEach((name, i) => {
+      print(`Example output ${i + 1}`, name);
     });
   }
 
