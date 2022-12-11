@@ -18,13 +18,12 @@ export function prepareInput(inputFile: string): Monkey[] {
 function computeRound(
   monkeys: Monkey[],
   throws: number[],
-  meditationRoutine: number,
   worryModifier: (worry: number) => number
 ) {
   monkeys.forEach((monkey, monkeyIndex) => {
     throws[monkeyIndex] += monkey.worryPerItem.length;
     monkey.worryPerItem.forEach((worry) => {
-      const newWorry = worryModifier(monkey.worryIncreaser(worry)) % meditationRoutine;
+      const newWorry = worryModifier(monkey.worryIncreaser(worry));
 
       const targetMonkey = newWorry % monkey.worryCheck === 0 ? monkey.ifTrue : monkey.ifFalse;
       monkeys[targetMonkey].worryPerItem.push(newWorry);
@@ -41,7 +40,9 @@ function computeMonkeyBusiness(
   const throws = monkeys.map(() => 0);
   const meditationRoutine = R.product(monkeys.map((m) => m.worryCheck));
 
-  R.range(0, rounds).forEach(() => computeRound(monkeys, throws, meditationRoutine, worryModifier));
+  R.range(0, rounds).forEach(() =>
+    computeRound(monkeys, throws, (worry) => worryModifier(worry) % meditationRoutine)
+  );
 
   const sorted = sortNums(throws);
   return sorted[sorted.length - 2] * sorted[sorted.length - 1];
