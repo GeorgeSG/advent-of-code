@@ -4,7 +4,7 @@ import { EXAMPLE_MONKEYS, REAL_MONKEYS } from './hardcoded_input';
 
 export type Monkey = {
   worryPerItem: number[];
-  worryIncreaser(item: number): number;
+  worryIncreaser(previousWorry: number): number;
   worryCheck: number;
   ifTrue: number;
   ifFalse: number;
