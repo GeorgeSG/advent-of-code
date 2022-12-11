@@ -1,3 +1,4 @@
+import { Logger } from 'cli/logger';
 import { readdirSync } from 'fs';
 
 export class FileManager {
@@ -31,6 +32,28 @@ export class FileManager {
 
   getExampleOutputs() {
     return this.getByPrefix('example_output');
+  }
+
+  printAll(logger: Logger) {
+    const { solution, realInput, realOutput, exampleInputs, exampleOutputs } = this.getPaths();
+
+    logger.text(`${this.solutionFolder} Files:`);
+
+    const print = (name: string, path: string) => {
+      logger.text(`${name.padStart(20, ' ')}: ${path}`);
+    };
+
+    print('Solution', solution);
+    print('Input', realInput);
+    print('Output', realOutput);
+
+    exampleInputs.forEach((name, i) => {
+      print(`Example input ${i + 1}`, name);
+    });
+
+    exampleOutputs.forEach((name, i) => {
+      print(`Example output ${i + 1}`, name);
+    });
   }
 
   private filterFiles(filter: (string) => boolean): string[] {

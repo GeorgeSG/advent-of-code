@@ -1,6 +1,5 @@
 import {
   CommandLineAction,
-  CommandLineChoiceParameter,
   CommandLineStringListParameter,
   CommandLineStringParameter,
 } from '@rushstack/ts-command-line';

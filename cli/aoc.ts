@@ -1,5 +1,6 @@
 import { CommandLineParser } from '@rushstack/ts-command-line';
 import { CLIActionCookie } from './actions/cookie';
+import { CLIActionListFiles } from './actions/listFiles';
 import { CLIActionNew } from './actions/new';
 import { CLIActionRun } from './actions/run';
 
@@ -13,6 +14,7 @@ export class AdventOfCodeCommandLine extends CommandLineParser {
     this.addAction(new CLIActionNew());
     this.addAction(new CLIActionCookie());
     this.addAction(new CLIActionRun());
+    this.addAction(new CLIActionListFiles());
   }
 
   protected onExecute(): Promise<void> {

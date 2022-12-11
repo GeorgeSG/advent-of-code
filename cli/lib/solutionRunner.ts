@@ -28,7 +28,7 @@ export class SolutionRunner {
   private fileManager: FileManager;
 
   private table: Table;
-  private log = new Logger('Solution Runner');
+  private logger = new Logger('Solution Runner');
 
   constructor(solutionFolder: string, private printers: Printer[]) {
     this.table = new Table({
@@ -64,7 +64,7 @@ export class SolutionRunner {
     // Get input and output
     const { inputFiles, outputFiles } = this.getFilePaths(runType);
     if (inputFiles.length === 0) {
-      this.log.warning(`Input files not found. Skipping ${runType.toLowerCase()} tests!`);
+      this.logger.warning(`Input files not found. Skipping ${runType.toLowerCase()} tests!`);
       return;
     }
     const expected = outputFiles.map((outputFile) => this.getExpectedResult(outputFile, part));
@@ -100,7 +100,7 @@ export class SolutionRunner {
       };
 
       if (this.printers.includes(Printer.LINE)) {
-        this.log.text(`${output.part}, ${output.run}:`);
+        this.logger.text(`${output.part}, ${output.run}:`);
         console.log(`${output.result} result: ${output.output} expected: ${output.expected}`);
         console.log('');
       }
@@ -123,24 +123,24 @@ export class SolutionRunner {
     const solutionFile = this.fileManager.getSolution();
 
     if (!existsSync(solutionFile)) {
-      this.log.error('Solution file does not exist!');
+      this.logger.error('Solution file does not exist!');
       process.exit(0);
     }
 
     const { partA, partB, prepareInput } = require(solutionFile);
 
     if (part === Part.A && typeof partA !== 'function') {
-      this.log.error('`partA` function not found.');
+      this.logger.error('`partA` function not found.');
       process.exit(0);
     }
 
     if (part === Part.B && typeof partB !== 'function') {
-      this.log.error('`partB` function not found.');
+      this.logger.error('`partB` function not found.');
       process.exit(0);
     }
 
     if (typeof prepareInput !== 'function') {
-      this.log.error('`prepareInput` function not found.');
+      this.logger.error('`prepareInput` function not found.');
       process.exit(0);
     }
 
