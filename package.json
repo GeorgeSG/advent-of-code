@@ -6,13 +6,12 @@
     "node": ">=16.17.0"
   },
   "scripts": {
-    "execute": "ts-node -r tsconfig-paths/register",
-    "respawn": "ts-node-dev -r tsconfig-paths/register --respawn --quiet --cls",
-    "test": "pnpm execute cli/runner.ts",
-    "watch": "pnpm respawn cli/runner.ts",
-    "new": "pnpm execute cli/new.ts",
-    "set-cookie": "pnpm execute cli/cookie.ts",
-    "test2": "pnpm execute cli/runner2.ts"
+    "aoc": "ts-node -r tsconfig-paths/register cli/aoc.ts",
+    "respawn": "ts-node-dev -r tsconfig-paths/register --respawn --quiet --cls cli/aoc.ts",
+    "test": "pnpm aoc run",
+    "watch": "pnpm respawn run",
+    "new": "pnpm aoc new",
+    "set-cookie": "pnpm aoc cookie"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
