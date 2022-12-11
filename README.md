@@ -46,14 +46,27 @@ There are useful utils in `./utils`. Check them out :)
 
 ## Commands
 
-### `yarn new 2022 01`
+### `pnpm new -y 2022 -d 01`
 Create a Solution folder 2022/01 using a predefined template. Attempt to automatically fetch and populate input.
 
-### `yarn test 2022/01 [example | real | both]`
-Run the tests for 2022/01 once. Defaults to running both example and real tests.
+### `pnpm test -t TASK -p PART -r RUN_TYPE --print PRINTER`
+Run tests for a given task once.
+Defaults to running all parts and all run types for the latest solution using a table printer.
 
-### `yarn watch 2022/01 [example | real | both]`
-Run the tests for 2022/01 and watch for changes. Defaults to running both example and real tests.
+-p: 'a' or 'b'
+-r: 'example' or 'real'
+--print: 'table' or 'line'
 
-### `yarn set-cookie [cookie]`
+Example:
+```
+pnpm test -t 2021/09 -p a -p b -r example --print table --print line
+```
+
+### `pnpm watch -t TASK -p PART -r RUN_TYPE --print PRINTER`
+Run the tests for a given task and watches for changes.
+
+### `pnpm files -t TASK`
+List the files for a given task.
+
+### `pnpm set-cookie [cookie]`
 Store your session cookie value locally to be able to automatically fetch input.
