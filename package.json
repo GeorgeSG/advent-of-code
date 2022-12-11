@@ -8,10 +8,10 @@
   "scripts": {
     "execute": "ts-node --project tsconfig.json -r tsconfig-paths/register",
     "respawn": "ts-node-dev --project tsconfig.json -r tsconfig-paths/register --respawn --quiet --cls",
-    "test": "yarn execute cli/runner.ts",
-    "watch": "yarn respawn cli/runner.ts",
-    "new": "yarn execute cli/new.ts",
-    "set-cookie": "yarn execute cli/cookie.ts"
+    "test": "pnpm run execute cli/runner.ts",
+    "watch": "pnpm run respawn cli/runner.ts",
+    "new": "pnpm run execute cli/new.ts",
+    "set-cookie": "pnpm run execute cli/cookie.ts"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
