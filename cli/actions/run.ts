@@ -41,7 +41,6 @@ export class CLIActionRun extends CommandLineAction {
 
     const runner = new SolutionRunner(this.task.value, printers);
     runner.runAll(parts, runTypes);
-    runner.print();
   }
 
   protected onDefineParameters(): void {

@@ -59,7 +59,7 @@ Optional arguments:
   -d DAY, --day DAY     Day of solution (1 - 25)
 ```
 
-#### `pnpm test -t TASK -p PART -r RUN_TYPE --print PRINTER`
+#### `pnpm once -t TASK -p PART -r RUN_TYPE --print PRINTER`
 Run tests for a given task once.
 Defaults to running all parts and all run types for the latest solution using a table printer.
 
@@ -72,12 +72,12 @@ You can select multiple argument values by passing the argument twice: `-p a -p 
 
 Example:
 ```
-pnpm test -t 2021/09 -p a -p b -r example --print table --print line
+pnpm once -t 2021/09 -p a -p b -r example --print table --print line
 ```
 
 Man page:
 ```
-usage: pnpm test [-h] [-t TASK] [-p PART] [-r RUNTYPE] [--print PRINT]
+usage: pnpm once [-h] [-t TASK] [-p PART] [-r RUNTYPE] [--print PRINT]
 
 Optional arguments:
   -h, --help            Show this help message and exit.

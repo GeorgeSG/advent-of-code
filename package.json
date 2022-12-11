@@ -8,7 +8,7 @@
   "scripts": {
     "aoc": "ts-node -r tsconfig-paths/register cli/aoc.ts",
     "respawn": "ts-node-dev -r tsconfig-paths/register --respawn --quiet --cls cli/aoc.ts",
-    "test": "pnpm aoc run",
+    "once": "pnpm aoc run",
     "watch": "pnpm respawn run",
     "new": "pnpm aoc new",
     "set-cookie": "pnpm aoc cookie",
