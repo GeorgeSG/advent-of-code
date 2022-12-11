@@ -22,7 +22,6 @@ export enum Run {
 
 export class SolutionRunner {
   private static readonly DATA_MISSING = '-';
-  private solutionFolder: string;
   private fileManager: FileManager;
 
   private table: Table;
@@ -33,9 +32,9 @@ export class SolutionRunner {
       title: bold().white(`${solutionFolder} Results`),
       charLength: { '❌': 2, '✅': 2 },
       columns: [
+        { name: 'run', title: 'Run', alignment: 'left' },
         { name: 'part', title: 'Part', alignment: 'left', color: 'white' },
         { name: 'time', title: 'Time', alignment: 'left', color: 'white' },
-        { name: 'type', title: 'Type', alignment: 'left' },
         { name: 'output', title: 'Output' },
         { name: 'expected', title: 'Expected' },
         { name: 'result', title: 'Result' },
@@ -60,54 +59,49 @@ export class SolutionRunner {
     const { solutionFn, prepareInput } = this.loadSolution(part);
 
     // Get input and output
-    const { inputFile, outputFile } = this.getFilePaths(run);
-    if (!existsSync(inputFile)) {
-      this.log.warning(
-        `'${R.last(
-          inputFile.split('/')
-        )}' file does not exist! Skipping ${run.toLowerCase()} tests!`
-      );
+    const { inputFiles, outputFiles } = this.getFilePaths(run);
+    if (inputFiles.length === 0) {
+      this.log.warning(`Input files not found. Skipping ${run.toLowerCase()} tests!`);
       return;
     }
-    const expected = existsSync(outputFile) ? this.getExpectedResult(outputFile, part) : '-';
+    const expected = outputFiles.map((outputFile) => this.getExpectedResult(outputFile, part));
 
-    // Run input through solution code and measure time
-    const start = process.hrtime();
-    const result = solutionFn(prepareInput(inputFile));
-    const end = hrtime(start);
-    const timeInMs = (end[0] * 1000000000 + end[1]) / 1000000;
+    inputFiles.forEach((inputFile, i) => {
+      // Run input through solution code and measure time
+      const start = process.hrtime();
+      const result = solutionFn(prepareInput(inputFile));
+      const end = hrtime(start);
+      const timeInMs = (end[0] * 1000000000 + end[1]) / 1000000;
 
-    let time: any = timeInMs > 1000 ? timeInMs / 1000 : timeInMs;
-    time = `${time.toPrecision(6).slice(0, 6)} ${timeInMs > 1000 ? 's' : 'ms'}`;
+      let time: any = timeInMs > 1000 ? timeInMs / 1000 : timeInMs;
+      time = `${time.toPrecision(6).slice(0, 6)} ${timeInMs > 1000 ? 's' : 'ms'}`;
 
-    // Add to results table
-    this.table.addRow({
-      output:
-        expected === SolutionRunner.DATA_MISSING
+      // Add to results table
+      this.table.addRow({
+        output: !expected[i]
           ? bold().yellow(result)
-          : result.toString() === expected
+          : result.toString() === expected[i]
           ? bold().green(result)
           : bold().red(result),
-      result:
-        expected === SolutionRunner.DATA_MISSING
+        result: !expected[i]
           ? SolutionRunner.DATA_MISSING
-          : result.toString() === expected
+          : result.toString() === expected[i]
           ? '✅'
           : '❌',
-      part: `Part ${part.toUpperCase()}`,
-      type: run === Run.EXAMPLE ? bold().cyan(run) : bold().magenta(run),
-      time,
-      expected,
+        part: `Part ${part.toUpperCase()}`,
+        run: run === Run.EXAMPLE ? bold().cyan(`${run} ${i + 1}`) : bold().magenta(run),
+        time,
+        expected: expected[i] || SolutionRunner.DATA_MISSING,
+      });
     });
   }
 
   private getFilePaths(run: Run) {
-    const { testInputFile, testOutputFile, realInputFile, realOutputFile } =
-      this.fileManager.getPaths();
+    const { exampleInputs, exampleOutputs, realInput, realOutput } = this.fileManager.getPaths();
 
     return {
-      inputFile: run === Run.REAL ? realInputFile : testInputFile,
-      outputFile: run === Run.REAL ? realOutputFile : testOutputFile,
+      inputFiles: run === Run.REAL ? [realInput].filter(Boolean) : exampleInputs,
+      outputFiles: run === Run.REAL ? [realOutput].filter(Boolean) : exampleOutputs,
     };
   }
 
