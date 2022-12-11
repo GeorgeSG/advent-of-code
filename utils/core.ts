@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { green, red } from 'kleur';
+import { red } from 'kleur';
 
 export const readFile = (inputFile, lineTransformer?) => {
   try {

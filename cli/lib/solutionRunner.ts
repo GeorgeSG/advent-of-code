@@ -49,9 +49,7 @@ export class SolutionRunner {
 
   runAll(parts: Part[], runs: RunType[]) {
     R.xprod(parts, runs).forEach((configuration) => this.runByPartAndRunType(...configuration));
-  }
 
-  print() {
     if (this.printers.includes(Printer.TABLE)) {
       this.table.printTable();
     }
