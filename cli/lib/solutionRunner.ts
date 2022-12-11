@@ -11,13 +11,16 @@ import { FileManager } from './fileManager';
 export enum Part {
   A = 'a',
   B = 'b',
-  BOTH = 'both',
 }
 
-export enum Run {
+export enum RunType {
   EXAMPLE = 'example',
   REAL = 'real',
-  ALL = 'all',
+}
+
+export enum Printer {
+  TABLE = 'table',
+  LINE = 'line',
 }
 
 export class SolutionRunner {
@@ -27,7 +30,7 @@ export class SolutionRunner {
   private table: Table;
   private log = new Logger('Solution Runner');
 
-  constructor(solutionFolder: string) {
+  constructor(solutionFolder: string, private printers: Printer[]) {
     this.table = new Table({
       title: bold().white(`${solutionFolder} Results`),
       charLength: { '❌': 2, '✅': 2 },
@@ -44,24 +47,24 @@ export class SolutionRunner {
     this.fileManager = new FileManager(`${appRootPath}/solutions/${solutionFolder}`);
   }
 
-  run(part: Part, run: Run) {
-    const parts = part === Part.BOTH ? [Part.A, Part.B] : [part];
-    const runs = run === Run.ALL ? [Run.EXAMPLE, Run.REAL] : [run];
-    R.xprod(parts, runs).forEach((configuration) => this.runSingle(...configuration));
+  runAll(parts: Part[], runs: RunType[]) {
+    R.xprod(parts, runs).forEach((configuration) => this.runByPartAndRunType(...configuration));
   }
 
   print() {
-    this.table.printTable();
+    if (this.printers.includes(Printer.TABLE)) {
+      this.table.printTable();
+    }
   }
 
-  private runSingle(part: Part, run: Run) {
+  private runByPartAndRunType(part: Part, runType: RunType) {
     // Check that solution exists and get handlers
     const { solutionFn, prepareInput } = this.loadSolution(part);
 
     // Get input and output
-    const { inputFiles, outputFiles } = this.getFilePaths(run);
+    const { inputFiles, outputFiles } = this.getFilePaths(runType);
     if (inputFiles.length === 0) {
-      this.log.warning(`Input files not found. Skipping ${run.toLowerCase()} tests!`);
+      this.log.warning(`Input files not found. Skipping ${runType.toLowerCase()} tests!`);
       return;
     }
     const expected = outputFiles.map((outputFile) => this.getExpectedResult(outputFile, part));
@@ -76,8 +79,7 @@ export class SolutionRunner {
       let time: any = timeInMs > 1000 ? timeInMs / 1000 : timeInMs;
       time = `${time.toPrecision(6).slice(0, 6)} ${timeInMs > 1000 ? 's' : 'ms'}`;
 
-      // Add to results table
-      this.table.addRow({
+      const output = {
         output: !expected[i]
           ? bold().yellow(result)
           : result.toString() === expected[i]
@@ -89,19 +91,31 @@ export class SolutionRunner {
           ? '✅'
           : '❌',
         part: `Part ${part.toUpperCase()}`,
-        run: run === Run.EXAMPLE ? bold().cyan(`${run} ${i + 1}`) : bold().magenta(run),
+        run:
+          runType === RunType.EXAMPLE
+            ? bold().cyan(`${runType} ${i + 1}`)
+            : bold().magenta(runType),
         time,
         expected: expected[i] || SolutionRunner.DATA_MISSING,
-      });
+      };
+
+      if (this.printers.includes(Printer.LINE)) {
+        this.log.text(`${output.part}, ${output.run}:`);
+        console.log(`${output.result} result: ${output.output} expected: ${output.expected}`);
+        console.log('');
+      }
+
+      // Add to results table
+      this.table.addRow(output);
     });
   }
 
-  private getFilePaths(run: Run) {
+  private getFilePaths(runType: RunType) {
     const { exampleInputs, exampleOutputs, realInput, realOutput } = this.fileManager.getPaths();
 
     return {
-      inputFiles: run === Run.REAL ? [realInput].filter(Boolean) : exampleInputs,
-      outputFiles: run === Run.REAL ? [realOutput].filter(Boolean) : exampleOutputs,
+      inputFiles: runType === RunType.REAL ? [realInput].filter(Boolean) : exampleInputs,
+      outputFiles: runType === RunType.REAL ? [realOutput].filter(Boolean) : exampleOutputs,
     };
   }
 

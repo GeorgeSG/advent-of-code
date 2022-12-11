@@ -1,15 +1,17 @@
 import {
   CommandLineAction,
   CommandLineChoiceParameter,
+  CommandLineStringListParameter,
   CommandLineStringParameter,
 } from '@rushstack/ts-command-line';
 import { readdirSync } from 'fs';
-import { Part, Run, SolutionRunner } from '../lib/solutionRunner';
+import { Part, Printer, RunType, SolutionRunner } from '../lib/solutionRunner';
 
 export class CLIActionRun extends CommandLineAction {
   private task: CommandLineStringParameter;
-  private part: CommandLineChoiceParameter;
-  private run: CommandLineChoiceParameter;
+  private parts: CommandLineStringListParameter;
+  private runTypes: CommandLineStringListParameter;
+  private printType: CommandLineStringListParameter;
 
   private solutions: string[];
 
@@ -27,8 +29,19 @@ export class CLIActionRun extends CommandLineAction {
   }
 
   protected async onExecute(): Promise<void> {
-    const runner = new SolutionRunner(this.task.value);
-    runner.run(this.part.value as Part, this.run.value as Run);
+    const parts: Part[] = this.parts.values.length
+      ? (this.parts.values as Part[])
+      : [Part.A, Part.B];
+    const runTypes: RunType[] = this.runTypes.values.length
+      ? (this.runTypes.values as RunType[])
+      : [RunType.EXAMPLE, RunType.REAL];
+
+    const printers: Printer[] = this.printType.values.length
+      ? (this.printType.values as Printer[])
+      : [Printer.TABLE];
+
+    const runner = new SolutionRunner(this.task.value, printers);
+    runner.runAll(parts, runTypes);
     runner.print();
   }
 
@@ -42,20 +55,24 @@ export class CLIActionRun extends CommandLineAction {
       defaultValue: this.solutions[this.solutions.length - 1],
     });
 
-    this.part = this.defineChoiceParameter({
+    this.parts = this.defineStringListParameter({
+      argumentName: 'PART',
       parameterLongName: '--part',
       parameterShortName: '-p',
-      description: 'Specify whether to run Part A, Part B, or both',
-      alternatives: Object.values(Part),
-      defaultValue: Part.BOTH,
+      description: "Specify whether to run part 'a' or 'b'",
     });
 
-    this.run = this.defineChoiceParameter({
+    this.runTypes = this.defineStringListParameter({
+      argumentName: 'RUNTYPE',
       parameterLongName: '--run',
       parameterShortName: '-r',
-      description: 'Specify whether to run example, real, or all tests',
-      alternatives: Object.values(Run),
-      defaultValue: Run.ALL,
+      description: "Specify whether to run 'example' or 'real'",
+    });
+
+    this.printType = this.defineStringListParameter({
+      argumentName: 'PRINT',
+      parameterLongName: '--print',
+      description: 'Specify whether to print "table" or "line"',
     });
   }
 }
