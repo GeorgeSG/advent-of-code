@@ -11,7 +11,8 @@
     "test": "pnpm aoc run",
     "watch": "pnpm respawn run",
     "new": "pnpm aoc new",
-    "set-cookie": "pnpm aoc cookie"
+    "set-cookie": "pnpm aoc cookie",
+    "files": "pnpm aoc files"
   },
   "author": "Georgi Gardev",
   "license": "UNLICENSED",
