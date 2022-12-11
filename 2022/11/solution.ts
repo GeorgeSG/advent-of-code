@@ -26,8 +26,8 @@ function computeRound(
     monkey.worryPerItem.forEach((worry) => {
       const newWorry = worryModifier(monkey.worryIncreaser(worry)) % meditationRoutine;
 
-      const newMonkey = newWorry % monkey.worryCheck === 0 ? monkey.ifTrue : monkey.ifFalse;
-      monkeys[newMonkey].worryPerItem.push(newWorry);
+      const targetMonkey = newWorry % monkey.worryCheck === 0 ? monkey.ifTrue : monkey.ifFalse;
+      monkeys[targetMonkey].worryPerItem.push(newWorry);
     });
     monkey.worryPerItem = [];
   });
