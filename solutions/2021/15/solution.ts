@@ -1,8 +1,7 @@
 import R from 'ramda';
-import { findMin } from '~utils/arrays';
 import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
-import { findAdjacent, Point2D } from '~utils/points';
+import { findAdjacent, fromKey, Point2D, toKey } from '~utils/points';
 
 type Input = number[][];
 
@@ -10,9 +9,6 @@ type Input = number[][];
 export function prepareInput(inputFile: string): Input {
   return readFile(inputFile, (line) => line.split('').map(toI));
 }
-
-const toKey = ({ x, y }: Point2D) => `${x}-${y}`;
-const fromKey = (key: string) => ({ x: toI(key.split('-')[0]), y: toI(key.split('-')[1]) });
 
 function findMinVertex(visited: Record<string, boolean>, dist: Record<string, number>): Point2D {
   let minDistance = Number.POSITIVE_INFINITY;
