@@ -1,12 +1,7 @@
 import R from 'ramda';
 import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
-import {
-  Point2D,
-  pointToKey as toString,
-  sumPoints as add,
-  ZERO as POINT_ZERO,
-} from '~utils/points';
+import { Point2D, toKey, sumPoints as add, ZERO as POINT_ZERO } from '~utils/points';
 
 type Motion = {
   direction: Point2D;
@@ -57,7 +52,7 @@ function solveForKnots(knotCount: number, input: Input): number {
         knots[i] = follow(knots[i], knots[i - 1]);
       }
 
-      visited.add(toString(knots[knots.length - 1]));
+      visited.add(toKey(knots[knots.length - 1]));
     }
   });
 

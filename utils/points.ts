@@ -1,4 +1,5 @@
 import { findMax } from './arrays';
+import { toI } from './numbers';
 
 export type Point2D = { x: number; y: number };
 export const ZERO: Point2D = { x: 0, y: 0 };
@@ -49,8 +50,12 @@ export function render(points: Point2D[]) {
   return output;
 }
 
-export function pointToKey({ x, y }: Point2D): string {
-  return `${x},${y}`;
+export function toKey({ x, y }: Point2D): string {
+  return `${x}-${y}`;
+}
+
+export function fromKey(key: string) {
+  return { x: toI(key.split('-')[0]), y: toI(key.split('-')[1]) };
 }
 
 export function sumPoints(p1: Point2D, p2: Point2D): Point2D {
