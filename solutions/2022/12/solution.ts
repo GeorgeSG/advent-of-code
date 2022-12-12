@@ -20,16 +20,11 @@ export function prepareInput(inputFile: string): Input {
 }
 
 function findMinDistanceNode(visited: Set<string>, dist: Record<string, number>): Point2D | null {
-  let minDistance = Number.POSITIVE_INFINITY;
-  let minDistKey = null;
-  Object.entries(dist).forEach(([key, distance]) => {
-    if (!visited.has(key) && distance <= minDistance) {
-      minDistance = distance;
-      minDistKey = key;
-    }
-  });
+  const minDistKey = Object.keys(dist)
+    .filter((key) => !visited.has(key))
+    .sort((key1, key2) => dist[key1] - dist[key2])[0];
 
-  return minDistKey === null ? null : fromKey(minDistKey);
+  return minDistKey ? fromKey(minDistKey) : null;
 }
 
 function dijkstra(
