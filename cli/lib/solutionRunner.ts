@@ -78,16 +78,18 @@ export class SolutionRunner {
       time = `${time.toPrecision(6).slice(0, 6)} ${timeInMs > 1000 ? 's' : 'ms'}`;
 
       const output = {
-        output: !expected[i]
-          ? bold().yellow(result)
-          : result.toString() === expected[i]
-          ? bold().green(result)
-          : bold().red(result),
-        result: !expected[i]
-          ? SolutionRunner.DATA_MISSING
-          : result.toString() === expected[i]
-          ? '✅'
-          : '❌',
+        output:
+          !expected[i] || expected[i] === SolutionRunner.DATA_MISSING
+            ? bold().yellow(result)
+            : result.toString() === expected[i]
+            ? bold().green(result)
+            : bold().red(result),
+        result:
+          !expected[i] || expected[i] === SolutionRunner.DATA_MISSING
+            ? SolutionRunner.DATA_MISSING
+            : result.toString() === expected[i]
+            ? '✅'
+            : '❌',
         part: `Part ${part.toUpperCase()}`,
         run:
           runType === RunType.EXAMPLE
