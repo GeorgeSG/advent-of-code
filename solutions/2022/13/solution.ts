@@ -5,10 +5,7 @@ type Input = any[];
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return R.splitEvery<string>(2, readFile(inputFile)).map(([left, right]) => [
-    JSON.parse(left),
-    JSON.parse(right),
-  ]);
+  return R.splitEvery(2, readFile(inputFile).map(JSON.parse));
 }
 
 const isNumber = (val: unknown): val is number => typeof val === 'number';
@@ -19,9 +16,7 @@ function compare(left: any[] | number, right: any[] | number): number {
   if (isNumber(left)) left = [left];
   if (isNumber(right)) right = [right];
 
-  for (let i = 0; i < left.length; i++) {
-    if (right[i] === undefined) return -1;
-
+  for (let i = 0; i < Math.min(left.length, right.length); i++) {
     const cmp = compare(left[i], right[i]);
     if (cmp) return cmp;
   }
@@ -40,12 +35,12 @@ export function partB(input: Input): number {
   const sortedPackets = input
     .flat()
     .concat(dividers)
-    .sort((packetA, packetB) => -1 * compare(packetA, packetB))
-    .map((packet) => JSON.stringify(packet));
+    .sort((packetA, packetB) => -1 * compare(packetA, packetB));
 
-  const dividerPositions = dividers.map(
-    (divider) => sortedPackets.findIndex((packet) => packet === JSON.stringify(divider)) + 1
-  );
+  // const dividerPositions = dividers.map(
+  //   (divider) => R.findIndex(R.equals(divider), sortedPackets) + 1
+  // );
 
-  return R.product(dividerPositions);
+  const getIndexes = (divider) => R.pipe(R.findIndex(R.equals(divider)), R.add(1))(sortedPackets);
+  return R.product(R.map(getIndexes, dividers));
 }
