@@ -26,16 +26,16 @@ function solve(input: Input, rangeFilter: (range: Range) => boolean) {
 
   ranges.forEach(({ from, to }) => {
     if (isDiagonal({ from, to })) {
-      const xDir = from[0] < to[0] ? 1 : -1;
-      const yDir = from[1] < to[1] ? 1 : -1;
+      const xDir = Math.sign(to[0] - from[0]);
+      const yDir = Math.sign(to[1] - from[1]);
 
       let x = from[0];
       let y = from[1];
       map.inc(`${x}-${y}`, 1);
 
       while (x !== to[0] && y !== to[1]) {
-        x += 1 * xDir;
-        y += 1 * yDir;
+        x += xDir;
+        y += yDir;
 
         map.inc(`${x}-${y}`, 1);
       }
