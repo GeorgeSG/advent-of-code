@@ -1,7 +1,5 @@
 import R from 'ramda';
 import { readFile } from '~utils/core';
-import { numberCompare } from '~utils/numbers';
-import { SortDirection } from '~utils/types';
 
 type Input = any[];
 
@@ -16,9 +14,7 @@ export function prepareInput(inputFile: string): Input {
 const isNumber = (val: unknown): val is number => typeof val === 'number';
 
 function compare(left: any[] | number, right: any[] | number): number {
-  if (isNumber(left) && isNumber(right)) {
-    return numberCompare(SortDirection.DESC)(left, right);
-  }
+  if (isNumber(left) && isNumber(right)) return right - left;
 
   if (isNumber(left)) left = [left];
   if (isNumber(right)) right = [right];
@@ -30,7 +26,7 @@ function compare(left: any[] | number, right: any[] | number): number {
     if (cmp) return cmp;
   }
 
-  return left.length === right.length ? 0 : 1;
+  return right.length - left.length;
 }
 
 // ---- Part A ----
