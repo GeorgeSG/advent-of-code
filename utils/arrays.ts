@@ -1,17 +1,19 @@
 import R from 'ramda';
+import { numberCompare } from './numbers';
+import { SortDirection } from './types';
 
 export const findMax = (array: number[]): number => R.apply(Math.max, array);
 export const findMin = (array: number[]): number => R.apply(Math.min, array);
 export const findMinMax = (array: number[]): [number, number] => {
-  const sorted = array.sort((a, b) => a - b);
+  const sorted = array.sort(numberCompare());
   return [sorted[0], sorted[sorted.length - 1]];
 };
 
 export const intersectAll = <T>(arrays: T[][]) =>
   R.reduce<T[], T[]>(R.intersection, arrays[0], arrays);
 
-export const sortNums = (array: number[], inverted = false): number[] =>
-  array.sort((a, b) => (inverted ? b - a : a - b));
+export const sortNums = (array: number[], direction: SortDirection = SortDirection.ASC): number[] =>
+  array.sort(numberCompare(direction));
 
 export const ijMeBro = <T>(array: T[][], callback: (i: number, j: number, el: T) => void) => {
   for (let i = 0; i < array.length; i++) {

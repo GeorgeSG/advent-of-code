@@ -1,5 +1,5 @@
 import { readFile } from '~utils/core';
-import { toI } from '~utils/numbers';
+import { numberCompare, toI } from '~utils/numbers';
 import { NumericMap } from '~utils/numericMap';
 
 type Point = [number, number];
@@ -43,8 +43,8 @@ function solve(input: Input, rangeFilter: (range: Range) => boolean) {
       return;
     }
 
-    const [minX, maxX] = [from[0], to[0]].sort((a, b) => a - b);
-    const [minY, maxY] = [from[1], to[1]].sort((a, b) => a - b);
+    const [minX, maxX] = [from[0], to[0]].sort(numberCompare());
+    const [minY, maxY] = [from[1], to[1]].sort(numberCompare());
 
     for (let i = minX; i <= maxX; i++) {
       for (let j = minY; j <= maxY; j++) {

@@ -3,6 +3,7 @@ import { ijMeBro, sortNums } from '~utils/arrays';
 import { readFile } from '~utils/core';
 import { toI } from '~utils/numbers';
 import { findAdjacent, Point2D } from '~utils/points';
+import { SortDirection } from '~utils/types';
 
 type Input = number[][];
 
@@ -58,5 +59,5 @@ function findBasin(lowPoint: Point2D, map: Input): Point2D[] {
 export function partB(input: Input): number {
   const lowPoints = findLowPoints(input);
   const basinSizes = lowPoints.map((point) => findBasin(point, input).length);
-  return R.product(sortNums(basinSizes, true).slice(0, 3));
+  return R.product(sortNums(basinSizes, SortDirection.DESC).slice(0, 3));
 }
