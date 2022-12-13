@@ -29,8 +29,7 @@ function solve(input: Input, rangeFilter: (range: Range) => boolean) {
       const xDir = Math.sign(to[0] - from[0]);
       const yDir = Math.sign(to[1] - from[1]);
 
-      let x = from[0];
-      let y = from[1];
+      let [x, y] = from;
       map.inc(`${x}-${y}`, 1);
 
       while (x !== to[0] && y !== to[1]) {
