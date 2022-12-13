@@ -40,13 +40,16 @@ export function partA(input: Input): number {
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const packetsWithDividers = [...input.flat(), [[2]], [[6]]];
-  const sortedPackets = packetsWithDividers
-    .sort((a, b) => (compare(a, b) === -1 ? 1 : -1))
-    .map((i) => JSON.stringify(i));
+  const dividers = [[[2]], [[6]]];
+  const sortedPackets = input
+    .flat()
+    .concat(dividers)
+    .sort((packetA, packetB) => -1 * compare(packetA, packetB))
+    .map((packet) => JSON.stringify(packet));
 
-  const dividerPacket1 = sortedPackets.findIndex((i) => i === '[[2]]') + 1;
-  const dividerPacket2 = sortedPackets.findIndex((i) => i === '[[6]]') + 1;
+  const dividerPositions = dividers.map(
+    (divider) => sortedPackets.findIndex((packet) => packet === JSON.stringify(divider)) + 1
+  );
 
-  return dividerPacket1 * dividerPacket2;
+  return R.product(dividerPositions);
 }
