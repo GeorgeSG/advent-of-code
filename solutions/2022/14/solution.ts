@@ -21,18 +21,15 @@ export function prepareInput(inputFile: string): Input {
 
   walls.forEach((wallCoords) => {
     for (let i = 0; i < wallCoords.length - 1; i++) {
-      const [{ x, y }, to] = [wallCoords[i], wallCoords[i + 1]];
+      const [from, to] = [wallCoords[i], wallCoords[i + 1]];
+      if (bottom < to.y) bottom = to.y;
 
-      const [minX, maxX] = sortNums([x, to.x]);
-      const [minY, maxY] = sortNums([y, to.y]);
-      const range = x === to.x ? R.range(minY, maxY + 1) : R.range(minX, maxX + 1);
+      const changingAxis = from.x === to.x ? 'y' : 'x';
+      const [wallStart, wallEnd] = sortNums([from[changingAxis], to[changingAxis]]);
 
-      if (bottom < maxY) bottom = maxY;
-
-      range
-        // x and y are reversed in the input, swap them
-        .map((n) => (x === to.x ? { x: n, y: x } : { y: n, x: y }))
-        .forEach((wallPoint) => blocked.add(toKey(wallPoint)));
+      R.range(wallStart, wallEnd + 1).forEach((wallPoint) =>
+        blocked.add(toKey({ ...from, [changingAxis]: wallPoint }))
+      );
     }
   });
 
@@ -43,10 +40,10 @@ export function prepareInput(inputFile: string): Input {
   };
 }
 
-const CAVE_TOP = { x: 0, y: 500 };
+const CAVE_TOP = { x: 500, y: 0 };
 const GRAIN_MOVES = [
-  [1, 0],
-  [1, -1],
+  [0, 1],
+  [-1, 1],
   [1, 1],
 ];
 
@@ -65,7 +62,7 @@ function simulateGrain({ blocked, bottom, isBlocked }: Input): boolean {
       return !R.equals(grain, CAVE_TOP); // There's space for more if it's not at the top.
     }
 
-    if (next.x >= bottom) return false; // sand is falling outside the map, stop simulation
+    if (next.y >= bottom) return false; // sand is falling outside the map, stop simulation
     grain = next;
   }
 }
@@ -87,7 +84,7 @@ export function partB({ blocked, bottom }: Input): number {
   const input = {
     blocked,
     bottom: bottom + 2,
-    isBlocked: (pos: Point2D) => pos.x === input.bottom || input.blocked.has(toKey(pos)),
+    isBlocked: (pos: Point2D) => pos.y === input.bottom || input.blocked.has(toKey(pos)),
   };
 
   return simulateSandfall(input) + 1;
