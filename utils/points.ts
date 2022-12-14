@@ -58,6 +58,10 @@ export function fromKey(key: string) {
   return { x: toI(key.split('-')[0]), y: toI(key.split('-')[1]) };
 }
 
+export function fromArray([x, y]: number[]): Point2D {
+  return { x, y };
+}
+
 export function sumPoints(p1: Point2D, p2: Point2D): Point2D {
   return { x: p1.x + p2.x, y: p1.y + p2.y };
 }
