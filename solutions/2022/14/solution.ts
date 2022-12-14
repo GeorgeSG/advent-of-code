@@ -50,7 +50,7 @@ const GRAIN_MOVES = [
   [1, 1],
 ];
 
-// Returns true if there's pos for more sand
+// Returns true if there's space for more sand
 function simulateGrain({ blocked, bottom, isBlocked }: Input): boolean {
   let grain = CAVE_TOP;
 
