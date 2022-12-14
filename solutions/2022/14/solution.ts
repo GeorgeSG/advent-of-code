@@ -54,22 +54,20 @@ const GRAIN_MOVES = [
 function simulateGrain({ blocked, bottom, isBlocked }: Input): boolean {
   let grain = CAVE_TOP;
 
-  while (!isBlocked(grain)) {
+  while (true) {
     const next: Point2D | undefined = GRAIN_MOVES.map(([x, y]) => ({
       x: grain.x + x,
       y: grain.y + y,
     })).find((pos) => !isBlocked(pos));
 
-    if (next) {
-      if (next.x === bottom) return false; // sand is falling outside the map
-      grain = next;
-    } else {
-      if (R.equals(grain, CAVE_TOP)) return false; // sand reached cave top
-      blocked.add(toKey(grain));
+    if (!next) {
+      blocked.add(toKey(grain)); // This grain has fallen.
+      return !R.equals(grain, CAVE_TOP); // There's space for more if it's not at the top.
     }
-  }
 
-  return true;
+    if (next.x >= bottom) return false; // sand is falling outside the map, stop simulation
+    grain = next;
+  }
 }
 
 function simulateSandfall(input: Input): number {
