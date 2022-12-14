@@ -7,7 +7,7 @@ import { fromArray, Point2D, toKey } from '~utils/points';
 type Input = {
   blocked: Set<string>;
   bottom: number;
-  isBlocked(point: Point2D): boolean;
+  isBlocked(pos: Point2D): boolean;
 };
 
 // Parser
@@ -39,31 +39,33 @@ export function prepareInput(inputFile: string): Input {
   return {
     blocked,
     bottom,
-    isBlocked: (coord: Point2D) => blocked.has(toKey(coord)),
+    isBlocked: (pos: Point2D) => blocked.has(toKey(pos)),
   };
 }
 
-const START = { x: 0, y: 500 };
-function sandFall({ blocked, isBlocked, bottom }: Input) {
-  const moves = [
-    [1, 0],
-    [1, -1],
-    [1, 1],
-  ];
+const CAVE_TOP = { x: 0, y: 500 };
+const GRAIN_MOVES = [
+  [1, 0],
+  [1, -1],
+  [1, 1],
+];
 
-  let current = START;
+// Returns true if there's pos for more sand
+function simulateGrain({ blocked, bottom, isBlocked }: Input): boolean {
+  let grain = CAVE_TOP;
 
-  while (!isBlocked(current)) {
-    const next: Point2D | undefined = moves
-      .map(([moveX, moveY]) => ({ x: current.x + moveX, y: current.y + moveY }))
-      .find((point) => !isBlocked(point));
+  while (!isBlocked(grain)) {
+    const next: Point2D | undefined = GRAIN_MOVES.map(([x, y]) => ({
+      x: grain.x + x,
+      y: grain.y + y,
+    })).find((pos) => !isBlocked(pos));
 
     if (next) {
-      current = next;
-      if (current.x > bottom) return false;
+      if (next.x === bottom) return false; // sand is falling outside the map
+      grain = next;
     } else {
-      blocked.add(toKey(current));
-      if (R.equals(current, START)) return false;
+      if (R.equals(grain, CAVE_TOP)) return false; // sand reached cave top
+      blocked.add(toKey(grain));
     }
   }
 
@@ -72,7 +74,7 @@ function sandFall({ blocked, isBlocked, bottom }: Input) {
 
 function simulateSandfall(input: Input): number {
   let fallen = 0;
-  while (sandFall(input)) fallen += 1;
+  while (simulateGrain(input)) fallen += 1;
 
   return fallen;
 }
@@ -87,7 +89,7 @@ export function partB({ blocked, bottom }: Input): number {
   const input = {
     blocked,
     bottom: bottom + 2,
-    isBlocked: (coord: Point2D) => coord.x === input.bottom || input.blocked.has(toKey(coord)),
+    isBlocked: (pos: Point2D) => pos.x === input.bottom || input.blocked.has(toKey(pos)),
   };
 
   return simulateSandfall(input) + 1;
