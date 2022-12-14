@@ -48,14 +48,14 @@ export class SolutionRunner {
   }
 
   runAll(parts: Part[], runs: RunType[]) {
-    R.xprod(parts, runs).forEach((configuration) => this.runByPartAndRunType(...configuration));
+    R.xprod(runs, parts).forEach((configuration) => this.runByPartAndRunType(...configuration));
 
     if (this.printers.includes(Printer.TABLE)) {
       this.table.printTable();
     }
   }
 
-  private runByPartAndRunType(part: Part, runType: RunType) {
+  private runByPartAndRunType(runType: RunType, part: Part) {
     // Check that solution exists and get handlers
     const { solutionFn, prepareInput } = this.loadSolution(part);
 
