@@ -32,33 +32,29 @@ function isSensorCovering(point: Point2D, sensor: Point2D, beacon: Point2D): boo
   return distance(sensor, beacon) >= distance(sensor, point);
 }
 
-// Returns the left and round index of the coverage of the sensor on line y
+// Returns the left and right index of the coverage of the sensor on line y
 function sensorCoverageOnY(y: number, sensor: Point2D, range: number): [number, number] | null {
-  if (range < Math.abs(y - sensor.y)) {
-    return null;
-  }
-
   const delta = range - Math.abs(sensor.y - y);
-  return [sensor.x - delta, sensor.x + delta];
+  return delta > 0 ? [sensor.x - delta, sensor.x + delta] : null;
 }
 
 // Simplifies an array of ranges ex: [[1, 2], [3, 4], [2, 4], [5, 6], [9, 9]] -> [[1, 6], [9, 9]]
 function simplifyRanges(ranges: [number, number][]): [number, number][] {
   const sortedRanges = ranges.slice().sort((a, b) => a[0] - b[0]);
-  const splatRanges = [sortedRanges[0]];
+  const result = [sortedRanges[0]];
 
   for (let i = 1; i < ranges.length; i++) {
-    const current = splatRanges[splatRanges.length - 1];
+    const current = result[result.length - 1];
     const range = sortedRanges[i];
 
     if (range[0] <= current[1] + 1 && current[1] <= range[1]) {
       current[1] = range[1];
     } else if (range[0] > current[1]) {
-      splatRanges.push(range);
+      result.push(range);
     }
   }
 
-  return splatRanges;
+  return result;
 }
 
 // ---- Part A ----
