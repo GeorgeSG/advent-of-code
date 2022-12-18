@@ -14,13 +14,17 @@ const DIRECTIONS_3D = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], 
 
 const toKey = (coords: number[]) => coords.join(',');
 
-// ---- Part A ----
-export function partA(input: Input): number {
+function findTotalSurface(input: Input): number {
   return [...input.keys()].reduce((surface, cube) => {
     const coords = cube.split(',').map(toI);
-    const sides = DIRECTIONS_3D.filter((dir) => input.has(toKey(sumArrays(coords, dir))));
-    return surface + 6 - sides.length;
+    const coveredSides = DIRECTIONS_3D.filter((dir) => input.has(toKey(sumArrays(coords, dir))));
+    return surface + 6 - coveredSides.length;
   }, 0);
+}
+
+// ---- Part A ----
+export function partA(input: Input): number {
+  return findTotalSurface(input);
 }
 
 function hasWallInDirection(coords: number[], input: Input, direction: number) {
@@ -53,13 +57,7 @@ function isInPocket(coords: number[], input: Set<string>) {
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const sides = [...input.keys()].reduce((surface, cube) => {
-    const coords = cube.split(',').map(toI);
-    const directions = DIRECTIONS_3D.map((direction) => sumArrays(coords, direction));
-    const closedSides = directions.filter((side) => input.has(toKey(side)));
-
-    return surface + 6 - closedSides.length;
-  }, 0);
+  const surface = findTotalSurface(input);
 
   let pocketSides = 0;
   for (let x = 0; x < 20; x++) {
@@ -79,5 +77,5 @@ export function partB(input: Input): number {
     }
   }
 
-  return sides - pocketSides;
+  return surface - pocketSides;
 }
