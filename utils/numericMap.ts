@@ -41,7 +41,7 @@ export class NumericMap<TKey extends string> {
     return Object.keys(this.map);
   }
 
-  values() {
+  values(): number[] {
     return Object.values(this.map);
   }
 }
