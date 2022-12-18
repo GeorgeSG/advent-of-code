@@ -15,6 +15,9 @@ export const intersectAll = <T>(arrays: T[][]) =>
 export const sortNums = (array: number[], direction: SortDirection = SortDirection.ASC): number[] =>
   array.sort(numberCompare(direction));
 
+export const sumArrays = (array1: number[], array2: number[]): number[] =>
+  R.map(R.sum, R.zip(array1, array2));
+
 export const ijMeBro = <T>(array: T[][], callback: (i: number, j: number, el: T) => void) => {
   for (let i = 0; i < array.length; i++) {
     for (let j = 0; j < array[i].length; j++) {
