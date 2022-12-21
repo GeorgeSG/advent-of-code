@@ -12,7 +12,6 @@ export function prepareInput(inputFile: string): Input {
 
 function mix(nodeList: Node<number>[], list: CyclicalLinkedList<number>) {
   nodeList.forEach((node) => {
-    let current = node;
     const value = node.value;
     if (value === 0) return;
 
@@ -22,6 +21,7 @@ function mix(nodeList: Node<number>[], list: CyclicalLinkedList<number>) {
     // if going backwards, we need to insert after the element prior to the lastStep
     if (direction === 'prev') moveSteps += 1;
 
+    let current = node;
     R.range(0, moveSteps).forEach(() => (current = current[direction]));
 
     list.remove(node);
