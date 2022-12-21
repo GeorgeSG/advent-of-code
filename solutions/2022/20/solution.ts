@@ -30,10 +30,10 @@ function mix(nodeList: Node<number>[], list: CyclicalLinkedList<number>) {
 }
 
 function solve(list: CyclicalLinkedList<number>, mixTimes: number): number {
-  const nodes = list.nodes;
+  const nodes = list.getNodes();
   R.range(0, mixTimes).forEach(() => mix(nodes, list));
 
-  const values = list.values;
+  const values = list.getValues();
   const zero = values.findIndex((val) => val === 0);
 
   return R.sum([1000, 2000, 3000].map((offset) => values[(zero + offset) % values.length]));
