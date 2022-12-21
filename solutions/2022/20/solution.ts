@@ -1,6 +1,6 @@
 import R from 'ramda';
 import { readFile } from '~utils/core';
-import { CyclicalLinkedList, Node } from '~utils/cyclicalLinkedList';
+import { CyclicalLinkedList, Node } from '~utils/linkedList';
 import { toI } from '~utils/numbers';
 
 type Input = number[];
