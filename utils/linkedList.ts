@@ -63,7 +63,7 @@ export class LinkedList<T> {
     node.next = null;
   }
 
-  get nodes(): Node<T>[] {
+  getNodes(): Node<T>[] {
     const nodes: Node<T>[] = [this.start];
 
     let node = this.start;
@@ -75,7 +75,7 @@ export class LinkedList<T> {
     return nodes;
   }
 
-  get values(): T[] {
+  getValues(): T[] {
     const result: T[] = [this.start.value];
 
     let node = this.start;
@@ -88,7 +88,7 @@ export class LinkedList<T> {
   }
 
   toString(delimiter = ', ') {
-    return this.values.join(delimiter);
+    return this.getValues().join(delimiter);
   }
 }
 
