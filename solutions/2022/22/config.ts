@@ -11,7 +11,7 @@ export const example_22 = {
     6: [ [1, 180], [2, 90], [5, 0], [4, 90], ],
   },
 
-  computeSides(map: string[]): string[][] {
+  extractSides(map: string[]): string[][] {
     const sides: string[][] = [['dummy'], [], [], [], [], [], []];
     const cubeSide = 4;
 
@@ -32,7 +32,7 @@ export const example_22 = {
 
     return sides;
   },
-  finalCoords(cubeSide) {
+  remapCoordsToMap(cubeSide) {
     return {
       1: ({ x, y }) => ({ x, y: 2 * cubeSide + y }),
       2: ({ x, y }) => ({ x: cubeSide + x, y }),
@@ -57,7 +57,7 @@ export const real_22 = {
     6: [ [5, 90], [2, 0], [1, 90], [4, 0], ],
   },
 
-  computeSides(map: string[]): string[][] {
+  extractSides(map: string[]): string[][] {
     const sides: string[][] = [['dummy'], [], [], [], [], [], []];
     const cubeSide = 50;
 
@@ -81,7 +81,7 @@ export const real_22 = {
     return sides;
   },
 
-  finalCoords(cubeSide) {
+  remapCoordsToMap(cubeSide) {
     return {
       1: ({ x, y }) => ({ x, y: cubeSide + y }),
       2: ({ x, y }) => ({ x, y: 2 * cubeSide + y }),
