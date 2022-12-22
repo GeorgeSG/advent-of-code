@@ -13,7 +13,7 @@ type Direction = {
 type Input = {
   directions: Direction[];
   map: string[];
-  config: any;
+  partBconfig: any;
 };
 
 const FACING_STEP_DELTA = {
@@ -47,9 +47,9 @@ export function prepareInput(inputFile: string): Input {
   const longestLine = findMax(input.map((line) => line.length));
 
   // here be hardcoded magic
-  let config = inputFile.includes('example') ? example_22 : real_22;
+  let partBconfig = inputFile.includes('example') ? example_22 : real_22;
 
-  return { directions, map: input.map((line) => line.padEnd(longestLine, ' ')), config };
+  return { directions, map: input.map((line) => line.padEnd(longestLine, ' ')), partBconfig };
 }
 
 const sumPoints = R.mergeWith(R.add);
@@ -130,9 +130,9 @@ export function partA(input: Input): number {
 // ---- Part B ----
 
 export function partB(input: Input): number {
-  const { map, directions, config } = input;
+  const { map, directions } = input;
   const { cubeSide, computeSides, finalCoords, SWITCH_SIDES, SWITCH_COORDS, SWITCH_FACING } =
-    config;
+    input.partBconfig;
 
   const sides = computeSides(map);
 
