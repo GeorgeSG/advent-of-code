@@ -161,9 +161,9 @@ const MOVEMENT = [
 
 export function partB(input: Input): number {
   const { map, directions } = input;
-  const { cubeSide, computeSides, finalCoords, NEIGHBOURS } = input.partBconfig;
+  const { cubeSide, extractSides, remapCoordsToMap, NEIGHBOURS } = input.partBconfig;
 
-  const sides = computeSides(map);
+  const sides = extractSides(map);
 
   let current = { side: 1, coords: { x: 0, y: 0 } };
   let facing = 0;
@@ -198,6 +198,6 @@ export function partB(input: Input): number {
     facing = turn ? makeTurn(facing, turn) : facing;
   });
 
-  const position = finalCoords(cubeSide)[current.side](current.coords);
+  const position = remapCoordsToMap(cubeSide)[current.side](current.coords);
   return resultFromFinalPos(position, facing);
 }
