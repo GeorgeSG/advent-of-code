@@ -1,8 +1,9 @@
 import R from 'ramda';
-import { findMax, ijMeBro } from '~utils/arrays';
-import { readFile, readFileRaw } from '~utils/core';
+import { findMax } from '~utils/arrays';
+import { readFileRaw } from '~utils/core';
 import { toI } from '~utils/numbers';
 import { Point2D } from '~utils/points';
+import { example_22, real_22 } from './config';
 
 type Direction = {
   steps: number;
@@ -12,10 +13,8 @@ type Direction = {
 type Input = {
   directions: Direction[];
   map: string[];
+  config: any;
 };
-
-type WrappingFn = (point: Point2D, map: string[]) => Point2D;
-type StepFn = (point: Point2D, facing: number, map: string[]) => Point2D;
 
 const FACING_STEP_DELTA = {
   0: { x: 0, y: 1 },
@@ -46,7 +45,11 @@ export function prepareInput(inputFile: string): Input {
   directions.push({ steps: toI(currentDirection) });
 
   const longestLine = findMax(input.map((line) => line.length));
-  return { directions, map: input.map((line) => line.padEnd(longestLine, ' ')) };
+
+  // here be hardcoded magic
+  let config = inputFile.includes('example') ? example_22 : real_22;
+
+  return { directions, map: input.map((line) => line.padEnd(longestLine, ' ')), config };
 }
 
 const sumPoints = R.mergeWith(R.add);
@@ -57,54 +60,43 @@ function makeTurn(currentFacing: number, turn: 'L' | 'R'): number {
   return newFacing === -1 ? 3 : newFacing;
 }
 
-function move(
-  start: Point2D,
-  facing: number,
-  steps: number,
-  stepFn: StepFn,
-  map: string[]
-): Point2D {
-  let newPos = start;
-  while (steps > 0) {
-    steps -= 1;
-
-    let step = stepFn(newPos, facing, map);
-    if (map[step.x][step.y] === '#') {
-      return newPos;
-    } else {
-      newPos = step;
-    }
-  }
-
-  return newPos;
-}
-
-function findStart(map: string[]): Point2D {
-  for (let i = 0; i < map[0].length; i++) {
-    if (map[0][i] === '.') {
-      return { x: 0, y: i };
-    }
-  }
-}
-
-function findLastPosition(input: Input, stepFn: StepFn): number {
-  const { map, directions } = input;
-
-  let facing = 0;
-  let position: Point2D = findStart(map);
-
-  directions.forEach(({ steps, turn }) => {
-    position = move(position, facing, steps, stepFn, map);
-    facing = turn ? makeTurn(facing, turn) : facing;
-  });
-
+function resultFromFinalPos(position: Point2D, facing: number): number {
   position = sumPoints(position, { x: 1, y: 1 });
   return position.x * 1000 + position.y * 4 + facing;
 }
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const wrapEmptySpace: WrappingFn = ({ x, y }: Point2D, map: string[]): Point2D => {
+  type WrappingFn = (point: Point2D) => Point2D;
+  type StepFn = (point: Point2D, facing: number) => Point2D;
+  const { map, directions } = input;
+
+  // helper FNs
+  const move = (start: Point2D, facing: number, steps: number, stepFn: StepFn): Point2D => {
+    let newPos = start;
+    while (steps > 0) {
+      steps -= 1;
+
+      let step = stepFn(newPos, facing);
+      if (map[step.x][step.y] === '#') {
+        return newPos;
+      } else {
+        newPos = step;
+      }
+    }
+
+    return newPos;
+  };
+
+  const findStart = (): Point2D => {
+    for (let i = 0; i < map[0].length; i++) {
+      if (map[0][i] === '.') {
+        return { x: 0, y: i };
+      }
+    }
+  };
+
+  const wrapEmptySpace: WrappingFn = ({ x, y }: Point2D): Point2D => {
     if (x === -1) return { x: map.length - 1, y };
     if (x === map.length) return { x: 0, y };
     if (y === -1) return { x, y: map[x].length - 1 };
@@ -113,113 +105,38 @@ export function partA(input: Input): number {
     return { x, y };
   };
 
-  const wrappingStep: StepFn = (start: Point2D, facing: number, map: string[]): Point2D => {
+  const wrappingStep: StepFn = (start: Point2D, facing: number): Point2D => {
     const stepDelta = FACING_STEP_DELTA[facing];
     let attemptStep = start;
     do {
-      attemptStep = wrapEmptySpace(sumPoints(attemptStep, stepDelta), map);
+      attemptStep = wrapEmptySpace(sumPoints(attemptStep, stepDelta));
     } while (map[attemptStep.x][attemptStep.y] === ' ');
 
     return attemptStep;
   };
 
-  return findLastPosition(input, wrappingStep);
+  // solve
+  let facing = 0;
+  let position: Point2D = findStart();
+
+  directions.forEach(({ steps, turn }) => {
+    position = move(position, facing, steps, wrappingStep);
+    facing = turn ? makeTurn(facing, turn) : facing;
+  });
+
+  return resultFromFinalPos(position, facing);
 }
 
 // ---- Part B ----
-export const SWITCH_SIDES = {
-  1: [2, 3, 4, 6],
-  2: [5, 3, 1, 6],
-  3: [2, 5, 4, 1],
-  4: [5, 6, 1, 3],
-  5: [2, 6, 4, 3],
-  6: [5, 2, 1, 4],
-};
-
-export const SWITCH_COORDS = {
-  1: [
-    ({ x, y }, n) => ({ x, y: 0 }),
-    ({ x, y }, n) => ({ x: 0, y }),
-    ({ x, y }, n) => ({ x: n - x, y: 0 }),
-    ({ x, y }, n) => ({ x: y, y: 0 }),
-  ],
-  2: [
-    ({ x, y }, n) => ({ x: n - x, y: n }),
-    ({ x, y }, n) => ({ x: y, y: n }),
-    ({ x, y }, n) => ({ x, y: n }),
-    ({ x, y }, n) => ({ x: n, y }),
-  ],
-  3: [
-    ({ x, y }, n) => ({ x: n, y: x }),
-    ({ x, y }, n) => ({ x: 0, y }),
-    ({ x, y }, n) => ({ x: 0, y: x }),
-    ({ x, y }, n) => ({ x: n, y }),
-  ],
-  4: [
-    ({ x, y }, n) => ({ x, y: 0 }),
-    ({ x, y }, n) => ({ x: 0, y }),
-    ({ x, y }, n) => ({ x: n - x, y: 0 }),
-    ({ x, y }, n) => ({ x: y, y: 0 }),
-  ],
-  5: [
-    ({ x, y }, n) => ({ x: n - x, y: n }),
-    ({ x, y }, n) => ({ x: y, y: n }),
-    ({ x, y }, n) => ({ x, y: n }),
-    ({ x, y }, n) => ({ x: n, y }),
-  ],
-  6: [
-    ({ x, y }, n) => ({ x: n, y: x }),
-    ({ x, y }, n) => ({ x: 0, y }),
-    ({ x, y }, n) => ({ x: 0, y: x }),
-    ({ x, y }, n) => ({ x: n, y }),
-  ],
-};
-
-export const SWITCH_FACING = {
-  1: [0, 1, 0, 0],
-  2: [2, 2, 2, 3],
-  3: [3, 1, 1, 3],
-  4: [0, 1, 0, 0],
-  5: [2, 2, 2, 3],
-  6: [3, 1, 1, 3],
-};
 
 export function partB(input: Input): number {
-  const { map, directions } = input;
+  const { map, directions, config } = input;
 
-  const sides: string[][] = [
-    ['i am a dummy, because sides are labelled 1-6'],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-  ];
+  const sides = config.computeSides(map);
 
-  const cubeSide = 50;
-  for (let i = 0; i < cubeSide; i++) {
-    sides[1].push(map[i].slice(cubeSide, 2 * cubeSide));
-    sides[2].push(map[i].slice(2 * cubeSide, 3 * cubeSide));
-  }
+  const cubeMax = config.cubeSide - 1;
 
-  for (let i = cubeSide; i < cubeSide * 2; i++) {
-    sides[3].push(map[i].slice(cubeSide, 2 * cubeSide));
-  }
-
-  for (let i = cubeSide * 2; i < cubeSide * 3; i++) {
-    sides[4].push(map[i].slice(0, cubeSide));
-    sides[5].push(map[i].slice(cubeSide, 2 * cubeSide));
-  }
-
-  for (let i = cubeSide * 3; i < cubeSide * 4; i++) {
-    sides[6].push(map[i].slice(0, cubeSide));
-  }
-
-  type Position = { side: number; coords: Point2D };
-  const cubeMax = cubeSide - 1;
-
-  let current: Position = { side: 1, coords: { x: 0, y: 0 } };
+  let current = { side: 1, coords: { x: 0, y: 0 } };
   let facing = 0;
 
   directions.forEach(({ steps, turn }) => {
@@ -233,9 +150,9 @@ export function partB(input: Input): number {
       const { x: newX, y: newY } = attemptStep;
 
       if (newX < 0 || newY < 0 || newX > cubeMax || newY > cubeMax) {
-        tempSide = SWITCH_SIDES[current.side][facing];
-        tempCoords = SWITCH_COORDS[current.side][facing](current.coords, cubeMax);
-        tempFacing = SWITCH_FACING[current.side][facing];
+        tempSide = config.SWITCH_SIDES[current.side][facing];
+        tempCoords = config.SWITCH_COORDS[current.side][facing](current.coords, cubeMax);
+        tempFacing = config.SWITCH_FACING[current.side][facing];
       } else {
         tempCoords = attemptStep;
       }
@@ -250,21 +167,9 @@ export function partB(input: Input): number {
     facing = turn ? makeTurn(facing, turn) : facing;
   });
 
-  const FINAL_COORDS = {
-    1: ({ x, y }) => ({ x, y: cubeSide + y }),
-    2: ({ x, y }) => ({ x, y: 2 * cubeSide + y }),
-    3: ({ x, y }) => ({ x: cubeSide + x, y: cubeSide + y }),
-    4: ({ x, y }) => ({ x: 2 * cubeSide + x, y }),
-    5: ({ x, y }) => ({ x: 2 * cubeSide + x, y: cubeSide + y }),
-    6: ({ x, y }) => ({ x: 3 * cubeMax + x, y }),
-  };
-
   const { side, coords } = current;
 
-  const finalCoords = sumPoints(FINAL_COORDS[side](coords), { x: 1, y: 1 });
+  const finalCoords = sumPoints(config.finalCoords(config.cubeSide)[side](coords), { x: 1, y: 1 });
 
-  console.log(finalCoords);
-
-  // not 65318, 65, 79
   return finalCoords.x * 1000 + finalCoords.y * 4 + facing;
 }
