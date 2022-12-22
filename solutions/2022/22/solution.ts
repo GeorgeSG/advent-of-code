@@ -131,10 +131,12 @@ export function partA(input: Input): number {
 
 export function partB(input: Input): number {
   const { map, directions, config } = input;
+  const { cubeSide, computeSides, finalCoords, SWITCH_SIDES, SWITCH_COORDS, SWITCH_FACING } =
+    config;
 
-  const sides = config.computeSides(map);
+  const sides = computeSides(map);
 
-  const cubeMax = config.cubeSide - 1;
+  const cubeMax = cubeSide - 1;
 
   let current = { side: 1, coords: { x: 0, y: 0 } };
   let facing = 0;
@@ -150,9 +152,9 @@ export function partB(input: Input): number {
       const { x: newX, y: newY } = attemptStep;
 
       if (newX < 0 || newY < 0 || newX > cubeMax || newY > cubeMax) {
-        tempSide = config.SWITCH_SIDES[current.side][facing];
-        tempCoords = config.SWITCH_COORDS[current.side][facing](current.coords, cubeMax);
-        tempFacing = config.SWITCH_FACING[current.side][facing];
+        tempSide = SWITCH_SIDES[current.side][facing];
+        tempCoords = SWITCH_COORDS[current.side][facing](current.coords, cubeMax);
+        tempFacing = SWITCH_FACING[current.side][facing];
       } else {
         tempCoords = attemptStep;
       }
@@ -167,9 +169,6 @@ export function partB(input: Input): number {
     facing = turn ? makeTurn(facing, turn) : facing;
   });
 
-  const { side, coords } = current;
-
-  const finalCoords = sumPoints(config.finalCoords(config.cubeSide)[side](coords), { x: 1, y: 1 });
-
-  return finalCoords.x * 1000 + finalCoords.y * 4 + facing;
+  const position = finalCoords(cubeSide)[current.side](current.coords);
+  return resultFromFinalPos(position, facing);
 }
