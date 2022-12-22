@@ -128,11 +128,40 @@ export function partA(input: Input): number {
 }
 
 // ---- Part B ----
+const MOVEMENT = [
+  // right
+  {
+    0: { facing: 0, fn: ({ x, y }, n) => ({ x, y: 0 }) },
+    90: { facing: 3, fn: ({ x, y }, n) => ({ x: n, y: x }) },
+    180: { facing: 2, fn: ({ x, y }, n) => ({ x: n - x, y: n }) },
+    270: { facing: 1, fn: ({ x, y }, n) => ({ x: 0, y: n - x }) },
+  },
+  // down
+  {
+    0: { facing: 1, fn: ({ y }, n) => ({ x: 0, y }) },
+    90: { facing: 0, fn: ({ x, y }, n) => ({ x: n - y, y: 0 }) },
+    180: { facing: 3, fn: ({ x, y }, n) => ({ x: n, y: n - y }) },
+    270: { facing: 2, fn: ({ x, y }, n) => ({ x: y, y: n }) },
+  },
+  // left
+  {
+    0: { facing: 2, fn: ({ x, y }, n) => ({ x, y: n }) },
+    90: { facing: 1, fn: ({ x, y }, n) => ({ x: 0, y: x }) },
+    180: { facing: 0, fn: ({ x, y }, n) => ({ x: n - x, y: 0 }) },
+    270: { facing: 3, fn: ({ x, y }, n) => ({ x: n, y: n - x }) },
+  },
+  // up
+  {
+    0: { facing: 3, fn: ({ x, y }, n) => ({ x: n, y }) },
+    90: { facing: 2, fn: ({ x, y }, n) => ({ x: n - y, y: n }) },
+    180: { facing: 1, fn: ({ x, y }, n) => ({ x: 0, y: n - y }) },
+    270: { facing: 0, fn: ({ x, y }, n) => ({ x: y, y: 0 }) },
+  },
+];
 
 export function partB(input: Input): number {
   const { map, directions } = input;
-  const { cubeSide, computeSides, finalCoords, SWITCH_SIDES, SWITCH_COORDS, SWITCH_FACING } =
-    input.partBconfig;
+  const { cubeSide, computeSides, finalCoords, NEIGHBOURS } = input.partBconfig;
 
   const sides = computeSides(map);
 
@@ -150,9 +179,10 @@ export function partB(input: Input): number {
       let attemptStep = sumPoints(current.coords, FACING_STEP_DELTA[facing]);
       const { x: newX, y: newY } = attemptStep;
       if (newX < 0 || newY < 0 || newX >= cubeSide || newY >= cubeSide) {
-        tempSide = SWITCH_SIDES[current.side][facing];
-        tempCoords = SWITCH_COORDS[current.side][facing](current.coords, cubeSide - 1);
-        tempFacing = SWITCH_FACING[current.side][facing];
+        tempSide = NEIGHBOURS[current.side][facing][0];
+        const degrees = NEIGHBOURS[current.side][facing][1];
+        tempCoords = MOVEMENT[facing][degrees].fn(current.coords, cubeSide - 1);
+        tempFacing = MOVEMENT[facing][degrees].facing;
       } else {
         tempCoords = attemptStep;
       }

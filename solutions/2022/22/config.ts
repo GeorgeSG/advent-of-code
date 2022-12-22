@@ -1,75 +1,20 @@
 export const example_22 = {
   cubeSide: 4,
-  SWITCH_SIDES: {
-    1: [6, 4, 3, 2],
-    2: [3, 5, 6, 1],
-    3: [4, 5, 2, 1],
-    4: [6, 5, 3, 1],
-    5: [6, 2, 3, 4],
-    6: [1, 2, 5, 4],
-  },
-
-  SWITCH_COORDS: {
-    1: [
-      ({ x, y }, n) => ({ x: n - x, y: n }),
-      ({ y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x: 0, y: x }),
-      ({ x, y }, n) => ({ x: 0, y: n - y }),
-    ],
-    2: [
-      ({ x, y }, n) => ({ x, y: 0 }),
-      ({ x, y }, n) => ({ x: n, y: n - y }),
-      ({ x, y }, n) => ({ x: n, y: n - x }),
-      ({ x, y }, n) => ({ x: 0, y: n - y }),
-    ],
-
-    3: [
-      ({ x, y }, n) => ({ x, y: 0 }),
-      ({ x, y }, n) => ({ x: n - y, y: 0 }),
-      ({ x, y }, n) => ({ x, y: n }),
-      ({ x, y }, n) => ({ x: y, y: 0 }),
-    ],
-    4: [
-      ({ x, y }, n) => ({ x: 0, y: n - x }),
-      ({ x, y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x, y: n }),
-      ({ x, y }, n) => ({ x: n, y }),
-    ],
-    5: [
-      ({ x, y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x: n, y: n - y }),
-      ({ x, y }, n) => ({ x: n, y: n - x }),
-      ({ x, y }, n) => ({ x: n, y }),
-    ],
-    6: [
-      ({ x, y }, n) => ({ x: n - x, y: n }),
-      ({ x, y }, n) => ({ x: n - y, y: 0 }),
-      ({ x, y }, n) => ({ x, y: n }),
-      ({ x, y }, n) => ({ x: n - y, y: n }),
-    ],
-  },
-
-  SWITCH_FACING: {
-    1: [2, 1, 1, 1],
-    2: [0, 3, 3, 1],
-    3: [0, 0, 2, 2],
-    4: [1, 1, 2, 1],
-    5: [0, 3, 3, 3],
-    6: [2, 0, 2, 2],
+  // NEIGHBOURS: right/down/left/up neighbour -> side & rotaton
+  // prettier-ignore
+  NEIGHBOURS: {
+    1: [ [6, 180], [4, 0], [3, 90], [2, 180], ],
+    2: [ [3, 0], [5, 180], [6, 270], [1, 180], ],
+    3: [ [4, 9], [5, 90], [2, 0], [1, 270], ],
+    4: [ [6, 270], [5, 0], [3, 0], [1, 0], ],
+    5: [ [6, 0], [2, 180], [3, 270], [4, 0], ],
+    6: [ [1, 180], [2, 90], [5, 0], [4, 90], ],
   },
 
   computeSides(map: string[]): string[][] {
-    const sides: string[][] = [
-      ['i am a dummy, because sides are labelled 1-6'],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-    ];
+    const sides: string[][] = [['dummy'], [], [], [], [], [], []];
+    const cubeSide = 4;
 
-    const cubeSide = map.length / 3;
     for (let i = 0; i < cubeSide; i++) {
       sides[1].push(map[i].trim());
     }
@@ -101,72 +46,21 @@ export const example_22 = {
 
 export const real_22 = {
   cubeSide: 50,
-  SWITCH_SIDES: {
-    1: [2, 3, 4, 6],
-    2: [5, 3, 1, 6],
-    3: [2, 5, 4, 1],
-    4: [5, 6, 1, 3],
-    5: [2, 6, 4, 3],
-    6: [5, 2, 1, 4],
+  // NEIGHBOURS: right/down/left/up neighbour -> side & rotaton
+  // prettier-ignore
+  NEIGHBOURS: {
+    1: [ [2, 0], [3, 0], [4, 180], [6, 270], ],
+    2: [ [5, 180], [3, 270], [1, 0], [6, 0], ],
+    3: [ [2, 90], [5, 0], [4, 90], [1, 0], ],
+    4: [ [5, 0], [6, 0], [1, 180], [3, 270], ],
+    5: [ [2, 180], [6, 270], [4, 0], [3, 0], ],
+    6: [ [5, 90], [2, 0], [1, 90], [4, 0], ],
   },
-  SWITCH_COORDS: {
-    1: [
-      ({ x, y }, n) => ({ x, y: 0 }),
-      ({ x, y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x: n - x, y: 0 }),
-      ({ x, y }, n) => ({ x: y, y: 0 }),
-    ],
-    2: [
-      ({ x, y }, n) => ({ x: n - x, y: n }),
-      ({ x, y }, n) => ({ x: y, y: n }),
-      ({ x, y }, n) => ({ x, y: n }),
-      ({ x, y }, n) => ({ x: n, y }),
-    ],
-    3: [
-      ({ x, y }, n) => ({ x: n, y: x }),
-      ({ x, y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x: 0, y: x }),
-      ({ x, y }, n) => ({ x: n, y }),
-    ],
-    4: [
-      ({ x, y }, n) => ({ x, y: 0 }),
-      ({ x, y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x: n - x, y: 0 }),
-      ({ x, y }, n) => ({ x: y, y: 0 }),
-    ],
-    5: [
-      ({ x, y }, n) => ({ x: n - x, y: n }),
-      ({ x, y }, n) => ({ x: y, y: n }),
-      ({ x, y }, n) => ({ x, y: n }),
-      ({ x, y }, n) => ({ x: n, y }),
-    ],
-    6: [
-      ({ x, y }, n) => ({ x: n, y: x }),
-      ({ x, y }, n) => ({ x: 0, y }),
-      ({ x, y }, n) => ({ x: 0, y: x }),
-      ({ x, y }, n) => ({ x: n, y }),
-    ],
-  },
-  SWITCH_FACING: {
-    1: [0, 1, 0, 0],
-    2: [2, 2, 2, 3],
-    3: [3, 1, 1, 3],
-    4: [0, 1, 0, 0],
-    5: [2, 2, 2, 3],
-    6: [3, 1, 1, 3],
-  },
-  computeSides(map: string[]): string[][] {
-    const sides: string[][] = [
-      ['i am a dummy, because sides are labelled 1-6'],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-    ];
 
+  computeSides(map: string[]): string[][] {
+    const sides: string[][] = [['dummy'], [], [], [], [], [], []];
     const cubeSide = 50;
+
     for (let i = 0; i < cubeSide; i++) {
       sides[1].push(map[i].slice(cubeSide, 2 * cubeSide));
       sides[2].push(map[i].slice(2 * cubeSide, 3 * cubeSide));
@@ -186,6 +80,7 @@ export const real_22 = {
     }
     return sides;
   },
+
   finalCoords(cubeSide) {
     return {
       1: ({ x, y }) => ({ x, y: cubeSide + y }),
