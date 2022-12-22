@@ -136,8 +136,6 @@ export function partB(input: Input): number {
 
   const sides = computeSides(map);
 
-  const cubeMax = cubeSide - 1;
-
   let current = { side: 1, coords: { x: 0, y: 0 } };
   let facing = 0;
 
@@ -148,12 +146,12 @@ export function partB(input: Input): number {
 
     while (steps > 0) {
       steps -= 1;
+
       let attemptStep = sumPoints(current.coords, FACING_STEP_DELTA[facing]);
       const { x: newX, y: newY } = attemptStep;
-
-      if (newX < 0 || newY < 0 || newX > cubeMax || newY > cubeMax) {
+      if (newX < 0 || newY < 0 || newX >= cubeSide || newY >= cubeSide) {
         tempSide = SWITCH_SIDES[current.side][facing];
-        tempCoords = SWITCH_COORDS[current.side][facing](current.coords, cubeMax);
+        tempCoords = SWITCH_COORDS[current.side][facing](current.coords, cubeSide - 1);
         tempFacing = SWITCH_FACING[current.side][facing];
       } else {
         tempCoords = attemptStep;
@@ -161,11 +159,12 @@ export function partB(input: Input): number {
 
       if (sides[tempSide][tempCoords.x].charAt(tempCoords.y) === '#') {
         break;
-      } else {
-        current = { side: tempSide, coords: tempCoords };
-        facing = tempFacing;
       }
+
+      current = { side: tempSide, coords: tempCoords };
+      facing = tempFacing;
     }
+
     facing = turn ? makeTurn(facing, turn) : facing;
   });
 
