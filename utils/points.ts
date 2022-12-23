@@ -51,11 +51,11 @@ export function render(points: Point2D[]) {
 }
 
 export function toKey({ x, y }: Point2D): string {
-  return `${x}-${y}`;
+  return `${x},${y}`;
 }
 
 export function fromKey(key: string) {
-  return { x: toI(key.split('-')[0]), y: toI(key.split('-')[1]) };
+  return { x: toI(key.split(',')[0]), y: toI(key.split(',')[1]) };
 }
 
 export function fromArray([x, y]: number[]): Point2D {
