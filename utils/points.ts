@@ -65,3 +65,23 @@ export function fromArray([x, y]: number[]): Point2D {
 export function sumPoints(p1: Point2D, p2: Point2D): Point2D {
   return { x: p1.x + p2.x, y: p1.y + p2.y };
 }
+
+export class Point {
+  constructor(public x: number, public y: number) {}
+
+  static fromArray([x, y]: number[]): Point {
+    return new Point(x, y);
+  }
+
+  static fromKey(key: string): Point {
+    return new Point(Number(key.split(',')[0]), Number(key.split(',')[1]));
+  }
+
+  toKey(): string {
+    return `${this.x},${this.y}`;
+  }
+
+  add({ x, y }: Point): Point {
+    return new Point(this.x + x, this.y + y);
+  }
+}
