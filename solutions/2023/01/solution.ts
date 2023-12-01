@@ -37,6 +37,7 @@ export function partB(input: Input): number {
       .replace(/oneight/g, 'oneeight')
       .replace(/threeight/g, 'threeeight')
       .replace(/fiveight/g, 'fiveeight')
+      .replace(/nineight/g, 'nineeight')
       .replace(/eightwo/g, 'eighttwo')
       .replace(/twone/g, 'twoone')
       .replace(/sevenine/g, 'sevennine')
