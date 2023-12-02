@@ -30,10 +30,10 @@ export function partA(games: Input): number {
   const GAME_LIMITS: RgbArray = [12, 13, 14];
 
   return games.reduce((result, game, turn) => {
-    const hasFailure = findMaxForGame(game).some(
+    const isImpossible = findMaxForGame(game).some(
       (gameMaxColor, colorIndex) => gameMaxColor > GAME_LIMITS[colorIndex]
     );
-    return hasFailure ? result : result + turn + 1;
+    return isImpossible ? result : result + turn + 1;
   }, 0);
 }
 
