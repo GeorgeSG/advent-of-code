@@ -12,7 +12,7 @@ export function prepareInput(inputFile: string): Input {
 
 const findValue = (regex: RegExp, line: string) => Number(regex.exec(line)?.[1] ?? 0);
 
-export const findMaxPerTurn = (game: string) =>
+export const findMaxPerTurn = (game: string): RgbArray =>
   game
     .split(':')[1]
     .split(';')
