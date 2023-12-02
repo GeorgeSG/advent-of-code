@@ -2,6 +2,7 @@ import R from 'ramda';
 import { findMax, sortNums } from '~utils/arrays';
 import { readFileRaw } from '~utils/core';
 import { toI } from '~utils/numbers';
+import { SortDirection } from '~utils/types';
 
 type Input = string[];
 
@@ -18,5 +19,5 @@ export function partA(input: Input): number {
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  return R.sum(sortNums(caloriesPerElf(input), true).slice(0, 3));
+  return R.sum(sortNums(caloriesPerElf(input), SortDirection.DESC).slice(0, 3));
 }

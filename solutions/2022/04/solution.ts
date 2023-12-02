@@ -6,11 +6,13 @@ type Input = Pair[];
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return readFile(inputFile, (line) =>
-    line
-      .split(',')
-      .map((elf) => elf.split('-').map(toI))
-      .sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]))
+  return readFile(
+    inputFile,
+    (line) =>
+      line
+        .split(',')
+        .map((elf) => elf.split('-').map(toI))
+        .sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0])) as Pair
   );
 }
 

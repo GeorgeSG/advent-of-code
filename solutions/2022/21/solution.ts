@@ -17,7 +17,7 @@ type Input = Record<string, Monkey>;
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  const input = readFile(inputFile, (line) => {
+  const input: Input[] = readFile(inputFile, (line) => {
     const name = line.slice(0, 4);
     const rest = line.slice(6);
 
@@ -34,7 +34,7 @@ export function prepareInput(inputFile: string): Input {
     }
   });
 
-  return R.mergeAll(input);
+  return R.mergeAll<Input>(input);
 }
 
 function queryMonkey(monkeyName: string, monkeys: Input): number {
