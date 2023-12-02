@@ -17,13 +17,11 @@ export const findMaxPerTurn = (game: string) =>
     .split(':')[1]
     .split(';')
     .reduce(
-      (max, round) => {
-        return [
-          Math.max(max[0], findValue(/(\d+) red/g, round)),
-          Math.max(max[1], findValue(/(\d+) green/g, round)),
-          Math.max(max[2], findValue(/(\d+) blue/g, round)),
-        ];
-      },
+      (max, round) => [
+        Math.max(max[0], findValue(/(\d+) red/g, round)),
+        Math.max(max[1], findValue(/(\d+) green/g, round)),
+        Math.max(max[2], findValue(/(\d+) blue/g, round)),
+      ],
       [0, 0, 0]
     );
 
