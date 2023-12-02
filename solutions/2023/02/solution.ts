@@ -29,8 +29,8 @@ export const findMaxPerTurn = (game: string): RgbArray =>
 export function partA(games: Input): number {
   const GAME_LIMITS: RgbArray = [12, 13, 14];
 
-  return games.reduce((result, gameInput, turn) => {
-    const hasFailure = findMaxPerTurn(gameInput).some(
+  return games.reduce((result, game, turn) => {
+    const hasFailure = findMaxPerTurn(game).some(
       (gameMaxColor, colorIndex) => gameMaxColor > GAME_LIMITS[colorIndex]
     );
     return hasFailure ? result : result + turn + 1;
