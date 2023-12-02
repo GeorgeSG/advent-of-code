@@ -20,13 +20,13 @@ export function partA(input: Input): number {
 export function partB(input: Input): number {
   return R.sum(
     input.map((mass) => {
-      let res = 0;
       let fuel = calcFuel(mass);
+      let res = fuel;
       while (calcFuel(fuel) > 0) {
-        res += fuel;
         fuel = calcFuel(fuel);
+        res += fuel;
       }
-      return res + fuel;
+      return res;
     })
   );
 }
