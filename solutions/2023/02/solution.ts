@@ -39,5 +39,5 @@ export function partA(games: Input): number {
 
 // ---- Part B ----
 export function partB(games: Input): number {
-  return games.reduce((power, game) => power + R.product(findMaxPerTurn(game)), 0);
+  return R.sum(games.map(findMaxPerTurn).map(R.product));
 }
