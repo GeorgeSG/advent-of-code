@@ -12,7 +12,7 @@ export function prepareInput(inputFile: string): Input {
 
 const findValue = (regex: RegExp, line: string) => Number(regex.exec(line)?.[1] ?? 0);
 
-export const findMaxPerTurn = (game: string): RgbArray =>
+export const findMaxPerGame = (game: string): RgbArray =>
   game
     .split(':')[1]
     .split(';')
@@ -30,7 +30,7 @@ export function partA(games: Input): number {
   const GAME_LIMITS: RgbArray = [12, 13, 14];
 
   return games.reduce((result, game, turn) => {
-    const hasFailure = findMaxPerTurn(game).some(
+    const hasFailure = findMaxPerGame(game).some(
       (gameMaxColor, colorIndex) => gameMaxColor > GAME_LIMITS[colorIndex]
     );
     return hasFailure ? result : result + turn + 1;
@@ -39,5 +39,5 @@ export function partA(games: Input): number {
 
 // ---- Part B ----
 export function partB(games: Input): number {
-  return R.sum(games.map(findMaxPerTurn).map(R.product));
+  return R.sum(games.map(findMaxPerGame).map(R.product));
 }
