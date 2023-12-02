@@ -1,7 +1,10 @@
 import { readFileSync } from 'fs';
 import { red } from 'kleur';
 
-export const readFile = (inputFile, lineTransformer?): string[] => {
+export const readFile = <T = string>(
+  inputFile: string,
+  lineTransformer?: (line: string, index: number) => T
+): T[] => {
   try {
     let input;
     input = readFileSync(inputFile, { encoding: 'utf8', flag: 'r' });

@@ -10,7 +10,7 @@ const LOSE = { A: 'Z', B: 'X', C: 'Y' };
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return readFile(inputFile, (line) => line.split(' '));
+  return readFile(inputFile, (line) => line.split(' ')) as Input;
 }
 
 function scoreGame(player1, player2): number {

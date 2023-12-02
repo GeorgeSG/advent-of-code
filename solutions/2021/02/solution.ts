@@ -1,11 +1,12 @@
 import { readFile } from '~utils/core';
 
-type Input = {
+type Command = {
   cmd: string;
   amount: number;
 };
+type Input = Command[];
 
-const lineParser = (line: string): Input => ({
+const lineParser = (line: string): Command => ({
   cmd: line.split(' ')[0],
   amount: parseInt(line.split(' ')[1]),
 });
@@ -14,7 +15,7 @@ export function prepareInput(inputFile: string): Input {
   return readFile(inputFile, lineParser);
 }
 
-export function partA(input: Input[]): number {
+export function partA(input: Input): number {
   let horizontal = 0;
   let depth = 0;
 
@@ -29,7 +30,7 @@ export function partA(input: Input[]): number {
   return horizontal * depth;
 }
 
-export function partB(input: Input[]): number {
+export function partB(input: Input): number {
   let horizontal = 0;
   let depth = 0;
   let aim = 0;

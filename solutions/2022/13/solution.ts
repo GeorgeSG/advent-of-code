@@ -5,7 +5,10 @@ type Input = any[];
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return R.splitEvery(2, readFile(inputFile).map(JSON.parse));
+  return R.splitEvery(
+    2,
+    readFile(inputFile).map((file) => JSON.parse(file))
+  );
 }
 
 const isNumber = (val: unknown): val is number => typeof val === 'number';

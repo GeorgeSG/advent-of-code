@@ -17,7 +17,7 @@ export function prepareInput(inputFile: string): Input {
   readFile(inputFile, (line) => {
     if (line.startsWith('fold')) {
       folds.push({
-        dir: line.split(' ')[2].split('=')[0],
+        dir: line.split(' ')[2].split('=')[0] as 'x' | 'y',
         value: toI(line.split('=')[1]),
       });
     } else {
