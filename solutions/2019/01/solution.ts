@@ -6,7 +6,7 @@ type Input = number[];
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return readFile(inputFile, (line) => toI(line));
+  return readFile(inputFile, toI);
 }
 
 const calcFuel = (mass: number) => Math.floor(mass / 3) - 2;
