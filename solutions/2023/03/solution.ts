@@ -9,19 +9,14 @@ export function prepareInput(inputFile: string): Input {
   return readFile(inputFile);
 }
 
-function allIndexesOf(str: string, char: string) {
-  return str
+const allIndexesOf = (str: string, char: string) =>
+  str
     .split('')
     .reduce<number[]>((indexes, current, i) => (current === char ? [...indexes, i] : indexes), []);
-}
 
-function matchAllNumbers(line: string) {
-  return line.matchAll(/(\d+)/g);
-}
+const matchAllNumbers = (line: string) => line.matchAll(/(\d+)/g);
 
-function toNumber(match: RegExpMatchArray): number {
-  return Number(match[0]);
-}
+const toNumber = (match: RegExpMatchArray) => Number(match[0]);
 
 // ---- Part A ----
 export function partA(input: Input): number {
