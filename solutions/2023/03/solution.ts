@@ -1,6 +1,6 @@
 import { product, sum } from 'ramda';
 import { readFile } from '~utils/core';
-import { Point2D, findAdjacentAll } from '~utils/points';
+import { Point2D, findAdjacentAll as getNeighbours } from '~utils/points';
 
 type Input = string[];
 
@@ -28,7 +28,7 @@ export function partA(input: Input): number {
     numberMatch[0]
       .split('')
       .some((_, i) =>
-        findAdjacentAll({ x: lineIndex, y: numberMatch.index + i }, inputMap).some(isSymbol)
+        getNeighbours({ x: lineIndex, y: numberMatch.index + i }, inputMap).some(isSymbol)
       );
 
   const partNumbersOnLine = (line: string, lineIndex: number) =>
