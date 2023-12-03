@@ -28,9 +28,9 @@ export function partA(input: Input): number {
   const isSymbol = (point: Point2D) => !/[0-9.]/.test(map.get(point));
 
   const isPart = (match: RegExpMatchArray, lineIndex: number) =>
-    match[0]
-      .split('')
-      .some((_, i) => map.findAdjacentAll({ x: lineIndex, y: match.index + i }).some(isSymbol));
+    [...match[0]].some((_, i) =>
+      map.findAdjacentAll({ x: lineIndex, y: match.index + i }).some(isSymbol)
+    );
 
   const partNumbersOnLine = (line: string, lineIndex: number) =>
     findNumbersBy(line, (match) => isPart(match, lineIndex));
