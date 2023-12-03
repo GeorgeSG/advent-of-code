@@ -1,6 +1,6 @@
 import { product, sum } from 'ramda';
 import { readFile } from '~utils/core';
-import { Point2D, findAdjacentAll as getNeighbours } from '~utils/points';
+import { Point2D, Map2D } from '~utils/points';
 
 type Input = string[];
 
@@ -23,15 +23,15 @@ const findNumbersBy = (str, filterFn: (match: RegExpMatchArray) => boolean) =>
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const inputMap = input.map((line) => line.split(''));
+  const map = Map2D.fromLines(input);
 
-  const isSymbol = ({ x, y }: Point2D) => !/[0-9.]/.test(inputMap[x][y]);
+  const isSymbol = (point: Point2D) => !/[0-9.]/.test(map.get(point));
 
   const isPart = (numberMatch: RegExpMatchArray, lineIndex: number) =>
     numberMatch[0]
       .split('')
       .some((_, i) =>
-        getNeighbours({ x: lineIndex, y: numberMatch.index + i }, inputMap).some(isSymbol)
+        map.findAdjacentAll({ x: lineIndex, y: numberMatch.index + i }).some(isSymbol)
       );
 
   const partNumbersOnLine = (line: string, lineIndex: number) =>
