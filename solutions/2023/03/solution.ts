@@ -15,7 +15,9 @@ const allIndexesOf = (str: string, char: string) =>
     .reduce<number[]>((indexes, current, i) => (current === char ? [...indexes, i] : indexes), []);
 
 const matchAllNumbers = (line: string) => line.matchAll(/(\d+)/g);
-const findNumbersBy = (line, filterFn) => [...matchAllNumbers(line)].filter(filterFn).map(toNumber);
+
+const findNumbers = (line, filterFn: (match: RegExpMatchArray) => boolean) =>
+  [...matchAllNumbers(line)].filter(filterFn).map(toNumber);
 
 const toNumber = (match: RegExpMatchArray) => Number(match[0]);
 
@@ -33,7 +35,7 @@ export function partA(input: Input): number {
       );
 
   const partNumbersOnLine = (line: string, lineIndex: number) =>
-    findNumbersBy(line, (match) => isPart(match, lineIndex));
+    findNumbers(line, (match) => isPart(match, lineIndex));
 
   return sum(input.flatMap(partNumbersOnLine));
 }
@@ -43,7 +45,7 @@ export function partB(input: Input): number {
   const GEAR = '*';
 
   const adjacentPartsOnLine = (gearIndex: number, line: string) =>
-    findNumbersBy(
+    findNumbers(
       line,
       (match) => match.index - 1 <= gearIndex && match.index + match[0].length >= gearIndex
     );
