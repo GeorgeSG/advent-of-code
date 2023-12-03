@@ -85,3 +85,23 @@ export class Point {
     return new Point(this.x + x, this.y + y);
   }
 }
+
+export class Map2D {
+  static fromLines(lines: string[]) {
+    return new Map2D(lines.map((line) => line.split('')));
+  }
+
+  constructor(private input: string[][]) {}
+
+  findAdjacent({ x, y }: Point2D): Point2D[] {
+    return findAdjacent({ x, y }, this.input);
+  }
+
+  findAdjacentAll({ x, y }: Point2D): Point2D[] {
+    return findAdjacentAll({ x, y }, this.input);
+  }
+
+  get({ x, y }: Point2D): string {
+    return this.input[x][y];
+  }
+}
