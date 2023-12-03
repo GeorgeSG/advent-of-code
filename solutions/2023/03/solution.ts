@@ -16,10 +16,10 @@ const allIndexesOf = (str: string, char: string) =>
 
 const matchAllNumbers = (line: string) => line.matchAll(/(\d+)/g);
 
+const toNumber = (match: RegExpMatchArray) => Number(match[0]);
+
 const findNumbers = (line, filterFn: (match: RegExpMatchArray) => boolean) =>
   [...matchAllNumbers(line)].filter(filterFn).map(toNumber);
-
-const toNumber = (match: RegExpMatchArray) => Number(match[0]);
 
 // ---- Part A ----
 export function partA(input: Input): number {
