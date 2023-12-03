@@ -14,12 +14,12 @@ const allIndexesOf = (str: string, char: string) =>
     .split('')
     .reduce<number[]>((indexes, current, i) => (current === char ? [...indexes, i] : indexes), []);
 
-const matchAllNumbers = (line: string) => line.matchAll(/(\d+)/g);
+const matchAllNumbers = (str: string) => str.matchAll(/(\d+)/g);
 
 const toNumber = (match: RegExpMatchArray) => Number(match[0]);
 
-const findNumbers = (line, filterFn: (match: RegExpMatchArray) => boolean) =>
-  [...matchAllNumbers(line)].filter(filterFn).map(toNumber);
+const findNumbers = (str, filterFn: (match: RegExpMatchArray) => boolean) =>
+  [...matchAllNumbers(str)].filter(filterFn).map(toNumber);
 
 // ---- Part A ----
 export function partA(input: Input): number {
