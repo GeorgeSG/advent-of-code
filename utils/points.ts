@@ -88,7 +88,7 @@ export class Point {
 
 export class Map2D {
   static fromLines(lines: string[]) {
-    return new Map2D(lines.map((line) => line.split('')));
+    return new Map2D(lines.map((line) => [...line]));
   }
 
   constructor(private input: string[][]) {}
