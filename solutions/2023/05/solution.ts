@@ -41,20 +41,20 @@ export function partA({ seeds, maps }: Input): number {
   return findMin(locations);
 }
 
-export function partB(input: Input): number {
+export function partB({ seeds, maps }: Input): number {
   console.warn(
     'WARN: Part B · this is a brute-force solution and takes minutes (~ 100 secs on my machine) 🙃\n'
   );
 
-  const mapOrder = Object.keys(input.maps).reverse();
-  const splitSeeds = splitEvery(2, input.seeds);
+  const mapOrder = Object.keys(maps).reverse();
+  const splitSeeds = splitEvery(2, seeds);
 
   function isSeed(location: number) {
     return splitSeeds.some(([start, range]) => location >= start && location <= start + range);
   }
 
   function findSource(location: number, mapName: string): number {
-    const viableMap = input.maps[mapName].find(
+    const viableMap = maps[mapName].find(
       ([destinationStart, _, range]) =>
         location >= destinationStart && location < destinationStart + range
     );
