@@ -1,4 +1,3 @@
-import { product } from 'ramda';
 import { readFile } from '~utils/core';
 
 type Input = string[];
