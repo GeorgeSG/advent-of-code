@@ -23,6 +23,11 @@ export enum Printer {
   LINE = 'line',
 }
 
+export type RunContext = {
+  runType: RunType;
+  runIndex: number;
+};
+
 export class SolutionRunner {
   private static readonly DATA_MISSING = '-';
   private fileManager: FileManager;
@@ -70,7 +75,10 @@ export class SolutionRunner {
     inputFiles.forEach((inputFile, i) => {
       // Run input through solution code and measure time
       const start = process.hrtime();
-      const result = solutionFn(prepareInput(inputFile));
+      const result = solutionFn(prepareInput(inputFile), {
+        runType,
+        runIndex: i,
+      } as RunContext);
       const end = hrtime(start);
       const timeInMs = (end[0] * 1000000000 + end[1]) / 1000000;
 
