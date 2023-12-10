@@ -69,27 +69,29 @@ function BFS(map: Map2D, start: Point): { path: Set<string>; steps: number } {
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const map = new Map2D(input);
-  const start = map.findByValue('S');
-  return BFS(map, start).steps;
+  const pipeMap = new Map2D(input);
+  const start = pipeMap.findByValue('S');
+  return BFS(pipeMap, start).steps;
 }
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const map = new Map2D(input);
-  const start = map.findByValue('S');
+  const pipeMap = new Map2D(input);
+  const start = pipeMap.findByValue('S');
 
   const { path } = BFS(new Map2D(input), start);
 
   function isInPipe(point: Point): boolean {
-    const intersections = range(point.y, map.maxY + 1)
+    const intersections = range(point.y, pipeMap.maxY + 1)
       .map((y) => new Point(point.x, y))
-      .filter((point) => path.has(point.toKey()) && HORIZONTAL_CROSSING.includes(map.get(point)));
+      .filter(
+        (point) => path.has(point.toKey()) && HORIZONTAL_CROSSING.includes(pipeMap.get(point))
+      );
 
     return intersections.length % 2 === 1;
   }
 
-  return map.reduce(
+  return pipeMap.reduce(
     (result, point) => (!path.has(point.toKey()) && isInPipe(point) ? result + 1 : result),
     0
   );
