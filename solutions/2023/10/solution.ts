@@ -10,17 +10,17 @@ export function prepareInput(inputFile: string): Input {
 }
 
 const CAN_GO = {
-  [Direction.EAST]: ['S', '-', 'L', 'F'],
-  [Direction.SOUTH]: ['S', '|', 'F', '7'],
-  [Direction.WEST]: ['S', '-', '7', 'J'],
-  [Direction.NORTH]: ['S', '|', 'L', 'J'],
+  [Direction.EAST]: 'S-LF',
+  [Direction.SOUTH]: 'S|F7',
+  [Direction.WEST]: 'S-7J',
+  [Direction.NORTH]: 'S|LJ',
 };
 
 const VALID_NEIGHBORS = {
-  [Direction.EAST]: ['J', '-', '7'],
-  [Direction.SOUTH]: ['J', '|', 'L'],
-  [Direction.WEST]: ['L', '-', 'F'],
-  [Direction.NORTH]: ['7', '|', 'F'],
+  [Direction.EAST]: 'J-7',
+  [Direction.SOUTH]: 'J|L',
+  [Direction.WEST]: 'L-F',
+  [Direction.NORTH]: '7|F',
 };
 
 function getNeighbors(point: Point): Record<Direction, Point> {
