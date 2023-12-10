@@ -9,14 +9,14 @@ export function prepareInput(inputFile: string): Input {
   return readFile(inputFile, (line) => line.split(''));
 }
 
-const CAN_GO = {
+const HAS_FLOW_TO = {
   [Direction.EAST]: 'S-LF',
   [Direction.SOUTH]: 'S|F7',
   [Direction.WEST]: 'S-7J',
   [Direction.NORTH]: 'S|LJ',
 };
 
-const VALID_NEIGHBORS = {
+const HAS_FLOW_FROM = {
   [Direction.EAST]: 'J-7',
   [Direction.SOUTH]: 'J|L',
   [Direction.WEST]: 'L-F',
@@ -43,13 +43,13 @@ function BFS(map: Map2D, start: Point): { path: Set<string>; steps: number } {
     const neighbors = getNeighbors(point);
 
     return Object.values(Direction)
-      .filter((direction) => CAN_GO[direction].includes(map.get(point)))
+      .filter((direction) => HAS_FLOW_TO[direction].includes(map.get(point)))
       .map((direction) => ({ direction, neighbor: neighbors[direction] }))
       .filter(
         ({ direction, neighbor }) =>
           !path.has(`${neighbor}`) &&
           neighbor.isIn(map) &&
-          VALID_NEIGHBORS[direction].includes(map.get(neighbor))
+          HAS_FLOW_FROM[direction].includes(map.get(neighbor))
       )
       .map(({ neighbor }) => neighbor);
   }
