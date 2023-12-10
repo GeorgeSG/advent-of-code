@@ -1,4 +1,4 @@
-import { is, range, until } from 'ramda';
+import { range } from 'ramda';
 import { readFile } from '~utils/core';
 import { Direction, Map2D, Point } from '~utils/points';
 
