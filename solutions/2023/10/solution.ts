@@ -39,7 +39,7 @@ function BFS(map: Map2D, start: Point): { path: Set<string>; steps: number } {
   let steps = 0;
 
   function visitAndGetNeighbors(point: Point): Point[] {
-    path.add(`${point}`);
+    path.add(point.toKey());
     const neighbors = getNeighbors(point);
 
     return Object.values(Direction)
@@ -84,13 +84,13 @@ export function partB(input: Input): number {
   function isInPipe(start: Point): boolean {
     const intersections = range(start.y, map.maxY + 1)
       .map((y) => new Point(start.x, y))
-      .filter((point) => path.has(`${point}`) && HORIZONTAL_CROSSING.includes(map.get(point)));
+      .filter((point) => path.has(point.toKey()) && HORIZONTAL_CROSSING.includes(map.get(point)));
 
     return intersections.length % 2 === 1;
   }
 
   return map.reduce(
-    (result, point) => (!path.has(`${point}`) && isInPipe(point) ? result + 1 : result),
+    (result, point) => (!path.has(point.toKey()) && isInPipe(point) ? result + 1 : result),
     0
   );
 }
