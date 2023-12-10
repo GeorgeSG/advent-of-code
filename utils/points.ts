@@ -1,4 +1,4 @@
-import { findMax } from './arrays';
+import { findMax, ijMeBro } from './arrays';
 import { toI } from './numbers';
 
 export type Point2D = { x: number; y: number };
@@ -69,14 +69,6 @@ export function sumPoints(p1: Point2D, p2: Point2D): Point2D {
 export class Point {
   constructor(public x: number, public y: number) {}
 
-  static fromArray([x, y]: number[]): Point {
-    return new Point(x, y);
-  }
-
-  static fromCoords({ x, y }: Point2D): Point {
-    return new Point(x, y);
-  }
-
   static fromKey(key: string): Point {
     return new Point(Number(key.split(',')[0]), Number(key.split(',')[1]));
   }
@@ -85,12 +77,20 @@ export class Point {
     return `${this.x},${this.y}`;
   }
 
+  isIn(map: Map2D) {
+    return map.isValid(this);
+  }
+
   toArray(): [number, number] {
     return [this.x, this.y];
   }
 
-  add({ x, y }: Point): Point {
+  add({ x, y }: Point | Point2D): Point {
     return new Point(this.x + x, this.y + y);
+  }
+
+  toString(): string {
+    return this.toKey();
   }
 }
 
@@ -101,12 +101,20 @@ export enum Direction {
   NORTH = 'N',
 }
 
-export class Map2D {
-  static fromLines(lines: string[]) {
+export class Map2D<T = string> {
+  static fromLines<T>(lines: T[][]) {
     return new Map2D(lines.map((line) => [...line]));
   }
 
-  constructor(private input: string[][]) {}
+  constructor(private input: T[][]) {}
+
+  get maxX(): number {
+    return this.input.length - 1;
+  }
+
+  get maxY(): number {
+    return this.input[0].length - 1;
+  }
 
   findAdjacent({ x, y }: Point2D): Point2D[] {
     return findAdjacent({ x, y }, this.input);
@@ -116,24 +124,31 @@ export class Map2D {
     return findAdjacentAll({ x, y }, this.input);
   }
 
-  get({ x, y }: Point2D): string {
+  findByValue(value: T): Point {
+    for (let x = 0; x < this.input.length; x++) {
+      for (let y = 0; y < this.input[0].length; y++) {
+        if (this.input[x][y] === value) {
+          return new Point(x, y);
+        }
+      }
+    }
+  }
+
+  forEach(fn: (point: Point, value: T) => void): void {
+    ijMeBro(this.input, (x, y, el) => fn(new Point(x, y), el));
+  }
+
+  reduce<R>(fn: (acc: R, point: Point, value: T) => R, initialValue: R): R {
+    let acc = initialValue;
+    this.forEach((point, value) => (acc = fn(acc, point, value)));
+    return acc;
+  }
+
+  get({ x, y }: Point | Point2D): T {
     return this.input[x][y];
   }
 
-  isValid({ x, y }: Point2D): boolean {
-    return x >= 0 && x < this.input.length && y >= 0 && y < this.input[0].length;
-  }
-
-  canGoFrom({ x, y }: Point2D, direction: Direction): boolean {
-    switch (direction) {
-      case Direction.EAST:
-        return y < this.input[0].length - 1;
-      case Direction.SOUTH:
-        return x < this.input.length - 1;
-      case Direction.WEST:
-        return y > 0;
-      case Direction.NORTH:
-        return x > 0;
-    }
+  isValid({ x, y }: Point | Point2D): boolean {
+    return x >= 0 && x <= this.maxX && y >= 0 && y <= this.maxY;
   }
 }
