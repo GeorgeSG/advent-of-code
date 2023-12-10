@@ -56,7 +56,7 @@ function BFS(map: Map2D, start: Point): { path: Set<string>; steps: number } {
 
   let pointsToVisit = [start];
   while (pointsToVisit.length) {
-    pointsToVisit = pointsToVisit.reduce<Point[]>(
+    pointsToVisit = pointsToVisit.reduce(
       (nextPoints, point) => nextPoints.concat(visitAndGetNeighbors(point)),
       []
     );
