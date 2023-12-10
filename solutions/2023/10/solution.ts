@@ -2,11 +2,11 @@ import { is, range, until } from 'ramda';
 import { readFile } from '~utils/core';
 import { Direction, Map2D, Point } from '~utils/points';
 
-type Input = string[][];
+type Input = Map2D;
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return readFile(inputFile, (line) => line.split(''));
+  return new Map2D(readFile(inputFile, (line) => line.split('')));
 }
 
 const HAS_FLOW_TO = {
@@ -69,29 +69,25 @@ function BFS(map: Map2D, start: Point): { path: Set<string>; steps: number } {
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const pipeMap = new Map2D(input);
-  const start = pipeMap.findByValue('S');
-  return BFS(pipeMap, start).steps;
+  const start = input.findByValue('S');
+  return BFS(input, start).steps;
 }
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const pipeMap = new Map2D(input);
-  const start = pipeMap.findByValue('S');
+  const start = input.findByValue('S');
 
-  const { path } = BFS(new Map2D(input), start);
+  const { path } = BFS(input, start);
 
   function isInPipe(point: Point): boolean {
-    const intersections = range(point.y, pipeMap.maxY + 1)
+    const intersections = range(point.y, input.maxY + 1)
       .map((y) => new Point(point.x, y))
-      .filter(
-        (point) => path.has(point.toKey()) && HORIZONTAL_CROSSING.includes(pipeMap.get(point))
-      );
+      .filter((point) => path.has(point.toKey()) && HORIZONTAL_CROSSING.includes(input.get(point)));
 
     return intersections.length % 2 === 1;
   }
 
-  return pipeMap.reduce(
+  return input.reduce(
     (result, point) => (!path.has(point.toKey()) && isInPipe(point) ? result + 1 : result),
     0
   );
