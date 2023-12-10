@@ -73,6 +73,10 @@ export class Point {
     return new Point(x, y);
   }
 
+  static fromCoords({ x, y }: Point2D): Point {
+    return new Point(x, y);
+  }
+
   static fromKey(key: string): Point {
     return new Point(Number(key.split(',')[0]), Number(key.split(',')[1]));
   }
@@ -81,9 +85,20 @@ export class Point {
     return `${this.x},${this.y}`;
   }
 
+  toArray(): [number, number] {
+    return [this.x, this.y];
+  }
+
   add({ x, y }: Point): Point {
     return new Point(this.x + x, this.y + y);
   }
+}
+
+export enum Direction {
+  EAST = 'E',
+  SOUTH = 'S',
+  WEST = 'W',
+  NORTH = 'N',
 }
 
 export class Map2D {
@@ -103,5 +118,22 @@ export class Map2D {
 
   get({ x, y }: Point2D): string {
     return this.input[x][y];
+  }
+
+  isValid({ x, y }: Point2D): boolean {
+    return x >= 0 && x < this.input.length && y >= 0 && y < this.input[0].length;
+  }
+
+  canGoFrom({ x, y }: Point2D, direction: Direction): boolean {
+    switch (direction) {
+      case Direction.EAST:
+        return y < this.input[0].length - 1;
+      case Direction.SOUTH:
+        return x < this.input.length - 1;
+      case Direction.WEST:
+        return y > 0;
+      case Direction.NORTH:
+        return x > 0;
+    }
   }
 }
