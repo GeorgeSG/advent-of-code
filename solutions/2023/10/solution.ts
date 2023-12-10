@@ -12,27 +12,27 @@ export function prepareInput(inputFile: string): Input {
 }
 
 const HAS_FLOW_TO = {
-  [Direction.EAST]: 'S-LF',
-  [Direction.SOUTH]: 'S|F7',
-  [Direction.WEST]: 'S-7J',
-  [Direction.NORTH]: 'S|LJ',
+  [Direction.RIGHT]: 'S-LF',
+  [Direction.DOWN]: 'S|F7',
+  [Direction.LEFT]: 'S-7J',
+  [Direction.UP]: 'S|LJ',
 };
 
 const HAS_FLOW_FROM = {
-  [Direction.EAST]: 'J-7',
-  [Direction.SOUTH]: 'J|L',
-  [Direction.WEST]: 'L-F',
-  [Direction.NORTH]: '7|F',
+  [Direction.RIGHT]: 'J-7',
+  [Direction.DOWN]: 'J|L',
+  [Direction.LEFT]: 'L-F',
+  [Direction.UP]: '7|F',
 };
 
 const HORIZONTAL_CROSSING = '|LJ';
 
 function getNeighbors(point: Point): Record<Direction, Point> {
   return {
-    [Direction.EAST]: point.add({ x: 0, y: 1 }),
-    [Direction.SOUTH]: point.add({ x: 1, y: 0 }),
-    [Direction.WEST]: point.add({ x: 0, y: -1 }),
-    [Direction.NORTH]: point.add({ x: -1, y: 0 }),
+    [Direction.RIGHT]: point.add({ x: 0, y: 1 }),
+    [Direction.DOWN]: point.add({ x: 1, y: 0 }),
+    [Direction.LEFT]: point.add({ x: 0, y: -1 }),
+    [Direction.UP]: point.add({ x: -1, y: 0 }),
   };
 }
 
