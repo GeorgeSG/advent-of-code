@@ -95,10 +95,10 @@ export class Point {
 }
 
 export enum Direction {
-  EAST = 'E',
-  SOUTH = 'S',
-  WEST = 'W',
-  NORTH = 'N',
+  RIGHT = 'R',
+  DOWN = 'D',
+  LEFT = 'L',
+  UP = 'U',
 }
 
 export class Map2D<T = string> {
