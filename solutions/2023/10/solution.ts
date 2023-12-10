@@ -1,6 +1,6 @@
-import { ijMeBro } from '~utils/arrays';
+import { range, until } from 'ramda';
 import { readFile } from '~utils/core';
-import { Direction, Map2D, Point, Point2D, toKey } from '~utils/points';
+import { Direction, Map2D, Point } from '~utils/points';
 
 type Input = string[][];
 
@@ -23,62 +23,78 @@ const VALID_NEIGHBORS = {
   [Direction.NORTH]: '7|F',
 };
 
+const HORIZONTAL_CROSSING = '|LJ';
+
 function getNeighbors(point: Point): Record<Direction, Point> {
   return {
-    [Direction.EAST]: point.add(Point.fromCoords({ x: 0, y: 1 })),
-    [Direction.SOUTH]: point.add(Point.fromCoords({ x: 1, y: 0 })),
-    [Direction.WEST]: point.add(Point.fromCoords({ x: 0, y: -1 })),
-    [Direction.NORTH]: point.add(Point.fromCoords({ x: -1, y: 0 })),
+    [Direction.EAST]: point.add({ x: 0, y: 1 }),
+    [Direction.SOUTH]: point.add({ x: 1, y: 0 }),
+    [Direction.WEST]: point.add({ x: 0, y: -1 }),
+    [Direction.NORTH]: point.add({ x: -1, y: 0 }),
   };
 }
 
-function findLongestPath(map: Map2D, start: Point): number {
+function BFS(map: Map2D, start: Point): { path: Set<string>; steps: number } {
+  const path = new Set<string>();
   let steps = 0;
 
-  const visited = new Set<string>();
-  visited.add(start.toKey());
+  function visitAndGetNeighbors(point: Point): Point[] {
+    path.add(`${point}`);
+    const neighbors = getNeighbors(point);
 
-  let next = [start];
-  while (next.length) {
-    next = next.reduce<Point[]>((newNext, point) => {
-      visited.add(point.toKey());
+    return Object.values(Direction)
+      .filter((direction) => CAN_GO[direction].includes(map.get(point)))
+      .map((direction) => ({ direction, neighbor: neighbors[direction] }))
+      .filter(
+        ({ direction, neighbor }) =>
+          !path.has(`${neighbor}`) &&
+          neighbor.isIn(map) &&
+          VALID_NEIGHBORS[direction].includes(map.get(neighbor))
+      )
+      .map(({ neighbor }) => neighbor);
+  }
 
-      const neighbors = getNeighbors(point);
-
-      Object.values(Direction).forEach((direction: Direction) => {
-        const neighbor = neighbors[direction];
-        if (
-          map.isValid(neighbor) &&
-          CAN_GO[direction].includes(map.get(point)) &&
-          VALID_NEIGHBORS[direction].includes(map.get(neighbor)) &&
-          !visited.has(neighbor.toKey())
-        ) {
-          newNext.push(neighbor);
-        }
-      });
-
-      return newNext;
-    }, []);
+  let pointsToVisit = [start];
+  while (pointsToVisit.length) {
+    pointsToVisit = pointsToVisit.reduce<Point[]>(
+      (nextPoints, point) => nextPoints.concat(visitAndGetNeighbors(point)),
+      []
+    );
 
     steps++;
   }
 
-  return steps - 1;
+  return { path, steps: steps - 1 };
 }
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  let start: Point;
-  ijMeBro(input, (x, y, el) => {
-    if (el === 'S') {
-      start = Point.fromCoords({ x, y });
-    }
-  });
-
-  return findLongestPath(new Map2D(input), start);
+  const map = new Map2D(input);
+  const start = map.findByValue('S');
+  return BFS(map, start).steps;
 }
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  return 0;
+  const map = new Map2D(input);
+  const start = map.findByValue('S');
+
+  const { path } = BFS(new Map2D(input), start);
+
+  function isInPipe(start: Point): boolean {
+    const intersections = range(start.y, map.maxY + 1)
+      .map((y) => new Point(start.x, y))
+      .filter((point) => path.has(`${point}`) && HORIZONTAL_CROSSING.includes(map.get(point)));
+
+    return intersections.length % 2 === 1;
+  }
+
+  return map.reduce((result, point) => {
+    if (!path.has(`${point}`)) {
+      if (isInPipe(point)) {
+        return result + 1;
+      }
+    }
+    return result;
+  }, 0);
 }
