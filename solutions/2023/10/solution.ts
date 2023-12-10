@@ -81,9 +81,9 @@ export function partB(input: Input): number {
 
   const { path } = BFS(new Map2D(input), start);
 
-  function isInPipe(start: Point): boolean {
-    const intersections = range(start.y, map.maxY + 1)
-      .map((y) => new Point(start.x, y))
+  function isInPipe(point: Point): boolean {
+    const intersections = range(point.y, map.maxY + 1)
+      .map((y) => new Point(point.x, y))
       .filter((point) => path.has(point.toKey()) && HORIZONTAL_CROSSING.includes(map.get(point)));
 
     return intersections.length % 2 === 1;
