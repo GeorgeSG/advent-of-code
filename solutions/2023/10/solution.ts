@@ -1,4 +1,4 @@
-import { range, until } from 'ramda';
+import { is, range, until } from 'ramda';
 import { readFile } from '~utils/core';
 import { Direction, Map2D, Point } from '~utils/points';
 
@@ -89,12 +89,8 @@ export function partB(input: Input): number {
     return intersections.length % 2 === 1;
   }
 
-  return map.reduce((result, point) => {
-    if (!path.has(`${point}`)) {
-      if (isInPipe(point)) {
-        return result + 1;
-      }
-    }
-    return result;
-  }, 0);
+  return map.reduce(
+    (result, point) => (!path.has(`${point}`) && isInPipe(point) ? result + 1 : result),
+    0
+  );
 }
