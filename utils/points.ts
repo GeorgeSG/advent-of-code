@@ -92,6 +92,10 @@ export class Point {
   toString(): string {
     return this.toKey();
   }
+
+  distanceTo({ x, y }: Point | Point2D): number {
+    return Math.abs(this.x - x) + Math.abs(this.y - y);
+  }
 }
 
 export enum Direction {
