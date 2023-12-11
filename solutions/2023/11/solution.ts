@@ -16,7 +16,7 @@ export function prepareInput(inputFile: string): Input {
     .map((row, i) => (row.every((char) => char === '.') ? i : -1))
     .filter((i) => i !== -1);
 
-  const expandCilumns = range(0, input[0].length)
+  const expandColumns = range(0, input[0].length)
     .map((y) => {
       const isColumnEmpty = range(0, input.length).every((x) => input[x][y] === '.');
       return isColumnEmpty ? y : -1;
@@ -27,7 +27,7 @@ export function prepareInput(inputFile: string): Input {
     [...row.join('').matchAll(/#/g)].map(({ index }) => new Point(x, index))
   );
 
-  return { galaxies, expandColumns: expandCilumns, expandRows };
+  return { galaxies, expandColumns, expandRows };
 }
 
 function remapGalaxy(
