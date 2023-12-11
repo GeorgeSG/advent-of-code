@@ -1,6 +1,7 @@
 import { product, sum } from 'ramda';
 import { readFile } from '~utils/core';
-import { Point2D, Map2D } from '~utils/points';
+import { Map2D } from '~utils/map2d';
+import { Point2D } from '~utils/points';
 
 type Input = string[];
 
@@ -23,7 +24,7 @@ const findNumbersBy = (str, filterFn: (match: RegExpMatchArray) => boolean) =>
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const map = Map2D.fromLines(input);
+  const map = Map2D.fromLines<string>(input.map((line) => [...line]));
 
   const isSymbol = (point: Point2D) => !/[0-9.]/.test(map.get(point));
 
