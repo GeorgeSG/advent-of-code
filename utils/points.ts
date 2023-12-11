@@ -82,19 +82,15 @@ export class Point {
     return map.isValid(this);
   }
 
-  toArray(): [number, number] {
-    return [this.x, this.y];
-  }
-
   add({ x, y }: Point | Point2D): Point {
     return new Point(this.x + x, this.y + y);
   }
 
-  toString(): string {
-    return this.toKey();
-  }
-
   distanceTo({ x, y }: Point | Point2D): number {
     return Math.abs(this.x - x) + Math.abs(this.y - y);
+  }
+
+  toString(): string {
+    return this.toKey();
   }
 }
