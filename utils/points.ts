@@ -1,4 +1,4 @@
-import { findMax, ijMeBro } from './arrays';
+import { findMax } from './arrays';
 import { Map2D } from './map2d';
 import { toI } from './numbers';
 
@@ -97,11 +97,4 @@ export class Point {
   distanceTo({ x, y }: Point | Point2D): number {
     return Math.abs(this.x - x) + Math.abs(this.y - y);
   }
-}
-
-export enum Direction {
-  RIGHT = 'R',
-  DOWN = 'D',
-  LEFT = 'L',
-  UP = 'U',
 }
