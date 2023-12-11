@@ -1,7 +1,6 @@
 import R from 'ramda';
 import { findMinMax } from '~utils/arrays';
 import { readFile } from '~utils/core';
-import { toI } from '~utils/numbers';
 import { fromKey, Point2D, sumPoints, toKey } from '~utils/points';
 
 type Input = Set<string>;

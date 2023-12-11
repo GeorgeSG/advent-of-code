@@ -1,7 +1,8 @@
 import { range } from 'ramda';
 import { readFile } from '~utils/core';
 import { Map2D } from '~utils/map2d';
-import { Direction, Point } from '~utils/points';
+import { Point } from '~utils/points';
+import { Direction } from '~utils/types';
 
 type Input = { pipeMap: Map2D; start: Point };
 
