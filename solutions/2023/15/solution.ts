@@ -17,22 +17,20 @@ export function partA(input: Input): number {
   return sum(input.map(hash));
 }
 
+function parseStep(step: string): { label: string; op: string; focalLength?: number } {
+  if (step.includes('=')) {
+    return { label: step.split('=')[0], op: '=', focalLength: Number(step.split('=')[1]) };
+  } else {
+    return { label: step.split('-')[0], op: '-' };
+  }
+}
+
 // ---- Part B ----
 export function partB(input: Input): number {
   const boxes = new Map<number, { lens: string; focalLength: number }[]>();
 
   input.forEach((step) => {
-    let label;
-    let op;
-    let focalLength;
-    if (step.includes('=')) {
-      label = step.split('=')[0];
-      op = '=';
-      focalLength = Number(step.split('=')[1]);
-    } else {
-      label = step.split('-')[0];
-      op = '-';
-    }
+    const { label, op, focalLength } = parseStep(step);
     const box = hash(label);
     const boxContents = boxes.get(box);
     const indexInBox = boxContents?.findIndex(({ lens }) => lens === label);
