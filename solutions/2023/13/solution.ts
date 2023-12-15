@@ -1,8 +1,5 @@
 import { readFileSync } from 'fs';
-import { find, sum, transpose } from 'ramda';
-import { debug2D } from '~utils/arrays';
-import { readFile } from '~utils/core';
-import { Map2D } from '~utils/map2d';
+import { sum, transpose } from 'ramda';
 
 type Pattern = string[][];
 type Input = Pattern[];
@@ -36,7 +33,7 @@ function findHorizontalReflections(pattern: Pattern): number {
 }
 
 function getDifference(a: string, b: string) {
-  return a.split('').filter((c, i) => c != b[i]).length;
+  return a.split('').filter((char, i) => char != b[i]).length;
 }
 
 function fixAndFindHorizontalReflections(pattern: Pattern) {
