@@ -56,12 +56,13 @@ function energize(
   visited.set(key, [...(visited.get(key) || []), direction]);
 
   const tile = map.get(location);
-  if (tile === '.') {
-    energize(map, location.move(direction), direction, visited);
-  } else {
-    REFLECTIONS[tile][direction].forEach((reflectedDirection) =>
+  const reflections = REFLECTIONS[tile]?.[direction];
+  if (reflections) {
+    reflections.forEach((reflectedDirection) =>
       energize(map, location.move(reflectedDirection), reflectedDirection, visited)
     );
+  } else {
+    energize(map, location.move(direction), direction, visited);
   }
 }
 
