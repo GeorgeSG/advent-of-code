@@ -114,6 +114,7 @@ export function partA(input: Input): number {
 // ---- Part B ----
 export function partB(input: Input): number {
   let max = 0;
+
   range(0, input.maxX).forEach((x) => {
     max = Math.max(max, countEnergized(input, new Point(x, 0), Direction.RIGHT));
     max = Math.max(max, countEnergized(input, new Point(x, input.maxY - 1), Direction.LEFT));
