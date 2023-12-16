@@ -4,11 +4,11 @@ import { Map2D } from '~utils/map2d';
 import { Point } from '~utils/points';
 import { Direction } from '~utils/types';
 
-type Input = string[][];
+type Input = Map2D<string>;
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  return readFile(inputFile, (line) => line.split(''));
+  return new Map2D(readFile(inputFile).map((line) => line.split('')));
 }
 
 function energize(
@@ -108,22 +108,20 @@ function countEnergized(map: Map2D, start: Point, direction: Direction): number 
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  return countEnergized(new Map2D(input), new Point(0, 0), Direction.RIGHT);
+  return countEnergized(input, new Point(0, 0), Direction.RIGHT);
 }
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const map = new Map2D(input);
-
   let max = 0;
-  range(0, input.length).forEach((x) => {
-    max = Math.max(max, countEnergized(map, new Point(x, 0), Direction.RIGHT));
-    max = Math.max(max, countEnergized(map, new Point(x, input[0].length - 1), Direction.LEFT));
+  range(0, input.maxX).forEach((x) => {
+    max = Math.max(max, countEnergized(input, new Point(x, 0), Direction.RIGHT));
+    max = Math.max(max, countEnergized(input, new Point(x, input.maxY - 1), Direction.LEFT));
   });
 
-  range(0, input[0].length).forEach((y) => {
-    max = Math.max(max, countEnergized(map, new Point(0, y), Direction.DOWN));
-    max = Math.max(max, countEnergized(map, new Point(input[0].length - 1, y), Direction.UP));
+  range(0, input.maxY).forEach((y) => {
+    max = Math.max(max, countEnergized(input, new Point(0, y), Direction.DOWN));
+    max = Math.max(max, countEnergized(input, new Point(input.maxX - 1, y), Direction.UP));
   });
 
   return max;
