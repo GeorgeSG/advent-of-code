@@ -11,6 +11,21 @@ export function prepareInput(inputFile: string): Input {
   return new Map2D(readFile(inputFile).map((line) => line.split('')));
 }
 
+const REFLECTIONS = {
+  '/': {
+    [Direction.UP]: Direction.RIGHT,
+    [Direction.DOWN]: Direction.LEFT,
+    [Direction.LEFT]: Direction.DOWN,
+    [Direction.RIGHT]: Direction.UP,
+  },
+  '\\': {
+    [Direction.UP]: Direction.LEFT,
+    [Direction.DOWN]: Direction.RIGHT,
+    [Direction.LEFT]: Direction.UP,
+    [Direction.RIGHT]: Direction.DOWN,
+  },
+};
+
 function energize(
   map: Map2D,
   current: Point,
@@ -62,38 +77,12 @@ function energize(
       break;
     }
     case '/': {
-      switch (direction) {
-        case Direction.UP:
-          direction = Direction.RIGHT;
-          break;
-        case Direction.DOWN:
-          direction = Direction.LEFT;
-          break;
-        case Direction.LEFT:
-          direction = Direction.DOWN;
-          break;
-        case Direction.RIGHT:
-          direction = Direction.UP;
-          break;
-      }
+      direction = REFLECTIONS['/'][direction];
       energize(map, current.move(direction), direction, visited);
       break;
     }
     case '\\': {
-      switch (direction) {
-        case Direction.UP:
-          direction = Direction.LEFT;
-          break;
-        case Direction.DOWN:
-          direction = Direction.RIGHT;
-          break;
-        case Direction.LEFT:
-          direction = Direction.UP;
-          break;
-        case Direction.RIGHT:
-          direction = Direction.DOWN;
-          break;
-      }
+      direction = REFLECTIONS['\\'][direction];
       energize(map, current.move(direction), direction, visited);
       break;
     }
