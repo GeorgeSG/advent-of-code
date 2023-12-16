@@ -1,6 +1,7 @@
 import { findMax } from './arrays';
 import { Map2D } from './map2d';
 import { toI } from './numbers';
+import { Direction } from './types';
 
 export type Point2D = { x: number; y: number };
 export const ZERO: Point2D = { x: 0, y: 0 };
@@ -84,6 +85,19 @@ export class Point {
 
   add({ x, y }: Point | Point2D): Point {
     return new Point(this.x + x, this.y + y);
+  }
+
+  move(direction: Direction): Point {
+    switch (direction) {
+      case Direction.UP:
+        return this.add({ x: -1, y: 0 });
+      case Direction.DOWN:
+        return this.add({ x: 1, y: 0 });
+      case Direction.LEFT:
+        return this.add({ x: 0, y: -1 });
+      case Direction.RIGHT:
+        return this.add({ x: 0, y: 1 });
+    }
   }
 
   distanceTo({ x, y }: Point | Point2D): number {
