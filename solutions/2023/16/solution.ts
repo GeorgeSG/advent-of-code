@@ -40,12 +40,12 @@ const REFLECTIONS = {
 
 function energize(
   map: Map2D,
-  current: Point,
+  location: Point,
   direction: Direction,
   visited: Map<string, Direction[]>
 ): void {
-  const key = current.toKey();
-  if (!current.isIn(map)) {
+  const key = location.toKey();
+  if (!location.isIn(map)) {
     return;
   }
 
@@ -55,11 +55,12 @@ function energize(
 
   visited.set(key, [...(visited.get(key) || []), direction]);
 
-  if (map.get(current) === '.') {
-    energize(map, current.move(direction), direction, visited);
+  const tile = map.get(location);
+  if (tile === '.') {
+    energize(map, location.move(direction), direction, visited);
   } else {
-    REFLECTIONS[map.get(current)][direction].forEach((d) =>
-      energize(map, current.move(d), d, visited)
+    REFLECTIONS[tile][direction].forEach((reflectedDirection) =>
+      energize(map, location.move(reflectedDirection), reflectedDirection, visited)
     );
   }
 }
