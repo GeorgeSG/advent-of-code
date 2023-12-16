@@ -83,12 +83,12 @@ export function partB(input: Input): number {
 
   range(0, input.maxX).forEach((x) => {
     max = Math.max(max, countEnergized(input, new Point(x, 0), Direction.RIGHT));
-    max = Math.max(max, countEnergized(input, new Point(x, input.maxY - 1), Direction.LEFT));
+    max = Math.max(max, countEnergized(input, new Point(x, input.maxY), Direction.LEFT));
   });
 
   range(0, input.maxY).forEach((y) => {
     max = Math.max(max, countEnergized(input, new Point(0, y), Direction.DOWN));
-    max = Math.max(max, countEnergized(input, new Point(input.maxX - 1, y), Direction.UP));
+    max = Math.max(max, countEnergized(input, new Point(input.maxX, y), Direction.UP));
   });
 
   return max;
