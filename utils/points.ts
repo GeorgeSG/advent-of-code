@@ -87,16 +87,16 @@ export class Point {
     return new Point(this.x + x, this.y + y);
   }
 
-  move(direction: Direction): Point {
+  move(direction: Direction, distance = 1): Point {
     switch (direction) {
       case Direction.UP:
-        return this.add({ x: -1, y: 0 });
+        return this.add({ x: -1 * distance, y: 0 });
       case Direction.DOWN:
-        return this.add({ x: 1, y: 0 });
+        return this.add({ x: 1 * distance, y: 0 });
       case Direction.LEFT:
-        return this.add({ x: 0, y: -1 });
+        return this.add({ x: 0, y: -1 * distance });
       case Direction.RIGHT:
-        return this.add({ x: 0, y: 1 });
+        return this.add({ x: 0, y: 1 * distance });
     }
   }
 
