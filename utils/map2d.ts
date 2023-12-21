@@ -1,4 +1,4 @@
-import { ijMeBro } from './arrays';
+import { debug2D, ijMeBro } from './arrays';
 import { Point, Point2D, findAdjacent, findAdjacentAll } from './points';
 
 export class Map2D<T = string> {
@@ -16,12 +16,12 @@ export class Map2D<T = string> {
     return this.input[0].length - 1;
   }
 
-  findAdjacent({ x, y }: Point2D): Point2D[] {
-    return findAdjacent({ x, y }, this.input);
+  findAdjacent({ x, y }: Point2D): Point[] {
+    return findAdjacent({ x, y }, this.input).map((p) => new Point(p.x, p.y));
   }
 
-  findAdjacentAll({ x, y }: Point2D): Point2D[] {
-    return findAdjacentAll({ x, y }, this.input);
+  findAdjacentAll({ x, y }: Point2D): Point[] {
+    return findAdjacentAll({ x, y }, this.input).map((p) => new Point(p.x, p.y));
   }
 
   findByValue(value: T): Point {
@@ -50,5 +50,9 @@ export class Map2D<T = string> {
 
   isValid({ x, y }: Point | Point2D): boolean {
     return x >= 0 && x <= this.maxX && y >= 0 && y <= this.maxY;
+  }
+
+  debug(separator = '', indicators = false, padEnd = 2): void {
+    debug2D(this.input, separator, indicators, padEnd);
   }
 }
