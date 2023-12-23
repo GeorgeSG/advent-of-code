@@ -1,8 +1,6 @@
-import { skip } from 'node:test';
-import { path } from 'ramda';
 import { readFile } from '~utils/core';
 import { Map2D } from '~utils/map2d';
-import { Point } from '~utils/points';
+import { Point, Point2D } from '~utils/points';
 import { Direction } from '~utils/types';
 
 type Input = Map2D<string>;
@@ -19,63 +17,34 @@ const MOVES = {
   v: Direction.DOWN,
 };
 
-function dfs1(input: Input, current: Point, end: Point, visited: Set<string>): number {
-  if (current.equals(end)) {
-    return visited.size - 1;
-  }
-
-  visited.add(current.toKey());
-
-  let neighbours = [];
-  switch (input.get(current)) {
-    case '>':
-    case '<':
-    case '^':
-    case 'v':
-      current = current.move(MOVES[input.get(current)]);
-      neighbours = [current];
-      break;
-    case '.':
-      neighbours = input.findAdjacent(current);
-      break;
-  }
-
-  neighbours = neighbours.filter((p) => !visited.has(p.toKey()) && input.get(p) !== '#');
-
-  let longestPath = 0;
-  for (let neighbour of neighbours) {
-    visited.add(neighbour.toKey());
-    longestPath = Math.max(longestPath, dfs1(input, neighbour, end, visited));
-    visited.delete(neighbour.toKey());
-  }
-
-  return longestPath;
-}
+type NeighborWithDirection = { point: Point; dir: Direction };
 
 let max = 0;
-function dfs2(input: Input, current: Point, end: Point, visited: Set<string>): number {
+let lastMaxUpdate = 0;
+function dfs(
+  input: Input,
+  current: Point,
+  end: Point,
+  visited: Set<string>,
+  getNeighbours: (point: Point, visited: Set<string>) => NeighborWithDirection[],
+  enforceSlopes = false
+): number {
+  // HACK: time limit search.
+  if (new Date().getTime() - lastMaxUpdate > 1_000_000) {
+    return max;
+  }
+
   if (current.equals(end)) {
     return visited.size - 1;
   }
 
   visited.add(current.toKey());
 
-  let neighbours = [];
-
-  if (current.y < input.maxY)
-    neighbours.push({ x: current.x, y: current.y + 1, dir: Direction.RIGHT });
-  if (current.y > 0) neighbours.push({ x: current.x, y: current.y - 1, dir: Direction.LEFT });
-  if (current.x < input.maxX)
-    neighbours.push({ x: current.x + 1, y: current.y, dir: Direction.DOWN });
-  if (current.x > 0) neighbours.push({ x: current.x - 1, y: current.y, dir: Direction.UP });
-
-  neighbours = neighbours.filter(
-    (p) => !visited.has(new Point(p.x, p.y).toKey()) && input.get(p) !== '#'
-  );
+  const neighbours = getNeighbours(current, visited);
 
   let longestPath = 0;
-  for (let { x, y, dir } of neighbours) {
-    let neighbour = new Point(x, y);
+  for (let { point, dir } of neighbours) {
+    let neighbour = new Point(point.x, point.y);
     if (neighbour.equals(end)) {
       return visited.size;
     }
@@ -83,6 +52,7 @@ function dfs2(input: Input, current: Point, end: Point, visited: Set<string>): n
     const skipped = [neighbour];
     while (
       !visited.has(neighbour.move(dir).toKey()) &&
+      (!enforceSlopes || input.get(neighbour) === '.') &&
       (((dir === Direction.UP || dir === Direction.DOWN) &&
         input.get(neighbour.move(Direction.LEFT)) === '#' &&
         input.get(neighbour.move(Direction.RIGHT)) === '#') ||
@@ -91,41 +61,84 @@ function dfs2(input: Input, current: Point, end: Point, visited: Set<string>): n
           input.get(neighbour.move(Direction.DOWN)) === '#'))
     ) {
       neighbour = neighbour.move(dir);
-      skipped.push(neighbour);
       if (neighbour.equals(end)) {
-        return visited.size + skipped.length - 1;
+        return visited.size + skipped.length;
       }
+
+      skipped.push(neighbour);
     }
 
     skipped.forEach((p) => visited.add(p.toKey()));
-
-    const newPathLength = dfs2(input, neighbour, end, visited);
-    if (longestPath < newPathLength) {
-      if (max < newPathLength) {
-        console.log('new longest path', newPathLength);
-        max = newPathLength;
-      }
-      longestPath = newPathLength;
-    }
-
+    const newPathLength = dfs(input, neighbour, end, visited, getNeighbours, enforceSlopes);
     skipped.forEach((p) => visited.delete(p.toKey()));
+
+    longestPath = Math.max(longestPath, newPathLength);
+
+    if (max < newPathLength && !enforceSlopes) {
+      max = newPathLength;
+      lastMaxUpdate = new Date().getTime();
+    }
   }
+
   return longestPath;
+}
+
+function getAllNeighbours(
+  input: Input,
+  current: Point,
+  visited: Set<string>
+): NeighborWithDirection[] {
+  return Object.values(MOVES)
+    .map((dir) => ({ point: current.move(dir), dir }))
+    .filter(
+      ({ point }) => point.isIn(input) && !visited.has(point.toKey()) && input.get(point) !== '#'
+    );
+}
+
+function startDfs(
+  input: Input,
+  getNeighbours: (current: Point, visited: Set<string>) => NeighborWithDirection[],
+  enforceSlopes = false
+): number {
+  max = 0;
+  lastMaxUpdate = new Date().getTime();
+
+  const start = new Point(0, 1);
+  const end = new Point(input.maxY, input.maxX - 1);
+
+  const result = dfs(input, start, end, new Set<string>(), getNeighbours, enforceSlopes);
+
+  return result;
 }
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const start = new Point(0, 1);
-  const end = new Point(input.maxY, input.maxX - 1);
+  return startDfs(
+    input,
+    (current: Point, visited: Set<string>) => {
+      const currentVal = input.get(current);
 
-  return dfs1(input, start, end, new Set<string>());
+      switch (currentVal) {
+        case '>':
+        case '<':
+        case '^':
+        case 'v':
+          const dir = MOVES[currentVal];
+          return [{ point: current.move(dir), dir }].filter(
+            ({ point }) => !visited.has(point.toKey()) && input.get(point) !== '#'
+          );
+        case '.':
+          return getAllNeighbours(input, current, visited);
+      }
+    },
+    true
+  );
 }
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const start = new Point(0, 1);
-  const end = new Point(input.maxY, input.maxX - 1);
-
-  return dfs2(input, start, end, new Set<string>());
+  return startDfs(input, (current: Point, visited: Set<string>) =>
+    getAllNeighbours(input, current, visited)
+  );
   // answer: 6546
 }
