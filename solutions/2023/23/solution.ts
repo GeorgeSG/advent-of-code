@@ -106,9 +106,7 @@ function startDfs(
   const start = new Point(0, 1);
   const end = new Point(input.maxY, input.maxX - 1);
 
-  const result = dfs(input, start, end, new Set<string>(), getNeighbours, enforceSlopes);
-
-  return result;
+  return dfs(input, start, end, new Set<string>(), getNeighbours, enforceSlopes);
 }
 
 // ---- Part A ----
