@@ -107,4 +107,8 @@ export class Point {
   toString(): string {
     return this.toKey();
   }
+
+  equals({ x, y }: Point2D): boolean {
+    return this.x === x && this.y === y;
+  }
 }
