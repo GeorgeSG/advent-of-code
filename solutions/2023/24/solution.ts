@@ -5,23 +5,17 @@ import { toI } from '~utils/numbers';
 import { Point, Point2D } from '~utils/points';
 
 type Coord = { x: number; y: number; z: number };
-type Speed = { x: number; y: number; z: number };
-type Input = { coords: Coord; speed: Speed }[];
+type Input = { coords: Coord; speed: Coord }[];
 
 // Parser
 export function prepareInput(inputFile: string): Input {
+  const toCoords = (line: string): Coord => {
+    const numbers = line.split(', ').map(toI);
+    return { x: numbers[0], y: numbers[1], z: numbers[2] };
+  };
+
   return readFile(inputFile, (line) => {
-    const [coordsArray, speedArray] = line.split(' @ ').map((part) => part.split(', '));
-    const coords = {
-      x: Number(coordsArray[0]),
-      y: Number(coordsArray[1]),
-      z: Number(coordsArray[2]),
-    };
-    const speed = {
-      x: Number(speedArray[0]),
-      y: Number(speedArray[1]),
-      z: Number(speedArray[2]),
-    };
+    const [coords, speed] = line.split(' @ ').map(toCoords);
     return { coords, speed };
   });
 }
