@@ -9,6 +9,9 @@ export const findMinMax = (array: number[]): [number, number] => {
   return [sorted[0], sorted[sorted.length - 1]];
 };
 
+export const permutations = <T>(arr: T[]): T[][] =>
+  arr.flatMap((v, i) => arr.slice(i + 1).map((w) => [v, w]));
+
 export const intersectAll = <T>(arrays: T[][]) =>
   R.reduce<T[], T[]>(R.intersection, arrays[0], arrays);
 
