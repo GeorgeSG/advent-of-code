@@ -5,14 +5,11 @@ type Input = Record<string, string[]>;
 
 // Parser
 export function prepareInput(inputFile: string): Input {
-  const result: Input = {};
-  readFile(inputFile, (line) => {
+  return readFile(inputFile).reduce((result, line) => {
     const [from, to] = line.split(': ');
-    const tos = to.split(' ');
-    result[from] = (result[from] || []).concat(tos);
-  });
-
-  return result;
+    result[from] = (result[from] || []).concat(to.split(' '));
+    return result;
+  }, {} as Input);
 }
 
 function printGraphvizDot(input: Input) {
