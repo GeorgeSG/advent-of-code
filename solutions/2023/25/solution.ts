@@ -45,11 +45,11 @@ export function partA(input: Input, { runType }: { runType: RunType }): number {
     removeEdge('jqt', 'nvd');
   }
 
-  // Make edges bidirectional
   const allEdges = new Set<string>();
 
   Object.keys(input).forEach((from) => {
     allEdges.add(from);
+    // Make edges bidirectional
     input[from].forEach((to) => {
       input[to] = [...(input[to] || []), from];
       allEdges.add(to);
