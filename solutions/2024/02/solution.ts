@@ -7,6 +7,8 @@ export function prepareInput(inputFile: string): Input {
   return readFile(inputFile, (line) => line.split(' ').map(Number));
 }
 
+// Solution
+
 function hasLevelFailure(a: number, b: number, decreasing: boolean): boolean {
   return a === b || Math.abs(a - b) > 3 || (decreasing && a < b) || (!decreasing && a > b);
 }
