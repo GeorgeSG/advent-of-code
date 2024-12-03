@@ -9,7 +9,8 @@ export function prepareInput(inputFile: string): Input {
 
 // Utils
 function extractMul(input: string): [number, number] {
-  return input.split('(')[1].split(')')[0].split(',').map(Number) as [number, number];
+  const [, a, b] = input.match(/mul\((\d+),(\d+)\)/).map(Number);
+  return [a, b];
 }
 
 function mul(input: string): number {
