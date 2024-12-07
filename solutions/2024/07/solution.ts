@@ -8,6 +8,8 @@ type Equation = {
 
 type Input = Equation[];
 
+type Operator = (a: number, b: number) => number;
+
 // Parser
 export function prepareInput(inputFile: string): Input {
   return readFile(inputFile).map((line) => {
@@ -19,10 +21,7 @@ export function prepareInput(inputFile: string): Input {
   });
 }
 
-function isPossible(
-  { testValue, numbers }: Equation,
-  operators: Array<(a: number, b: number) => number>
-): boolean {
+function isPossible({ testValue, numbers }: Equation, operators: Operator[]): boolean {
   const remainingNumbers = numbers.slice(1);
   const permutations = range(0, Math.pow(operators.length, numbers.length - 1));
 
@@ -39,22 +38,19 @@ function isPossible(
   });
 }
 
-function getTotalCalibrationResult(
-  input: Input,
-  operators: Array<(a: number, b: number) => number>
-) {
+function getTotalCalibrationResult(input: Input, operators: Operator[]) {
   const possibleEquations = input.filter((eq) => isPossible(eq, operators));
   return sum(possibleEquations.map(({ testValue }) => testValue));
 }
 
 // ---- Part A ----
 export function partA(input: Input): number {
-  const operators = [(a, b) => a + b, (a, b) => a * b];
+  const operators: Operator[] = [(a, b) => a + b, (a, b) => a * b];
   return getTotalCalibrationResult(input, operators);
 }
 
 // ---- Part B ----
 export function partB(input: Input): number {
-  const operators = [(a, b) => a + b, (a, b) => a * b, (a, b) => Number(`${a}${b}`)];
+  const operators: Operator[] = [(a, b) => a + b, (a, b) => a * b, (a, b) => Number(`${a}${b}`)];
   return getTotalCalibrationResult(input, operators);
 }
