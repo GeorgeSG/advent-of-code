@@ -46,6 +46,7 @@ function getTotalCalibrationResult(
   const possibleEquations = input.filter((eq) => isPossible(eq, operators));
   return sum(possibleEquations.map(({ testValue }) => testValue));
 }
+
 // ---- Part A ----
 export function partA(input: Input): number {
   const operators = [(a, b) => a + b, (a, b) => a * b];
