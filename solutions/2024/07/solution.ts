@@ -27,7 +27,7 @@ function isPossible(
   const permutations = range(0, Math.pow(operators.length, numbers.length - 1));
 
   return permutations.some((perm) => {
-    // operator mask is a number in base of operators.length, e.g. 20012 for base 3
+    // operator mask is a number in base of operators.length, e.g. something like 20012 in base 3
     const operatorMask = perm.toString(operators.length).padStart(numbers.length - 1, '0');
 
     const result = remainingNumbers.reduce((acc, number, i) => {
