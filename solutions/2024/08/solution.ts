@@ -65,15 +65,16 @@ function findAllAntinodes(p1: Point, p2: Point, maxX: number, maxY: number): Set
   ]);
 }
 
-// ---- Part A ----
-export function partA({ antennasPerFrequency, maxX, maxY }: Input): number {
+function solve(
+  { antennasPerFrequency, maxX, maxY }: Input,
+  antinodeFn: (pointA: Point, pointB: Point, maxX: number, maxY: number) => Set<string>
+): number {
   const anitnodes = new Set();
 
-  Object.keys(antennasPerFrequency).forEach((antenna) => {
-    const points = antennasPerFrequency[antenna];
+  Object.values(antennasPerFrequency).forEach((points) => {
     for (let i = 0; i < points.length; i++) {
       for (let j = i + 1; j < points.length; j++) {
-        const newAntinodes = findAntinodes(points[i], points[j], maxX, maxY);
+        const newAntinodes = antinodeFn(points[i], points[j], maxX, maxY);
         newAntinodes.forEach((node) => anitnodes.add(node));
       }
     }
@@ -82,19 +83,12 @@ export function partA({ antennasPerFrequency, maxX, maxY }: Input): number {
   return anitnodes.size;
 }
 
+// ---- Part A ----
+export function partA(input: Input): number {
+  return solve(input, findAntinodes);
+}
+
 // ---- Part B ----
-export function partB({ antennasPerFrequency, maxX, maxY }: Input): number {
-  const anitnodes = new Set();
-
-  Object.keys(antennasPerFrequency).forEach((antenna) => {
-    const points = antennasPerFrequency[antenna];
-    for (let i = 0; i < points.length; i++) {
-      for (let j = i + 1; j < points.length; j++) {
-        const newAntinodes = findAllAntinodes(points[i], points[j], maxX, maxY);
-        newAntinodes.forEach((node) => anitnodes.add(node));
-      }
-    }
-  });
-
-  return anitnodes.size;
+export function partB(input: Input): number {
+  return solve(input, findAllAntinodes);
 }
