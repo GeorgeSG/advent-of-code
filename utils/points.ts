@@ -87,6 +87,10 @@ export class Point {
     return new Point(this.x + x, this.y + y);
   }
 
+  subtract({ x, y }: Point | Point2D): Point {
+    return new Point(this.x - x, this.y - y);
+  }
+
   move(direction: Direction, distance = 1): Point {
     switch (direction) {
       case Direction.UP:
