@@ -47,15 +47,15 @@ function findAntinodesInDirection(
   maxX: number,
   maxY: number
 ): Set<string> {
-  const anitnodes = new Set<string>();
+  const antinodes = new Set<string>();
   let point = start;
 
   while (point !== null) {
-    anitnodes.add(point.toKey());
+    antinodes.add(point.toKey());
     point = findAntinode(point, diff, maxX, maxY);
   }
 
-  return anitnodes;
+  return antinodes;
 }
 
 function findAllAntinodes(p1: Point, p2: Point, maxX: number, maxY: number): Set<string> {
@@ -69,18 +69,18 @@ function solve(
   { antennasPerFrequency, maxX, maxY }: Input,
   antinodeFn: (pointA: Point, pointB: Point, maxX: number, maxY: number) => Set<string>
 ): number {
-  const anitnodes = new Set();
+  const antinodes = new Set();
 
   Object.values(antennasPerFrequency).forEach((points) => {
     for (let i = 0; i < points.length; i++) {
       for (let j = i + 1; j < points.length; j++) {
         const newAntinodes = antinodeFn(points[i], points[j], maxX, maxY);
-        newAntinodes.forEach((node) => anitnodes.add(node));
+        newAntinodes.forEach((node) => antinodes.add(node));
       }
     }
   });
 
-  return anitnodes.size;
+  return antinodes.size;
 }
 
 // ---- Part A ----
