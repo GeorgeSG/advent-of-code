@@ -30,9 +30,7 @@ function countStones(
   }
 
   return stones.reduce((totalCount, stone) => {
-    if (!cache[blinksRemaining]) {
-      cache[blinksRemaining] = {};
-    }
+    cache[blinksRemaining] ||= {};
 
     const cachedCount = cache[blinksRemaining][stone];
     if (cachedCount) {
