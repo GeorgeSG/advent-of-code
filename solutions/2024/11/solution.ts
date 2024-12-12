@@ -29,20 +29,20 @@ function countStones(
     return stones.length;
   }
 
-  return stones.reduce((acc, stone) => {
+  return stones.reduce((totalCount, stone) => {
     if (!cache[blinksRemaining]) {
       cache[blinksRemaining] = {};
     }
 
     const cachedCount = cache[blinksRemaining][stone];
     if (cachedCount) {
-      return acc + cachedCount;
+      return totalCount + cachedCount;
     }
 
     const newCount = countStones(blinkAtStone(stone), blinksRemaining - 1, cache);
 
     cache[blinksRemaining][stone] = newCount;
-    return acc + newCount;
+    return totalCount + newCount;
   }, 0);
 }
 
