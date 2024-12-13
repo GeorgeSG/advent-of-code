@@ -2,3 +2,4 @@ node_modules
 .session
 
 solutions/**/input
+solutions/**/draft.ts
