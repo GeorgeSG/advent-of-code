@@ -33,7 +33,7 @@ export function prepareInput(inputFile: string): Input {
 function getMachinePrice(machine: ClawMachine, offset = 0): number | null {
   const [aX, aY] = machine.a;
   const [bX, bY] = machine.b;
-  let [targetX, targetY] = machine.prize.map((p) => p + offset);
+  const [targetX, targetY] = machine.prize.map((p) => p + offset);
 
   const b = (aX * targetY - aY * targetX) / (aX * bY - aY * bX);
   const a = (targetX - b * bX) / aX;
