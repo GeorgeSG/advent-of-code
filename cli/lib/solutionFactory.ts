@@ -38,7 +38,7 @@ export class SolutionFactory {
       return true;
     }
 
-    console.log(`Copying template to ${this.folder}...`);
+    this.logger.text(`Copying template to ${this.folder}...`);
     copy('./template/', this.folder, (err) => {
       if (err) {
         this.logger.error(err);
