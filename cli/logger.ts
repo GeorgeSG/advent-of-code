@@ -12,11 +12,11 @@ export class Logger {
   }
 
   warning(message: string) {
-    console.log(bold().yellow(`WARNING: ${this.prefixStr}${message}`));
+    console.log(bold().yellow(`${this.prefixStr}WARNING: ${message}`));
   }
 
   error(message: string) {
-    console.log(bold().red(`ERROR: ${this.prefixStr}${message}`));
+    console.log(bold().red(`${this.prefixStr}ERROR: ${message}`));
   }
 
   private get prefixStr() {

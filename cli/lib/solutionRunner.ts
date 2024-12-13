@@ -7,6 +7,7 @@ import R from 'ramda';
 import { readFileRaw } from '~utils/core';
 import { Logger } from '../logger';
 import { FileManager } from './fileManager';
+import { SolutionFactory } from './solutionFactory';
 
 export enum Part {
   A = 'a',
@@ -31,6 +32,7 @@ export type RunContext = {
 export class SolutionRunner {
   private static readonly DATA_MISSING = '-';
   private fileManager: FileManager;
+  private solutionFolder: string;
 
   private table: Table;
   private logger = new Logger('Solution Runner');
@@ -49,25 +51,50 @@ export class SolutionRunner {
       ],
     });
 
+    this.solutionFolder = solutionFolder;
     this.fileManager = new FileManager(`${appRootPath}/solutions/${solutionFolder}`);
   }
 
-  runAll(parts: Part[], runs: RunType[]) {
-    R.xprod(runs, parts).forEach((configuration) => this.runByPartAndRunType(...configuration));
+  async runAll(parts: Part[], runs: RunType[]) {
+    if (runs.includes(RunType.REAL)) {
+      await this.fetchRealInput();
+    }
+
+    await Promise.all(
+      R.xprod(runs, parts).map((configuration) => this.runByPartAndRunType(...configuration))
+    );
 
     if (this.printers.includes(Printer.TABLE)) {
       this.table.printTable();
     }
   }
 
-  private runByPartAndRunType(runType: RunType, part: Part) {
+  private async fetchRealInput(): Promise<void> {
+    const { inputFiles } = this.getFilePaths(RunType.REAL);
+    if (inputFiles.length > 0) {
+      return Promise.resolve();
+    }
+
+    this.logger.warning(`Input files not found. Attempting to download input...`);
+    const solutionFactory = new SolutionFactory(
+      this.solutionFolder.split('/')[0],
+      this.solutionFolder.split('/')[1]
+    );
+    const downloadFile = await solutionFactory.fetchInput();
+    if (!downloadFile) {
+      this.logger.error(`Unable to download task input. Skipping real tests!`);
+      return;
+    }
+  }
+
+  private async runByPartAndRunType(runType: RunType, part: Part) {
     // Check that solution exists and get handlers
     const { solutionFn, prepareInput } = this.loadSolution(part);
 
     // Get input and output
     const { inputFiles, outputFiles } = this.getFilePaths(runType);
     if (inputFiles.length === 0) {
-      this.logger.warning(`Input files not found. Skipping ${runType.toLowerCase()} tests!`);
+      this.logger.error(`Input files not found. Skipping ${runType.toLowerCase()} tests!`);
       return;
     }
     const expected = outputFiles.map((outputFile) => this.getExpectedResult(outputFile, part));

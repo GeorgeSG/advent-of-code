@@ -48,35 +48,42 @@ export class SolutionFactory {
     });
   }
 
-  fetchInput() {
+  async fetchInput() {
     const inputFile = `${this.folder}/input`;
 
     if (!fileExistsSync(SESSION_FILE)) {
       this.logger.warning('Set your session via pnpm set-cookie to fetch input.');
-      return;
+      return false;
     }
 
     const sessionId = readFileSync(SESSION_FILE, { encoding: 'utf-8' });
 
     if (existsSync(inputFile)) {
       this.logger.warning(`Input file already exists. Skipping download.`);
+      return true;
     } else {
-      console.log('Attempting input fetch...');
+      this.logger.text('Attempting input fetch...');
       const headers = new Headers({
         'User-Agent': 'github.com/GeorgeSG/advent-of-code by georgi@gar.dev',
         Cookie: `session=${sessionId}`,
       });
 
-      fetch(`https://adventofcode.com/${this.year}/day/${this.day}/input`, {
-        method: 'GET',
-        headers,
-      })
-        .then((response) => response.text())
-        .then((data) => {
-          writeFileSync(inputFile, data);
-          this.logger.success(`Input for ${this.year}/day/${this.day} downloaded successfully.`);
-        })
-        .catch((e) => this.logger.error('Unable to fetch input.'));
+      try {
+        const response = await fetch(
+          `https://adventofcode.com/${this.year}/day/${this.day}/input`,
+          {
+            method: 'GET',
+            headers,
+          }
+        );
+        const data = await response.text();
+        writeFileSync(inputFile, data);
+        this.logger.success(`Input for ${this.year}/${this.day} downloaded successfully.`);
+        return true;
+      } catch (e) {
+        this.logger.error('Unable to fetch input.');
+        return false;
+      }
     }
   }
 }
