@@ -23,10 +23,10 @@ function parsePrize(line: string): [number, number] {
 export function prepareInput(inputFile: string): Input {
   const lines = readFile(inputFile);
 
-  return splitEvery(3, lines).map((machineLines) => ({
-    a: parseButton(machineLines[0]),
-    b: parseButton(machineLines[1]),
-    prize: parsePrize(machineLines[2]),
+  return splitEvery(3, lines).map(([a, b, prize]) => ({
+    a: parseButton(a),
+    b: parseButton(b),
+    prize: parsePrize(prize),
   }));
 }
 
