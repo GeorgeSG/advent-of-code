@@ -48,6 +48,10 @@ export class Map2D<T = string> {
     return this.input[x][y];
   }
 
+  set({ x, y }: Point | Point2D, value: T): void {
+    this.input[x][y] = value;
+  }
+
   isValid({ x, y }: Point | Point2D): boolean {
     return x >= 0 && x <= this.maxX && y >= 0 && y <= this.maxY;
   }
