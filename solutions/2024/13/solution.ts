@@ -1,4 +1,4 @@
-import { splitAt, splitEvery, splitWhen, splitWhenever, sum } from 'ramda';
+import { splitEvery, sum } from 'ramda';
 import { readFile } from '~utils/core';
 
 type ClawMachine = {
