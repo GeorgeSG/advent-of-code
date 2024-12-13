@@ -9,7 +9,7 @@ export function prepareInput(inputFile: string): Input {
   return new Map2D(readFile(inputFile, (line) => line.split('').map(Number)));
 }
 
-const getTrailEnds = (map: Map2D<number>, point: Point) => {
+function getTrailEnds(map: Map2D<number>, point: Point): string[] {
   const queue = [point];
   const trailEnds = [];
 
@@ -30,9 +30,12 @@ const getTrailEnds = (map: Map2D<number>, point: Point) => {
   }
 
   return trailEnds;
-};
+}
 
-function getTotalScore(input: Input, scoreFn: (map: Map2D<number>, point: Point) => number) {
+function getTotalScore(
+  input: Input,
+  scoreFn: (map: Map2D<number>, point: Point) => number
+): number {
   return input.reduce(
     (score, point, value) => (value === 0 ? score + scoreFn(input, point) : score),
     0
