@@ -79,7 +79,7 @@ export class Point {
     return `${this.x},${this.y}`;
   }
 
-  isIn(map: Map2D) {
+  isIn<T>(map: Map2D<T>) {
     return map.isValid(this);
   }
 
