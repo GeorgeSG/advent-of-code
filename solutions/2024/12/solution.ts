@@ -1,8 +1,6 @@
-import { ijMeBro } from '~utils/arrays';
 import { readFile } from '~utils/core';
 import { Map2D } from '~utils/map2d';
 import { Point } from '~utils/points';
-import { Direction } from '~utils/types';
 
 type Input = Map2D;
 
