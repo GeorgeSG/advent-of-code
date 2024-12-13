@@ -13,7 +13,7 @@ export class SolutionFactory {
   private folder: string;
   private fileManager: FileManager;
 
-  private logger = new Logger();
+  private logger = new Logger('Solution Factory');
 
   constructor(year: string, day: string) {
     this.year = year;
@@ -62,7 +62,7 @@ export class SolutionFactory {
       this.logger.warning(`Input file already exists. Skipping download.`);
       return true;
     } else {
-      this.logger.text('Attempting input fetch...');
+      this.logger.text('Fetching real input...');
       const headers = new Headers({
         'User-Agent': 'github.com/GeorgeSG/advent-of-code by georgi@gar.dev',
         Cookie: `session=${sessionId}`,
