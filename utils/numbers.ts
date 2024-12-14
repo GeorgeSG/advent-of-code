@@ -18,3 +18,7 @@ export function lcm(a: number, b: number): number {
 export function arrayLcm(numbers: number[]): number {
   return numbers.reduce(lcm);
 }
+
+export function wrapNumber(value: number, max: number): number {
+  return ((value % max) + max) % max;
+}

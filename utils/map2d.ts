@@ -6,7 +6,7 @@ export class Map2D<T = string> {
     return new Map2D(lines.map((line) => [...line]));
   }
 
-  constructor(private input: T[][]) {}
+  constructor(public input: T[][]) {}
 
   get maxX(): number {
     return this.input.length - 1;
