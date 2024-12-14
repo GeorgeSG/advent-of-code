@@ -71,7 +71,7 @@ export function partA(input: Input, { runType }): number {
 // ---- Part B ----
 function getMap(emptyCanvas: string[][], robots: Robot[]): Map2D<string> {
   const map = new Map2D<string>(emptyCanvas);
-  robots.map(({ position }) => position).forEach((robot) => map.set(robot, '#'));
+  robots.forEach((robot) => map.set(robot.position, '#'));
   return map;
 }
 
