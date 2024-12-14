@@ -27,8 +27,8 @@ function getLimits(runType: RunType): [number, number] {
   return runType === 'real' ? [103, 101] : [7, 11];
 }
 
-function moveRobot({ position, velocity }: Robot, maxX: number, maxY: number, times = 100): Point {
-  const { x, y } = position.add({ x: velocity.x * times, y: velocity.y * times });
+function moveRobot({ position, velocity }: Robot, maxX: number, maxY: number, steps = 100): Point {
+  const { x, y } = position.add({ x: velocity.x * steps, y: velocity.y * steps });
   return new Point(wrapNumber(x, maxX), wrapNumber(y, maxY));
 }
 
