@@ -22,7 +22,7 @@ function countWaysToBuildDesign(patterns: string[], design: string): number {
 
   range(1, design.length + 1).forEach((i) => {
     patterns.forEach((pattern) => {
-      if (i >= pattern.length && design.slice(i - pattern.length, i) === pattern) {
+      if (design.slice(i - pattern.length, i) === pattern) {
         waysToBuildAtLength[i] += waysToBuildAtLength[i - pattern.length];
       }
     });
