@@ -16,14 +16,14 @@ export function prepareInput(inputFile: string): Input {
   };
 }
 
-function canBuildDesign(patterns: string[], design: string): boolean {
-  const memory = Array(design.length + 1).fill(false);
-  memory[0] = true;
+function countWaysToBuildDesign(patterns: string[], design: string): number {
+  const memory = Array(design.length + 1).fill(0);
+  memory[0] = 1;
 
   range(1, design.length + 1).forEach((i) => {
     patterns.forEach((pattern) => {
       if (i >= pattern.length && design.slice(i - pattern.length, i) === pattern) {
-        memory[i] ||= memory[i - pattern.length];
+        memory[i] += memory[i - pattern.length];
       }
     });
   });
@@ -33,10 +33,10 @@ function canBuildDesign(patterns: string[], design: string): boolean {
 
 // ---- Part A ----
 export function partA({ patterns, designs }: Input): number {
-  return designs.filter((design) => canBuildDesign(patterns, design)).length;
+  return designs.filter((design) => countWaysToBuildDesign(patterns, design)).length;
 }
 
 // ---- Part B ----
 export function partB({ patterns, designs }: Input): number {
-  return 0;
+  return sum(designs.map((design) => countWaysToBuildDesign(patterns, design)));
 }
