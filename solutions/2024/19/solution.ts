@@ -17,18 +17,18 @@ export function prepareInput(inputFile: string): Input {
 }
 
 function countWaysToBuildDesign(patterns: string[], design: string): number {
-  const memory = Array(design.length + 1).fill(0);
-  memory[0] = 1;
+  const waysToBuildAtLength = Array(design.length + 1).fill(0);
+  waysToBuildAtLength[0] = 1;
 
   range(1, design.length + 1).forEach((i) => {
     patterns.forEach((pattern) => {
       if (i >= pattern.length && design.slice(i - pattern.length, i) === pattern) {
-        memory[i] += memory[i - pattern.length];
+        waysToBuildAtLength[i] += waysToBuildAtLength[i - pattern.length];
       }
     });
   });
 
-  return memory[design.length];
+  return waysToBuildAtLength[design.length];
 }
 
 // ---- Part A ----
