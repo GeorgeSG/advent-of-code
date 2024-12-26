@@ -42,9 +42,11 @@ function getCluster(pc: string, input: Input): string {
       ...input[secondPc].filter((thirdPc) => thirdPc !== pc && input[pc].includes(thirdPc)),
     ])
     .filter(
-      (secondPc, i, cluster) =>
-        cluster.every((thirdPc) => thirdPc === secondPc || input[secondPc].includes(thirdPc)) &&
-        cluster.indexOf(secondPc) === i
+      (clusterPc, i, cluster) =>
+        cluster.every(
+          (secondClusterPc) =>
+            secondClusterPc === clusterPc || input[clusterPc].includes(secondClusterPc)
+        ) && cluster.indexOf(clusterPc) === i
     )
     .sort()
     .join(',');
