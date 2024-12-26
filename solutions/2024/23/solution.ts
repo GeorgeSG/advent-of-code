@@ -34,7 +34,6 @@ export function partA(input: Input): number {
 }
 
 // ---- Part B ----
-
 function getCluster(pc: string, input: Input): string[] {
   return input[pc]
     .flatMap((secondPc) => [
