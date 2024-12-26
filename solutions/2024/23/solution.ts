@@ -35,24 +35,23 @@ export function partA(input: Input): number {
 
 // ---- Part B ----
 
-function getCluster(pc: string, input: Input): string {
-  return input[pc]
-    .flatMap((secondPc) => [
+function getCluster(pc: string, input: Input): string[] {
+  return uniq(
+    input[pc].flatMap((secondPc) => [
       pc,
       ...input[secondPc].filter((thirdPc) => thirdPc !== pc && input[pc].includes(thirdPc)),
     ])
-    .filter(
-      (clusterPc, i, cluster) =>
-        cluster.every(
-          (secondClusterPc) =>
-            secondClusterPc === clusterPc || input[clusterPc].includes(secondClusterPc)
-        ) && cluster.indexOf(clusterPc) === i
+  )
+    .filter((clusterPc, i, cluster) =>
+      cluster.every(
+        (secondClusterPc) =>
+          secondClusterPc === clusterPc || input[clusterPc].includes(secondClusterPc)
+      )
     )
-    .sort()
-    .join(',');
+    .sort();
 }
 
 export function partB(input: Input): string {
   const clusters = Object.keys(input).map((pc) => getCluster(pc, input));
-  return clusters.sort((a, b) => b.length - a.length)[0];
+  return clusters.sort((a, b) => b.length - a.length)[0].join(',');
 }
