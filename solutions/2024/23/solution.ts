@@ -34,7 +34,8 @@ export function partA(input: Input): number {
 }
 
 // ---- Part B ----
-function getCluster(pc: string, input: Input): string[] {
+
+function getCluster(pc: string, input: Input): string {
   return input[pc]
     .flatMap((secondPc) => [
       pc,
@@ -44,11 +45,12 @@ function getCluster(pc: string, input: Input): string[] {
       (secondPc, i, cluster) =>
         cluster.every((thirdPc) => thirdPc === secondPc || input[secondPc].includes(thirdPc)) &&
         cluster.indexOf(secondPc) === i
-    );
+    )
+    .sort()
+    .join(',');
 }
 
 export function partB(input: Input): string {
   const clusters = Object.keys(input).map((pc) => getCluster(pc, input));
-  const largestNetwork = clusters.sort((a, b) => b.length - a.length)[0];
-  return largestNetwork.sort().join(',');
+  return clusters.sort((a, b) => b.length - a.length)[0];
 }
