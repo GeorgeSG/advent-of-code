@@ -20,7 +20,7 @@ defmodule AdventOfCode.Cli.Utils.InputParser do
     }
   end
 
-  def get_part(input) do
+  defp get_part(input) do
     part_mapping = %{"a" => :part_a, "b" => :part_b, "both" => :both}
 
     input
@@ -37,7 +37,7 @@ defmodule AdventOfCode.Cli.Utils.InputParser do
     end
   end
 
-  def get_run(input) do
+  defp get_run(input) do
     run_mapping = %{"example" => :example, "real" => :real, "both" => :both}
 
     input
@@ -56,7 +56,7 @@ defmodule AdventOfCode.Cli.Utils.InputParser do
     end
   end
 
-  def get_task(input) do
+  defp get_task(input) do
     task_input =
       input
       |> Keyword.get(:task, "")
