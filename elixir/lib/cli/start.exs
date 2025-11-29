@@ -1,4 +1,10 @@
 defmodule AdventOfCode.Cli.Start do
+  @moduledoc """
+  CLI to run a single task solution
+
+  run by `mix start --task YEAR/TASK [--part a|b|both] [--run example|real|both]`
+  """
+
   alias AdventOfCode.Cli.Utils
 
   defp load_file(file_path) do
