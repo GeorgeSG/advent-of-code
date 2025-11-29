@@ -6,6 +6,8 @@ defmodule AdventOfCode.Cli.Once do
   """
 
   alias AdventOfCode.Cli.Utils
+  alias AdventOfCode.Cli.Utils.InputParser
+  alias AdventOfCode.Cli.Utils.SolutionHelper
 
   defp load_file(file_path) do
     case File.read(file_path) do
@@ -45,17 +47,10 @@ defmodule AdventOfCode.Cli.Once do
     end
   end
 
-  defp get_module(year, task) do
-    "AdventOfCode.Solutions#{year}.Task#{task}"
-    |> String.split(".")
-    |> Enum.map(&String.to_atom/1)
-    |> Module.concat()
-  end
-
   def run(solution_path, parts, runs, year, task) do
-    parts = if parts == :both, do: [:part_a, :part_b], else: List.wrap(part)
-    runs = if runs == :both, do: [:example, :real], else: List.wrap(run)
-    module = get_module(year, task)
+    parts = if parts == :both, do: [:part_a, :part_b], else: List.wrap(parts)
+    runs = if runs == :both, do: [:example, :real], else: List.wrap(runs)
+    module = SolutionHelper.get_module(year, task)
 
     for part <- parts, run <- runs do
       IO.puts("#{part}, #{run}:")
@@ -69,54 +64,9 @@ defmodule AdventOfCode.Cli.Once do
   end
 
   def main() do
-    {opts, _, _} =
-      OptionParser.parse(System.argv(),
-        strict: [part: :string, run: :string, task: :string],
-        aliases: [p: :part, r: :run, t: :task]
-      )
+    %{part: part, run: run, year: year, task: task} = InputParser.parse(System.argv())
 
-    run_mapping = %{"example" => :example, "real" => :real, "both" => :both}
-
-    run =
-      opts
-      |> Keyword.get(:run, "both")
-      |> then(&Map.fetch(run_mapping, &1))
-      |> case do
-        {:ok, value} ->
-          value
-
-        :error ->
-          IO.puts("Invalid --run: #{other}. Expected one of: example, real, both")
-          exit(1)
-      end
-
-    part_mapping = %{"a" => :part_a, "b" => :part_b, "both" => :both}
-
-    part =
-      opts
-      |> Keyword.get(:part, "both")
-      |> then(&Map.fetch(part_mapping, &1))
-      |> case do
-        {:ok, value} ->
-          value
-
-        :error ->
-          IO.puts("Invalid --part: #{other}. Expected one of: example, real, both")
-          exit(1)
-      end
-
-    task_input =
-      opts
-      |> Keyword.get(:task, "")
-      |> String.trim()
-      |> case do
-        value -> value
-        "" -> raise ArgumentError, "must select task (use --task YEAR/TASK)"
-      end
-
-    [year, task] = String.split(task_input, "/", parts: 2)
-
-    solution_path = Path.join([__DIR__, "..", "solutions", year, task])
+    solution_path = SolutionHelper.get_path(year, task)
 
     run(solution_path, part, run, year, task)
 

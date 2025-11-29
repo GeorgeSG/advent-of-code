@@ -20,7 +20,8 @@ defmodule AdventOfCode.MixProject do
 
   defp deps do
     [
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:file_system, "~> 1.0", only: [:dev, :test]}
     ]
   end
 
@@ -29,7 +30,8 @@ defmodule AdventOfCode.MixProject do
       setup: ["deps.get", "compile"],
       ci: ["format --check-formatted", "test"],
       get: ["run lib/cli/get.exs"],
-      once: ["run lib/cli/once.exs"]
+      once: ["run lib/cli/once.exs"],
+      watch: ["run lib/cli/watch.exs"]
     ]
   end
 end
