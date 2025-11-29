@@ -29,9 +29,9 @@ defmodule AdventOfCode.MixProject do
     [
       setup: ["deps.get", "compile"],
       ci: ["format --check-formatted", "test"],
-      get: ["run lib/cli/get.exs"],
       once: ["run lib/cli/once.exs"],
-      watch: ["run lib/cli/watch.exs"]
+      watch: ["run lib/cli/watch.exs"],
+      new: ["run lib/cli/new.exs"]
     ]
   end
 end
