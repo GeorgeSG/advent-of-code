@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs';
-import { red } from 'kleur';
+import { Logger } from 'cli/logger';
+
+const logger = new Logger();
 
 export const readFile = <T = string>(
   inputFile: string,
@@ -15,7 +17,7 @@ export const readFile = <T = string>(
 
     return lineTransformer ? input.map((line, i) => lineTransformer(line, i)) : input;
   } catch (e) {
-    console.error(red().bold('Error: unable to read input'));
+    logger.error('Unable to read input');
   }
 };
 
@@ -23,6 +25,6 @@ export const readFileRaw = (inputFile) => {
   try {
     return readFileSync(inputFile, { encoding: 'utf8', flag: 'r' });
   } catch (e) {
-    console.error(red().bold('Error: unable to read input'));
+    logger.error('Unable to read input');
   }
 };
