@@ -33,7 +33,7 @@ defmodule AdventOfCode.Cli.Start do
   end
 
   defp check_output(actual, expected) do
-    actual = String.trim(to_string(actual))
+    actual = to_string(actual) |> String.trim()
 
     if actual == String.trim(expected) do
       IO.puts("✅ result: #{Utils.green(actual)} expected: #{expected}")
@@ -69,9 +69,7 @@ defmodule AdventOfCode.Cli.Start do
       input = load_input(solution_path, r)
       expected_output = load_output(solution_path, r)
 
-      prepared_input =
-        get_module(year, task)
-        |> apply(:prepare_input, [input])
+      prepared_input = get_module(year, task) |> apply(:prepare_input, [input])
 
       get_module(year, task)
       |> apply(p, [prepared_input])
