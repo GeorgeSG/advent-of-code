@@ -1,4 +1,4 @@
-defmodule AdventOfCode.Cli.Start do
+defmodule AdventOfCode.Cli.Once do
   @moduledoc """
   CLI to run a single task solution
 
@@ -135,4 +135,4 @@ defmodule AdventOfCode.Cli.Start do
   end
 end
 
-AdventOfCode.Cli.Start.main()
+AdventOfCode.Cli.Once.main()

@@ -29,7 +29,7 @@ defmodule AdventOfCode.MixProject do
       setup: ["deps.get", "compile"],
       ci: ["format --check-formatted", "test"],
       get: ["run lib/cli/get.exs"],
-      start: ["run lib/cli/start.exs"]
+      once: ["run lib/cli/once.exs"]
     ]
   end
 end
