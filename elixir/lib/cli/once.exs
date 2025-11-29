@@ -33,7 +33,8 @@ defmodule AdventOfCode.Cli.Once do
   end
 
   defp check_output(actual, expected) do
-    actual = to_string(actual) |> String.trim()
+    actual = actual |> to_string() |> String.trim()
+    expected = expected |> to_string() |> String.trim()
 
     if actual == String.trim(expected) do
       IO.puts("✅ result: #{Utils.green(actual)} expected: #{expected}")
@@ -51,29 +52,19 @@ defmodule AdventOfCode.Cli.Once do
     |> Module.concat()
   end
 
-  def run(solution_path, part, run, year, task) do
-    parts =
-      case part do
-        :both -> [:part_a, :part_b]
-        other -> [other]
-      end
+  def run(solution_path, parts, runs, year, task) do
+    parts = if parts == :both, do: [:part_a, :part_b], else: List.wrap(part)
+    runs = if runs == :both, do: [:example, :real], else: List.wrap(run)
+    module = get_module(year, task)
 
-    runs =
-      case run do
-        :both -> [:example, :real]
-        other -> [other]
-      end
+    for part <- parts, run <- runs do
+      IO.puts("#{part}, #{run}:")
 
-    for p <- parts, r <- runs do
-      IO.puts("#{p}, #{r}:")
-      input = load_input(solution_path, r)
-      expected_output = load_output(solution_path, r)
-
-      prepared_input = get_module(year, task) |> apply(:prepare_input, [input])
-
-      get_module(year, task)
-      |> apply(p, [prepared_input])
-      |> check_output(expected_output)
+      solution_path
+      |> load_input(run)
+      |> then(&module.prepare_input/1)
+      |> then(&apply(module, part, [&1]))
+      |> check_output(load_output(solution_path, run))
     end
   end
 
@@ -84,35 +75,33 @@ defmodule AdventOfCode.Cli.Once do
         aliases: [p: :part, r: :run, t: :task]
       )
 
+    run_mapping = %{"example" => :example, "real" => :real, "both" => :both}
+
     run =
-      case Keyword.get(opts, :run, "both") do
-        "example" ->
-          :example
+      opts
+      |> Keyword.get(:run, "both")
+      |> then(&Map.fetch(run_mapping, &1))
+      |> case do
+        {:ok, value} ->
+          value
 
-        "real" ->
-          :real
-
-        "both" ->
-          :both
-
-        other ->
+        :error ->
           IO.puts("Invalid --run: #{other}. Expected one of: example, real, both")
           exit(1)
       end
 
+    part_mapping = %{"a" => :part_a, "b" => :part_b, "both" => :both}
+
     part =
-      case Keyword.get(opts, :part, "both") do
-        "a" ->
-          :part_a
+      opts
+      |> Keyword.get(:part, "both")
+      |> then(&Map.fetch(part_mapping, &1))
+      |> case do
+        {:ok, value} ->
+          value
 
-        "b" ->
-          :part_b
-
-        "both" ->
-          :both
-
-        other ->
-          IO.puts("Invalid --part: #{other}. Expected one of: a, b, both")
+        :error ->
+          IO.puts("Invalid --part: #{other}. Expected one of: example, real, both")
           exit(1)
       end
 
@@ -121,8 +110,8 @@ defmodule AdventOfCode.Cli.Once do
       |> Keyword.get(:task, "")
       |> String.trim()
       |> case do
-        "" -> raise ArgumentError, "must select task (use --task YEAR/TASK)"
         value -> value
+        "" -> raise ArgumentError, "must select task (use --task YEAR/TASK)"
       end
 
     [year, task] = String.split(task_input, "/", parts: 2)
