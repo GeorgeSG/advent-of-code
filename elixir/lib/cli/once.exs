@@ -25,12 +25,18 @@ defmodule AdventOfCode.Cli.Once do
     end
   end
 
-  defp load_output(solution_path, run) do
+  defp load_output(solution_path, part, run) do
     filenames = %{example: "example_output", real: "output"}
 
     case Map.fetch(filenames, run) do
-      {:ok, filename} -> Path.join([solution_path, filename]) |> load_file()
-      :error -> raise ArgumentError, "Invalid run: #{inspect(run)}"
+      {:ok, filename} ->
+        Path.join([solution_path, filename])
+        |> load_file()
+        |> String.split("\n")
+        |> Enum.at(if part == :part_a, do: 0, else: 1)
+
+      :error ->
+        raise ArgumentError, "Invalid run: #{inspect(run)}"
     end
   end
 
@@ -59,7 +65,7 @@ defmodule AdventOfCode.Cli.Once do
       |> load_input(run)
       |> then(&module.prepare_input/1)
       |> then(&apply(module, part, [&1]))
-      |> check_output(load_output(solution_path, run))
+      |> check_output(load_output(solution_path, part, run))
     end
   end
 
